@@ -3037,6 +3037,52 @@
       "customConditional": "show = (data.StateTask == 7 || data.StateTask === '7' || data.StateTask == '7' || Number(data.StateTask) === 7);"
     },
     {
+      "title": "اطلاعیه",
+      "label": "اطلاعیه",
+      "key": "stepNotice",
+      "type": "panel",
+      "input": false,
+      "tableView": false,
+      "breadcrumbClickable": true,
+      "buttonSettings": {
+        "previous": false,
+        "cancel": false,
+        "next": false
+      },
+      "collapsible": false,
+      "customConditional": "show = String(data.StateTask) === '0';",
+      "components": [
+        {
+          "label": "noticeView",
+          "key": "noticeView",
+          "type": "htmlelement",
+          "input": false,
+          "tableView": false,
+          "tag": "div",
+          "refreshOnChange": true,
+          "content": "<div class=\"alert alert-info\" style=\"margin-bottom:0\"><h4 style=\"margin-top:0\">{{ data.NoticeTitle || '' }}</h4><p style=\"white-space:pre-line\">{{ data.NoticeText || '' }}</p><small>{{ data.NoticeTime || '' }}</small></div>"
+        },
+        {
+          "label": "مشاهده شد",
+          "action": "custom",
+          "showValidations": false,
+          "theme": "success",
+          "size": "lg",
+          "block": true,
+          "tableView": false,
+          "key": "submit0",
+          "conditional": {
+            "show": true,
+            "when": "StateTask",
+            "eq": "0"
+          },
+          "type": "button",
+          "custom": "(function() { try { const form = instance.root || (document.querySelector('.formio') ? document.querySelector('.formio').formio : null); if (!form) { console.error('Form instance not found'); return; } form.options = form.options || {}; form.options.disableAlerts = true; form.options.noAlerts = true; const alertBox = document.querySelector('.formio-alerts'); if (alertBox) alertBox.style.display = 'none'; const submitBtn = (instance.refs && instance.refs.button) || document.querySelector('button[name=\"data[' + instance.key + ']\"]') || document.querySelector('button[data-key=\"submit\"]'); const originalText = submitBtn ? submitBtn.innerHTML : 'ثبت و ادامه فرآیند'; const isValid = form.checkValidity(form.data, true); const errors = form.errors || []; if (!isValid) { showThemedPopup(errors.length > 0 ? errors : [{ message: 'لطفاً فیلدهای اجباری (علامت‌دار با *) را به درستی پر کنید.' }]); if (submitBtn) { submitBtn.disabled = false; submitBtn.style.opacity = '1'; submitBtn.innerHTML = originalText; } return; } if (submitBtn) { submitBtn.disabled = true; submitBtn.style.opacity = '0.6'; submitBtn.innerHTML = '⏳ در حال پردازش...'; } form.submit().then(function(submission) { try { var root = form.element || document; Array.prototype.forEach.call(root.querySelectorAll('.alert-success, [ref=\"buttonMessageContainer\"]'), function (el) { el.style.display = 'none'; }); } catch (e0) {}}).catch(function(err) { console.error('Submit error:', err); if (submitBtn) { submitBtn.disabled = false; submitBtn.style.opacity = '1'; submitBtn.innerHTML = originalText; } showThemedPopup([{ message: 'خطا در ارتباط با سرور. لطفاً اتصال شبکه را بررسی و مجدداً تلاش کنید.' }]); }); function showThemedPopup(errorList) { if (!errorList || errorList.length === 0) return; const existingModal = document.getElementById('formErrorModal'); if (existingModal) existingModal.remove(); const modal = document.createElement('div'); modal.id = 'formErrorModal'; modal.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; z-index: 99999; direction: rtl; font-family: Tahoma, sans-serif;'; const modalContent = document.createElement('div'); modalContent.style.cssText = 'background: #ffffff; border-radius: 12px; width: 90%; max-width: 500px; padding: 20px;'; const errorListContainer = document.createElement('div'); errorList.forEach(function(error) { const fieldName = error.component ? (error.component.label || error.component.key || 'یک فیلد') : (error.field || 'یک فیلد'); const errorMessage = error.message || 'مقدار وارد شده معتبر نیست'; const errorItem = document.createElement('div'); errorItem.style.cssText = 'padding: 12px 15px; margin-bottom: 10px; background: #fdf2f2; border-right: 4px solid #e74c3c; border-radius: 8px; color: #c0392b; font-size: 13px;'; errorItem.innerHTML = '<strong>' + escapeHtml(fieldName) + ':</strong> ' + escapeHtml(errorMessage); errorListContainer.appendChild(errorItem); }); modalContent.appendChild(errorListContainer); const closeBtn = document.createElement('button'); closeBtn.textContent = 'متوجه شدم'; closeBtn.style.cssText = 'background: #d35400; color: white; border: none; padding: 10px 24px; border-radius: 6px; margin-top: 10px; cursor: pointer;'; closeBtn.onclick = function() { modal.remove(); }; modalContent.appendChild(closeBtn); modal.appendChild(modalContent); document.body.appendChild(modal); } function escapeHtml(str) { if (!str) return ''; return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); } } catch (err) { console.error('Submit button error:', err); alert('خطایی رخ داده است: ' + err.message); } })();",
+          "input": true
+        }
+      ]
+    },
+    {
       "title": "اطلاعات ثبت شده",
       "theme": "default",
       "collapsible": false,

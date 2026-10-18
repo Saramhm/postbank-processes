@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_HousingDepositSettlementNotice" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.51.1" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.17.0">
+  <bpmn:process id="HousingDepositSettlementNotice" name="اطلاع‌رسانی تسویه حساب ودیعه مسکن" isExecutable="true">
+    <bpmn:startEvent id="Notice_Start" name="ارسال اطلاعیه">
+      <bpmn:outgoing>Flow_Notice_Start_Task</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:userTask id="Task_Notice" name="${NoticeTaskName}" camunda:formKey="embedded:/camunda/forms/formioWizardCallApi.html?deployment=HousingDepositSettlementWizard.json&#38;var=Submission&#38;DefaultVal=Submission&#38;StateTask=0" camunda:assignee="${PM}">
+      <bpmn:documentation>اطلاعیه فرآیند تسویه حساب ودیعه مسکن برای متقاضی. متن اطلاعیه در فرم نمایش داده می‌شود و با «مشاهده شد» بسته می‌شود.</bpmn:documentation>
+      <bpmn:incoming>Flow_Notice_Start_Task</bpmn:incoming>
+      <bpmn:outgoing>Flow_Notice_Task_End</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:endEvent id="Notice_End" name="مشاهده شد">
+      <bpmn:incoming>Flow_Notice_Task_End</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_Notice_Start_Task" sourceRef="Notice_Start" targetRef="Task_Notice" />
+    <bpmn:sequenceFlow id="Flow_Notice_Task_End" sourceRef="Task_Notice" targetRef="Notice_End" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_HousingDepositSettlementNotice">
+    <bpmndi:BPMNPlane id="BPMNPlane_HousingDepositSettlementNotice" bpmnElement="HousingDepositSettlementNotice">
+      <bpmndi:BPMNShape id="Notice_Start_di" bpmnElement="Notice_Start">
+        <dc:Bounds x="152" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="135" y="145" width="70" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Notice_di" bpmnElement="Task_Notice">
+        <dc:Bounds x="250" y="80" width="140" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Notice_End_di" bpmnElement="Notice_End">
+        <dc:Bounds x="452" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="440" y="145" width="60" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_Notice_Start_Task_di" bpmnElement="Flow_Notice_Start_Task">
+        <di:waypoint x="188" y="120" />
+        <di:waypoint x="250" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Notice_Task_End_di" bpmnElement="Flow_Notice_Task_End">
+        <di:waypoint x="390" y="120" />
+        <di:waypoint x="452" y="120" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

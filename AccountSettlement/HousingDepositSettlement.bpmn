@@ -202,10 +202,10 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
       vars.put("Submission", S(JSON.stringify(nobj)));
       var rs = execution.getProcessEngineServices().getRuntimeService();
       var bk = execution.getProcessBusinessKey();
-      if (bk) { rs.startProcessInstanceByKey("HousingDepositNotice", String(bk), vars); }
-      else { rs.startProcessInstanceByKey("HousingDepositNotice", vars); }
+      if (bk) { rs.startProcessInstanceByKey("HousingDepositSettlementNotice", String(bk), vars); }
+      else { rs.startProcessInstanceByKey("HousingDepositSettlementNotice", vars); }
     } catch (eN) {
-      console.error("[Notice] HousingDepositNotice not started, falling back to plain task: " + eN);
+      console.error("[Notice] HousingDepositSettlementNotice not started, falling back to plain task: " + eN);
       var ts = execution.getProcessEngineServices().getTaskService();
       var t = ts.newTask();
       t.setName("اطلاع: " + title);
@@ -275,10 +275,10 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
       vars.put("Submission", S(JSON.stringify(nobj)));
       var rs = execution.getProcessEngineServices().getRuntimeService();
       var bk = execution.getProcessBusinessKey();
-      if (bk) { rs.startProcessInstanceByKey("HousingDepositNotice", String(bk), vars); }
-      else { rs.startProcessInstanceByKey("HousingDepositNotice", vars); }
+      if (bk) { rs.startProcessInstanceByKey("HousingDepositSettlementNotice", String(bk), vars); }
+      else { rs.startProcessInstanceByKey("HousingDepositSettlementNotice", vars); }
     } catch (eN) {
-      console.error("[Notice] HousingDepositNotice not started, falling back to plain task: " + eN);
+      console.error("[Notice] HousingDepositSettlementNotice not started, falling back to plain task: " + eN);
       var ts = execution.getProcessEngineServices().getTaskService();
       var t = ts.newTask();
       t.setName("اطلاع: " + title);
@@ -389,10 +389,10 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
       vars.put("Submission", S(JSON.stringify(nobj)));
       var rs = execution.getProcessEngineServices().getRuntimeService();
       var bk = execution.getProcessBusinessKey();
-      if (bk) { rs.startProcessInstanceByKey("HousingDepositNotice", String(bk), vars); }
-      else { rs.startProcessInstanceByKey("HousingDepositNotice", vars); }
+      if (bk) { rs.startProcessInstanceByKey("HousingDepositSettlementNotice", String(bk), vars); }
+      else { rs.startProcessInstanceByKey("HousingDepositSettlementNotice", vars); }
     } catch (eN) {
-      console.error("[Notice] HousingDepositNotice not started, falling back to plain task: " + eN);
+      console.error("[Notice] HousingDepositSettlementNotice not started, falling back to plain task: " + eN);
       var ts = execution.getProcessEngineServices().getTaskService();
       var t = ts.newTask();
       t.setName("اطلاع: " + title);
@@ -538,10 +538,10 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
       vars.put("Submission", S(JSON.stringify(nobj)));
       var rs = execution.getProcessEngineServices().getRuntimeService();
       var bk = execution.getProcessBusinessKey();
-      if (bk) { rs.startProcessInstanceByKey("HousingDepositNotice", String(bk), vars); }
-      else { rs.startProcessInstanceByKey("HousingDepositNotice", vars); }
+      if (bk) { rs.startProcessInstanceByKey("HousingDepositSettlementNotice", String(bk), vars); }
+      else { rs.startProcessInstanceByKey("HousingDepositSettlementNotice", vars); }
     } catch (eN) {
-      console.error("[Notice] HousingDepositNotice not started, falling back to plain task: " + eN);
+      console.error("[Notice] HousingDepositSettlementNotice not started, falling back to plain task: " + eN);
       var ts = execution.getProcessEngineServices().getTaskService();
       var t = ts.newTask();
       t.setName("اطلاع: " + title);
@@ -634,10 +634,10 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
       vars.put("Submission", S(JSON.stringify(nobj)));
       var rs = execution.getProcessEngineServices().getRuntimeService();
       var bk = execution.getProcessBusinessKey();
-      if (bk) { rs.startProcessInstanceByKey("HousingDepositNotice", String(bk), vars); }
-      else { rs.startProcessInstanceByKey("HousingDepositNotice", vars); }
+      if (bk) { rs.startProcessInstanceByKey("HousingDepositSettlementNotice", String(bk), vars); }
+      else { rs.startProcessInstanceByKey("HousingDepositSettlementNotice", vars); }
     } catch (eN) {
-      console.error("[Notice] HousingDepositNotice not started, falling back to plain task: " + eN);
+      console.error("[Notice] HousingDepositSettlementNotice not started, falling back to plain task: " + eN);
       var ts = execution.getProcessEngineServices().getTaskService();
       var t = ts.newTask();
       t.setName("اطلاع: " + title);
@@ -729,10 +729,10 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
       vars.put("Submission", S(JSON.stringify(nobj)));
       var rs = execution.getProcessEngineServices().getRuntimeService();
       var bk = execution.getProcessBusinessKey();
-      if (bk) { rs.startProcessInstanceByKey("HousingDepositNotice", String(bk), vars); }
-      else { rs.startProcessInstanceByKey("HousingDepositNotice", vars); }
+      if (bk) { rs.startProcessInstanceByKey("HousingDepositSettlementNotice", String(bk), vars); }
+      else { rs.startProcessInstanceByKey("HousingDepositSettlementNotice", vars); }
     } catch (eN) {
-      console.error("[Notice] HousingDepositNotice not started, falling back to plain task: " + eN);
+      console.error("[Notice] HousingDepositSettlementNotice not started, falling back to plain task: " + eN);
       var ts = execution.getProcessEngineServices().getTaskService();
       var t = ts.newTask();
       t.setName("اطلاع: " + title);
@@ -825,10 +825,10 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
       vars.put("Submission", S(JSON.stringify(nobj)));
       var rs = execution.getProcessEngineServices().getRuntimeService();
       var bk = execution.getProcessBusinessKey();
-      if (bk) { rs.startProcessInstanceByKey("HousingDepositNotice", String(bk), vars); }
-      else { rs.startProcessInstanceByKey("HousingDepositNotice", vars); }
+      if (bk) { rs.startProcessInstanceByKey("HousingDepositSettlementNotice", String(bk), vars); }
+      else { rs.startProcessInstanceByKey("HousingDepositSettlementNotice", vars); }
     } catch (eN) {
-      console.error("[Notice] HousingDepositNotice not started, falling back to plain task: " + eN);
+      console.error("[Notice] HousingDepositSettlementNotice not started, falling back to plain task: " + eN);
       var ts = execution.getProcessEngineServices().getTaskService();
       var t = ts.newTask();
       t.setName("اطلاع: " + title);
