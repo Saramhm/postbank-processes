@@ -25,12 +25,12 @@
         <bpmn:flowNodeRef>Task_LeaseInfo</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>End_Rejected</bpmn:flowNodeRef>
       </bpmn:lane>
-      <bpmn:lane id="Lane_CEO" name="مدیرعامل">
+      <bpmn:lane id="Lane_CEO" name="مدیرعامل / معاونت ستادی">
         <bpmn:flowNodeRef>Task_CEOReview</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Notify_CEO</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Gateway_CEO</bpmn:flowNodeRef>
       </bpmn:lane>
-      <bpmn:lane id="Lane_ProvinceManagement" name="مدیریت شعب استان / منطقه">
+      <bpmn:lane id="Lane_ProvinceManagement" name="مدیریت شعب استان / منطقه / حراست">
         <bpmn:flowNodeRef>Task_ProvinceReview</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Notify_Province</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Gateway_Province</bpmn:flowNodeRef>
@@ -134,6 +134,29 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
 } catch (e) { console.error("[Start_Request] notice " + e); }
 </camunda:script>
         </camunda:executionListener>
+        <camunda:executionListener event="end">
+          <camunda:script scriptFormat="javascript">try {
+  var raw = execution.getVariable("Submission");
+  var obj = null;
+  if (raw === null || raw === undefined) { obj = { data: {} }; }
+  else if (typeof raw === "string") { obj = JSON.parse(raw); }
+  else if (raw &amp;&amp; typeof raw.prop === "function") { obj = JSON.parse(raw.toString()); }
+  else { try { obj = JSON.parse(JSON.stringify(raw)); } catch (e1) { obj = { data: {} }; } }
+  if (!obj.data) { obj = { data: obj }; }
+  var d = obj.data;
+  var cat = String(d.RequestCategory || "");
+  var g = String(d.EligibilityGroup || "");
+  var ttl = String(d.PostTitle || "");
+  var grp;
+  if (cat === "HQ") { grp = (g === "g1") ? "PBCEO" : "PBHQDeputy"; }
+  else if (ttl.indexOf("حراست") &gt;= 0) { grp = "PBSecurityAffairs"; }
+  else if (g === "g3") { grp = "PBProvincesAffairs"; }
+  else { grp = "PBProvinceManagement"; }
+  execution.setVariable("_approverGroup", grp);
+  console.log("[ApproverRouting] _approverGroup=" + grp);
+} catch (e) { console.error("[ApproverRouting] " + e); }
+</camunda:script>
+        </camunda:executionListener>
       </bpmn:extensionElements>
       <bpmn:outgoing>Flow_Start_Request_Gateway_Category</bpmn:outgoing>
     </bpmn:startEvent>
@@ -142,7 +165,7 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
       <bpmn:outgoing>Flow_Gateway_Category_Task_CEOReview</bpmn:outgoing>
       <bpmn:outgoing>Flow_Gateway_Category_Task_ProvinceReview</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:userTask id="Task_CEOReview" name="بررسی درخواست" camunda:formKey="embedded:/camunda/forms/formioWizardCallApi.html?deployment=HousingDepositCompleteWizard.json&#38;var=Submission&#38;DefaultVal=Submission&#38;StateTask=1" camunda:assignee="${PM}" camunda:candidateGroups="PBCEO">
+    <bpmn:userTask id="Task_CEOReview" name="بررسی درخواست" camunda:formKey="embedded:/camunda/forms/formioWizardCallApi.html?deployment=HousingDepositCompleteWizard.json&#38;var=Submission&#38;DefaultVal=Submission&#38;StateTask=1" camunda:assignee="${PM}" camunda:candidateGroups="${_approverGroup}">
       <bpmn:extensionElements>
         <camunda:executionListener event="start">
           <camunda:script scriptFormat="javascript">
@@ -259,7 +282,7 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
       <bpmn:outgoing>Flow_Notify_CEO_Gateway_CEO</bpmn:outgoing>
       <bpmn:messageEventDefinition id="MessageEventDefinition_Notify_CEO" />
     </bpmn:intermediateThrowEvent>
-    <bpmn:userTask id="Task_ProvinceReview" name="بررسی درخواست" camunda:formKey="embedded:/camunda/forms/formioWizardCallApi.html?deployment=HousingDepositCompleteWizard.json&#38;var=Submission&#38;DefaultVal=Submission&#38;StateTask=2" camunda:assignee="${PM}" camunda:candidateGroups="PBProvinceManagement">
+    <bpmn:userTask id="Task_ProvinceReview" name="بررسی درخواست" camunda:formKey="embedded:/camunda/forms/formioWizardCallApi.html?deployment=HousingDepositCompleteWizard.json&#38;var=Submission&#38;DefaultVal=Submission&#38;StateTask=2" camunda:assignee="${PM}" camunda:candidateGroups="${_approverGroup}">
       <bpmn:extensionElements>
         <camunda:executionListener event="start">
           <camunda:script scriptFormat="javascript">

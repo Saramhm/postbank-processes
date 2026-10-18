@@ -10,7 +10,7 @@
         <bpmn:flowNodeRef>Notify_Rejected</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>End_Rejected</bpmn:flowNodeRef>
       </bpmn:lane>
-      <bpmn:lane id="Lane_ProvinceManagement" name="مدیریت شعب استان / منطقه">
+      <bpmn:lane id="Lane_ProvinceManagement" name="مدیریت شعب استان / منطقه / حراست">
         <bpmn:flowNodeRef>Task_ProvinceReview</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Notify_Province</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Gateway_Province</bpmn:flowNodeRef>
@@ -67,6 +67,16 @@ try {
   else { try { obj = JSON.parse(JSON.stringify(raw)); } catch (e1) { obj = { data: {} }; } }
   if (!obj.data) { obj = { data: obj }; }
   var d = obj.data;
+  var cat = String(d.RequestCategory || "");
+  var g = String(d.EligibilityGroup || "");
+  var ttl = String(d.PostTitle || "");
+  var grp;
+  if (cat === "HQ") { grp = (g === "g1") ? "PBCEO" : "PBHQDeputy"; }
+  else if (ttl.indexOf("حراست") &gt;= 0) { grp = "PBSecurityAffairs"; }
+  else if (g === "g3") { grp = "PBProvincesAffairs"; }
+  else { grp = "PBProvinceManagement"; }
+  execution.setVariable("_approverGroup", grp);
+  console.log("[ApproverRouting] _approverGroup=" + grp);
   execution.setVariable("_requestCategory", (d.RequestCategory !== undefined &amp;&amp; d.RequestCategory !== null) ? String(d.RequestCategory) : "");
   console.log("[Start_Request] _requestCategory=" + execution.getVariable("_requestCategory"));
 } catch (e) { console.error("[Start_Request] " + e); }
@@ -101,7 +111,7 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
       </bpmn:extensionElements>
       <bpmn:outgoing>Flow_Start_Request_Task_ProvinceReview</bpmn:outgoing>
     </bpmn:startEvent>
-    <bpmn:userTask id="Task_ProvinceReview" name="بررسی و اعلام تسویه به اداره کل سرمایه انسانی و رفاه" camunda:formKey="embedded:/camunda/forms/formioWizardCallApi.html?deployment=HousingDepositSettlementWizard.json&#38;var=Submission&#38;DefaultVal=Submission&#38;StateTask=1" camunda:assignee="${PM}" camunda:candidateGroups="PBProvinceManagement">
+    <bpmn:userTask id="Task_ProvinceReview" name="بررسی و اعلام تسویه به اداره کل سرمایه انسانی و رفاه" camunda:formKey="embedded:/camunda/forms/formioWizardCallApi.html?deployment=HousingDepositSettlementWizard.json&#38;var=Submission&#38;DefaultVal=Submission&#38;StateTask=1" camunda:assignee="${PM}" camunda:candidateGroups="${_approverGroup}">
       <bpmn:extensionElements>
         <camunda:executionListener event="start">
           <camunda:script scriptFormat="javascript">
