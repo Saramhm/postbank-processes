@@ -46,6 +46,7 @@
         <bpmn:flowNodeRef>Gateway_ExitWait</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Catch_ExitMessage</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Catch_SettlementDue</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Notify_Exit</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Notify_Settlement</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>End_Handover</bpmn:flowNodeRef>
       </bpmn:lane>
@@ -1282,7 +1283,7 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
         </camunda:executionListener>
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_Gateway_ExitWait_Catch_ExitMessage</bpmn:incoming>
-      <bpmn:outgoing>Flow_Catch_ExitMessage_Notify_Settlement</bpmn:outgoing>
+      <bpmn:outgoing>Flow_Catch_ExitMessage_Notify_Exit</bpmn:outgoing>
       <bpmn:messageEventDefinition id="MessageEventDefinition_ExitCoverage" messageRef="Message_HousingDepositExitCoverage" />
     </bpmn:intermediateCatchEvent>
     <bpmn:intermediateCatchEvent id="Catch_SettlementDue" name="سررسید تسویه / پایان مهلت استفاده">
@@ -1302,7 +1303,7 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
         </camunda:executionListener>
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_Gateway_ExitWait_Catch_SettlementDue</bpmn:incoming>
-      <bpmn:outgoing>Flow_Catch_SettlementDue_Notify_Settlement</bpmn:outgoing>
+      <bpmn:outgoing>Flow_Catch_SettlementDue_Notify_Exit</bpmn:outgoing>
       <bpmn:timerEventDefinition id="TimerEventDefinition_SettlementDue">
         <bpmn:timeDate xsi:type="bpmn:tFormalExpression">${_exitDueDate}</bpmn:timeDate>
       </bpmn:timerEventDefinition>
@@ -1310,6 +1311,75 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
     <bpmn:sequenceFlow id="Flow_Notify_Done_Gateway_ExitWait" sourceRef="Notify_Done" targetRef="Gateway_ExitWait" />
     <bpmn:sequenceFlow id="Flow_Gateway_ExitWait_Catch_ExitMessage" sourceRef="Gateway_ExitWait" targetRef="Catch_ExitMessage" />
     <bpmn:sequenceFlow id="Flow_Gateway_ExitWait_Catch_SettlementDue" sourceRef="Gateway_ExitWait" targetRef="Catch_SettlementDue" />
+    <bpmn:intermediateThrowEvent id="Notify_Exit" name="اطلاع الزام به تسویه به متقاضی">
+      <bpmn:extensionElements>
+        <camunda:executionListener event="start">
+          <camunda:script scriptFormat="javascript">try {
+  var raw = execution.getVariable("Submission");
+  var obj = null;
+  if (raw === null || raw === undefined) { obj = { data: {} }; }
+  else if (typeof raw === "string") { obj = JSON.parse(raw); }
+  else if (raw &amp;&amp; typeof raw.prop === "function") { obj = JSON.parse(raw.toString()); }
+  else { try { obj = JSON.parse(JSON.stringify(raw)); } catch (e1) { obj = { data: {} }; } }
+  if (!obj.data) { obj = { data: obj }; }
+  var d = obj.data;
+  function fmt(n) { n = Math.round(Number(n || 0)); return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ","); }
+  function note(s) { return s ? " توضیحات: " + s : ""; }
+  function hdG2J(gy, gm, gd) { var g_d_m = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334]; var gy2 = (gm &gt; 2) ? (gy + 1) : gy; var days = 355666 + (365 * gy) + Math.floor((gy2 + 3) / 4) - Math.floor((gy2 + 99) / 100) + Math.floor((gy2 + 399) / 400) + gd + g_d_m[gm - 1]; var jy = -1595 + (33 * Math.floor(days / 12053)); days %= 12053; jy += 4 * Math.floor(days / 1461); days %= 1461; if (days &gt; 365) { jy += Math.floor((days - 1) / 365); days = (days - 1) % 365; } var jm, jd; if (days &lt; 186) { jm = 1 + Math.floor(days / 31); jd = 1 + (days % 31); } else { jm = 7 + Math.floor((days - 186) / 30); jd = 1 + ((days - 186) % 30); } return [jy, jm, jd]; }
+function hdJ2G(jy, jm, jd) { jy += 1595; var days = -355668 + (365 * jy) + (Math.floor(jy / 33) * 8) + Math.floor(((jy % 33) + 3) / 4) + jd + ((jm &lt; 7) ? (jm - 1) * 31 : ((jm - 7) * 30) + 186); var gy = 400 * Math.floor(days / 146097); days %= 146097; if (days &gt; 36524) { days--; gy += 100 * Math.floor(days / 36524); days %= 36524; if (days &gt;= 365) { days++; } } gy += 4 * Math.floor(days / 1461); days %= 1461; if (days &gt; 365) { gy += Math.floor((days - 1) / 365); days = (days - 1) % 365; } var gd = days + 1; var ml = [0, 31, ((gy % 4 === 0 &amp;&amp; gy % 100 !== 0) || (gy % 400 === 0)) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]; var gm; for (gm = 0; gm &lt; 13 &amp;&amp; gd &gt; ml[gm]; gm++) { gd -= ml[gm]; } return [gy, gm, gd]; }
+function hdPad(n) { return (n &lt; 10 ? "0" : "") + n; }
+function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.type("java.time.ZoneId"); var z = Z.now(I.of("Asia/Tehran")); var j = hdG2J(z.getYear(), z.getMonthValue(), z.getDayOfMonth()); return j[0] + "/" + hdPad(j[1]) + "/" + hdPad(j[2]) + " " + hdPad(z.getHour()) + ":" + hdPad(z.getMinute()); } catch (e) { var d = new Date(); var j2 = hdG2J(d.getFullYear(), d.getMonth() + 1, d.getDate()); return j2[0] + "/" + hdPad(j2[1]) + "/" + hdPad(j2[2]) + " " + hdPad(d.getHours()) + ":" + hdPad(d.getMinutes()); } }
+  var name = ((d.ApplicantFirstName || "") + " " + (d.ApplicantLastName || "")).trim();
+  var title = "الزام به تسویه ودیعه";
+  var text = "به علت خروج از شمول دستورالعمل، ودیعه مسکن به مبلغ " + fmt(d.ApprovedDepositAmount) + " ریال باید حداکثر تا تاریخ " + (d.SettlementDueDate || "-") + " تسویه شود." + note(d.ExitNote);
+  var log = d.InitiatorNotifications || [];
+  log.push({ NoticeTitle: title, NoticeText: text, NoticeTime: hdNow() });
+  d.InitiatorNotifications = log;
+  execution.setVariable("Submission", S(JSON.stringify(obj)));
+  execution.setVariable("_lastNotice", title + ": " + text);
+  var pm = execution.getVariable("PM");
+  if (pm) {
+    var nt = hdNow();
+    try {
+      var nobj = JSON.parse(JSON.stringify(obj));
+      nobj.data.StateTask = "0";
+      nobj.data.NoticeTitle = title;
+      nobj.data.NoticeText = text;
+      nobj.data.NoticeTime = nt;
+      var HashMap = Java.type("java.util.HashMap");
+      var vars = new HashMap();
+      vars.put("PM", String(pm));
+      vars.put("StateTask", "0");
+      vars.put("NoticeTaskName", "اطلاع: " + title);
+      vars.put("NoticeTitle", title);
+      vars.put("NoticeText", text);
+      vars.put("NoticeTime", nt);
+      vars.put("SourceProcessInstanceId", execution.getProcessInstanceId());
+      vars.put("Submission", S(JSON.stringify(nobj)));
+      var rs = execution.getProcessEngineServices().getRuntimeService();
+      var bk = execution.getProcessBusinessKey();
+      if (bk) { rs.startProcessInstanceByKey("HousingDepositNotice", String(bk), vars); }
+      else { rs.startProcessInstanceByKey("HousingDepositNotice", vars); }
+    } catch (eN) {
+      console.error("[Notice] HousingDepositNotice not started, falling back to plain task: " + eN);
+      var ts = execution.getProcessEngineServices().getTaskService();
+      var t = ts.newTask();
+      t.setName("اطلاع: " + title);
+      t.setDescription(text);
+      t.setAssignee(String(pm));
+      ts.saveTask(t);
+    }
+  }
+  console.log("[Notify_Exit] " + title);
+} catch (e) { console.error("[Notify_Exit] " + e); }
+</camunda:script>
+        </camunda:executionListener>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_Catch_ExitMessage_Notify_Exit</bpmn:incoming>
+      <bpmn:incoming>Flow_Catch_SettlementDue_Notify_Exit</bpmn:incoming>
+      <bpmn:outgoing>Flow_Notify_Exit_Notify_Settlement</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_Notify_Exit" />
+    </bpmn:intermediateThrowEvent>
     <bpmn:intermediateThrowEvent id="Notify_Settlement" name="ارجاع به فرآیند تسویه حساب">
       <bpmn:documentation>خروج از شمول یا سررسید تسویه اعلام شده است. ادامه کار (اعلام تسویه، دریافت وجه، اسناد معکوس، خسارت تأخیر و اقدام حقوقی) در فرآیند مستقل HousingDepositSettlement انجام می‌شود.</bpmn:documentation>
       <bpmn:extensionElements>
@@ -1341,16 +1411,16 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
 </camunda:script>
         </camunda:executionListener>
       </bpmn:extensionElements>
-      <bpmn:incoming>Flow_Catch_ExitMessage_Notify_Settlement</bpmn:incoming>
-      <bpmn:incoming>Flow_Catch_SettlementDue_Notify_Settlement</bpmn:incoming>
+      <bpmn:incoming>Flow_Notify_Exit_Notify_Settlement</bpmn:incoming>
       <bpmn:outgoing>Flow_Notify_Settlement_End_Handover</bpmn:outgoing>
       <bpmn:messageEventDefinition id="MessageEventDefinition_Notify_Settlement" />
     </bpmn:intermediateThrowEvent>
     <bpmn:endEvent id="End_Handover" name="پایان (ادامه در فرآیند تسویه حساب)">
       <bpmn:incoming>Flow_Notify_Settlement_End_Handover</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:sequenceFlow id="Flow_Catch_ExitMessage_Notify_Settlement" name="رویداد خاص" sourceRef="Catch_ExitMessage" targetRef="Notify_Settlement" />
-    <bpmn:sequenceFlow id="Flow_Catch_SettlementDue_Notify_Settlement" name="سررسید" sourceRef="Catch_SettlementDue" targetRef="Notify_Settlement" />
+    <bpmn:sequenceFlow id="Flow_Catch_ExitMessage_Notify_Exit" name="رویداد خاص" sourceRef="Catch_ExitMessage" targetRef="Notify_Exit" />
+    <bpmn:sequenceFlow id="Flow_Catch_SettlementDue_Notify_Exit" name="سررسید" sourceRef="Catch_SettlementDue" targetRef="Notify_Exit" />
+    <bpmn:sequenceFlow id="Flow_Notify_Exit_Notify_Settlement" sourceRef="Notify_Exit" targetRef="Notify_Settlement" />
     <bpmn:sequenceFlow id="Flow_Notify_Settlement_End_Handover" sourceRef="Notify_Settlement" targetRef="End_Handover" />
     <bpmn:endEvent id="End_Rejected" name="پایان فرآیند (عدم تأیید)">
       <bpmn:incoming>Flow_Gateway_CEO_End_Rejected</bpmn:incoming>
@@ -1366,31 +1436,31 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
   <bpmndi:BPMNDiagram id="BPMNDiagram_HousingDepositComplete">
     <bpmndi:BPMNPlane id="BPMNPlane_HousingDepositComplete" bpmnElement="Collaboration_HousingDepositComplete">
       <bpmndi:BPMNShape id="Participant_HousingDepositComplete_di" bpmnElement="Participant_HousingDepositComplete" isHorizontal="true">
-        <dc:Bounds x="150" y="80" width="4900" height="1280" />
+        <dc:Bounds x="150" y="80" width="5200" height="1280" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_Executor_di" bpmnElement="Lane_Executor" isHorizontal="true">
-        <dc:Bounds x="180" y="1200" width="4870" height="160" />
+        <dc:Bounds x="180" y="1200" width="5170" height="160" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_Legal_di" bpmnElement="Lane_Legal" isHorizontal="true">
-        <dc:Bounds x="180" y="1040" width="4870" height="160" />
+        <dc:Bounds x="180" y="1040" width="5170" height="160" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_Inspection_di" bpmnElement="Lane_Inspection" isHorizontal="true">
-        <dc:Bounds x="180" y="880" width="4870" height="160" />
+        <dc:Bounds x="180" y="880" width="5170" height="160" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_Guarantor_di" bpmnElement="Lane_Guarantor" isHorizontal="true">
-        <dc:Bounds x="180" y="720" width="4870" height="160" />
+        <dc:Bounds x="180" y="720" width="5170" height="160" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_HR_di" bpmnElement="Lane_HR" isHorizontal="true">
-        <dc:Bounds x="180" y="560" width="4870" height="160" />
+        <dc:Bounds x="180" y="560" width="5170" height="160" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_ProvinceManagement_di" bpmnElement="Lane_ProvinceManagement" isHorizontal="true">
-        <dc:Bounds x="180" y="400" width="4870" height="160" />
+        <dc:Bounds x="180" y="400" width="5170" height="160" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_CEO_di" bpmnElement="Lane_CEO" isHorizontal="true">
-        <dc:Bounds x="180" y="240" width="4870" height="160" />
+        <dc:Bounds x="180" y="240" width="5170" height="160" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_Employee_di" bpmnElement="Lane_Employee" isHorizontal="true">
-        <dc:Bounds x="180" y="80" width="4870" height="160" />
+        <dc:Bounds x="180" y="80" width="5170" height="160" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Start_Request_di" bpmnElement="Start_Request">
         <dc:Bounds x="277" y="142" width="36" height="36" />
@@ -1727,7 +1797,7 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
         <di:waypoint x="4357" y="640" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Participant_Notary_di" bpmnElement="Participant_Notary" isHorizontal="true">
-        <dc:Bounds x="150" y="1510" width="4900" height="70" />
+        <dc:Bounds x="150" y="1510" width="5200" height="70" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="TextAnnotation_1_di" bpmnElement="TextAnnotation_1">
         <dc:Bounds x="3225" y="1372" width="200" height="120" />
@@ -1773,31 +1843,39 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
         <di:waypoint x="4475" y="670" />
         <di:waypoint x="4652" y="670" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="Notify_Settlement_di" bpmnElement="Notify_Settlement">
+      <bpmndi:BPMNShape id="Notify_Exit_di" bpmnElement="Notify_Exit">
         <dc:Bounds x="4785" y="622" width="36" height="36" />
-        <bpmndi:BPMNLabel><dc:Bounds x="4760" y="665" width="86" height="40" /></bpmndi:BPMNLabel>
+        <bpmndi:BPMNLabel><dc:Bounds x="4750" y="665" width="106" height="40" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Notify_Settlement_di" bpmnElement="Notify_Settlement">
+        <dc:Bounds x="4912" y="622" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="4887" y="665" width="86" height="40" /></bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="End_Handover_di" bpmnElement="End_Handover">
-        <dc:Bounds x="4912" y="622" width="36" height="36" />
-        <bpmndi:BPMNLabel><dc:Bounds x="4880" y="665" width="100" height="40" /></bpmndi:BPMNLabel>
+        <dc:Bounds x="5039" y="622" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="5007" y="665" width="100" height="40" /></bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="Flow_Catch_ExitMessage_Notify_Settlement_di" bpmnElement="Flow_Catch_ExitMessage_Notify_Settlement">
+      <bpmndi:BPMNEdge id="Flow_Catch_ExitMessage_Notify_Exit_di" bpmnElement="Flow_Catch_ExitMessage_Notify_Exit">
         <di:waypoint x="4608" y="600" />
         <di:waypoint x="4720" y="600" />
         <di:waypoint x="4720" y="640" />
         <di:waypoint x="4785" y="640" />
         <bpmndi:BPMNLabel><dc:Bounds x="4722" y="582" width="60" height="14" /></bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_Catch_SettlementDue_Notify_Settlement_di" bpmnElement="Flow_Catch_SettlementDue_Notify_Settlement">
+      <bpmndi:BPMNEdge id="Flow_Catch_SettlementDue_Notify_Exit_di" bpmnElement="Flow_Catch_SettlementDue_Notify_Exit">
         <di:waypoint x="4688" y="670" />
         <di:waypoint x="4720" y="670" />
         <di:waypoint x="4720" y="640" />
         <di:waypoint x="4785" y="640" />
         <bpmndi:BPMNLabel><dc:Bounds x="4690" y="676" width="40" height="14" /></bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_Notify_Settlement_End_Handover_di" bpmnElement="Flow_Notify_Settlement_End_Handover">
+      <bpmndi:BPMNEdge id="Flow_Notify_Exit_Notify_Settlement_di" bpmnElement="Flow_Notify_Exit_Notify_Settlement">
         <di:waypoint x="4821" y="640" />
         <di:waypoint x="4912" y="640" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Notify_Settlement_End_Handover_di" bpmnElement="Flow_Notify_Settlement_End_Handover">
+        <di:waypoint x="4948" y="640" />
+        <di:waypoint x="5039" y="640" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
