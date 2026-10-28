@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_HousingDepositSimple" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.26.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.21.0">
+  <bpmn:collaboration id="Collaboration_HousingDepositSimple">
+    <bpmn:participant id="Participant_HousingDepositSimple" name="ودیعه مسکن (نسخه ساده برای تست)" processRef="HousingDepositSimple" />
+  </bpmn:collaboration>
+  <bpmn:process id="HousingDepositSimple" name="ودیعه مسکن (نسخه ساده برای تست)" isExecutable="true">
+    <bpmn:laneSet id="LaneSet_HousingDepositSimple">
+      <bpmn:lane id="Lane_Employee" name="کارکنان مشمول">
+        <bpmn:flowNodeRef>StartEvent_1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Request</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_Province" name="مدیریت شعب استان / منطقه">
+        <bpmn:flowNodeRef>Task_ProvinceReview</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_HR" name="اداره کل سرمایه انسانی و رفاه">
+        <bpmn:flowNodeRef>Task_HRReview</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_End</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:userTask id="Task_Request" name="ارائه درخواست ودیعه مسکن" camunda:asyncBefore="true" camunda:formKey="65" camunda:assignee="${starter}">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="Input_Level1">
+            <camunda:script scriptFormat="javascript">level = 1;</camunda:script>
+          </camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1</bpmn:incoming>
+      <bpmn:outgoing>Flow_2</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Task_ProvinceReview" name="بررسی درخواست - مدیریت شعب استان / منطقه" camunda:asyncBefore="true" camunda:formKey="65" camunda:assignee="${starter}">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="Input_Level2">
+            <camunda:script scriptFormat="javascript">level = 2;</camunda:script>
+          </camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_2</bpmn:incoming>
+      <bpmn:outgoing>Flow_3</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Task_HRReview" name="بررسی درخواست - اداره کل سرمایه انسانی و رفاه" camunda:asyncBefore="true" camunda:formKey="65" camunda:assignee="${starter}">
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="Input_Level3">
+            <camunda:script scriptFormat="javascript">level = 3;</camunda:script>
+          </camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_3</bpmn:incoming>
+      <bpmn:outgoing>Flow_4</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:endEvent id="Event_End" name="پایان">
+      <bpmn:incoming>Flow_4</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1" sourceRef="StartEvent_1" targetRef="Task_Request" />
+    <bpmn:sequenceFlow id="Flow_2" sourceRef="Task_Request" targetRef="Task_ProvinceReview" />
+    <bpmn:sequenceFlow id="Flow_3" sourceRef="Task_ProvinceReview" targetRef="Task_HRReview" />
+    <bpmn:sequenceFlow id="Flow_4" sourceRef="Task_HRReview" targetRef="Event_End" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_HousingDepositSimple">
+      <bpmndi:BPMNShape id="Participant_di" bpmnElement="Participant_HousingDepositSimple" isHorizontal="true">
+        <dc:Bounds x="129" y="80" width="780" height="480" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Employee_di" bpmnElement="Lane_Employee" isHorizontal="true">
+        <dc:Bounds x="159" y="80" width="750" height="160" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Province_di" bpmnElement="Lane_Province" isHorizontal="true">
+        <dc:Bounds x="159" y="240" width="750" height="160" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_HR_di" bpmnElement="Lane_HR" isHorizontal="true">
+        <dc:Bounds x="159" y="400" width="750" height="160" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="StartEvent_1_di" bpmnElement="StartEvent_1">
+        <dc:Bounds x="212" y="132" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Request_di" bpmnElement="Task_Request">
+        <dc:Bounds x="300" y="110" width="120" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_ProvinceReview_di" bpmnElement="Task_ProvinceReview">
+        <dc:Bounds x="450" y="270" width="120" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_HRReview_di" bpmnElement="Task_HRReview">
+        <dc:Bounds x="600" y="430" width="120" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_End_di" bpmnElement="Event_End">
+        <dc:Bounds x="782" y="452" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="788" y="495" width="25" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1_di" bpmnElement="Flow_1">
+        <di:waypoint x="248" y="150" />
+        <di:waypoint x="300" y="150" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_2_di" bpmnElement="Flow_2">
+        <di:waypoint x="420" y="150" />
+        <di:waypoint x="435" y="150" />
+        <di:waypoint x="435" y="310" />
+        <di:waypoint x="450" y="310" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_3_di" bpmnElement="Flow_3">
+        <di:waypoint x="570" y="310" />
+        <di:waypoint x="585" y="310" />
+        <di:waypoint x="585" y="470" />
+        <di:waypoint x="600" y="470" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_4_di" bpmnElement="Flow_4">
+        <di:waypoint x="720" y="470" />
+        <di:waypoint x="782" y="470" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
