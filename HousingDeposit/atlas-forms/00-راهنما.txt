@@ -1,0 +1,19 @@
+فرم‌های فرایند ودیعه مسکن (Atlas) – هر فایل یک فرم جدا است (نوع Form، بدون ویزارد)
+
+فایل                     اسم پیشنهادی فرم                  تسک در BPMN
+01-CEOReview.json        HousingDepositCEOReview           Task_CEOReview
+02-ProvinceReview.json   HousingDepositProvinceReview      Task_ProvinceReview
+03-HRReview.json         HousingDepositHRReview            Task_HRReview
+04-LeaseInfo.json        HousingDepositLeaseInfo           Task_LeaseInfo
+06-Referral.json         HousingDepositReferral            Task_ReferralProvince و Task_ReferralBranch
+07-Inspection.json       HousingDepositInspection          Task_Inspection
+08-Legal.json            HousingDepositLegalGuarantee      Task_Legal
+09-File.json             HousingDepositFile                Task_File
+10-Payment.json          HousingDepositPayment             Task_Payment
+11-Database.json         HousingDepositDatabase            Task_Database
+
+نکته‌ها:
+- فرم شروع (فرم ۶۵) را خودتان ساخته‌اید و اینجا نیست.
+- Property Name هر فیلد نباید تغییر کند (بند ۴ صورتجلسه).
+- بعد از ذخیره هر فرم در Atlas، آن را «فعال» کنید و شماره‌اش را در Form key همان تسک بگذارید.
+- در فرم حقوقی (08) لیست ضامن‌ها نمونه است و داخل "json":[ ... ] قابل ویرایش است.
