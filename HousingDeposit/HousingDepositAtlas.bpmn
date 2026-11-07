@@ -1,0 +1,398 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_HousingDepositAtlas" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.26.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.21.0">
+  <bpmn:collaboration id="Collaboration_1">
+    <bpmn:participant id="Participant_1" name="ودیعه مسکن مدیران غیر بومی (فرآیند کامل)" processRef="HousingDepositComplete" />
+  </bpmn:collaboration>
+  <bpmn:process id="HousingDepositComplete" name="ودیعه مسکن مدیران غیر بومی (فرآیند کامل)" isExecutable="true">
+    <bpmn:laneSet id="LaneSet_1">
+      <bpmn:lane id="Lane_Employee" name="کارکنان مشمول">
+        <bpmn:flowNodeRef>Task_Request</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_LeaseInfo</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_Category</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_Route</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>StartEvent_1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>End_Rejected</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_CEO" name="مدیرعامل">
+        <bpmn:flowNodeRef>Task_CEOReview</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_CEO</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_Province" name="مدیریت شعب استان / منطقه">
+        <bpmn:flowNodeRef>Task_ProvinceReview</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Referral</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_Province</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_HR" name="اداره کل سرمایه انسانی و رفاه">
+        <bpmn:flowNodeRef>Task_HRReview</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Database</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_HR</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>End_RejectedHQ</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>End_Completed</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_Inspection" name="اداره کل بازرسی">
+        <bpmn:flowNodeRef>Task_Inspection</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_Legal" name="واحد حقوقی">
+        <bpmn:flowNodeRef>Task_Legal</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_Executor" name="ذی‌حساب / شعبه (واحد مجری پرداخت)">
+        <bpmn:flowNodeRef>Task_File</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Payment</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>F01</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:endEvent id="End_Rejected" name="پایان (عدم تأیید)">
+      <bpmn:incoming>F07</bpmn:incoming>
+      <bpmn:incoming>F10</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:endEvent id="End_RejectedHQ" name="پایان (عدم تأیید)">
+      <bpmn:incoming>F14</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:endEvent id="End_Completed" name="پایان (تکمیل پرونده)">
+      <bpmn:incoming>F23</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:userTask id="Task_Request" name="ارائه درخواست ودیعه مسکن" camunda:asyncBefore="true" camunda:formKey="65" camunda:assignee="${starter}">
+      <bpmn:incoming>F01</bpmn:incoming>
+      <bpmn:outgoing>F02</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Task_CEOReview" name="بررسی درخواست – مدیرعامل" camunda:asyncBefore="true" camunda:formKey="FORM_CEO" camunda:assignee="${starter}">
+      <bpmn:incoming>F03</bpmn:incoming>
+      <bpmn:outgoing>F05</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Task_ProvinceReview" name="بررسی درخواست – مدیریت شعب استان / منطقه" camunda:asyncBefore="true" camunda:formKey="FORM_PROVINCE" camunda:assignee="${starter}">
+      <bpmn:incoming>F04</bpmn:incoming>
+      <bpmn:incoming>F13</bpmn:incoming>
+      <bpmn:outgoing>F08</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Task_HRReview" name="بررسی درخواست – اداره کل سرمایه انسانی و رفاه" camunda:asyncBefore="true" camunda:formKey="185" camunda:assignee="${starter}">
+      <bpmn:incoming>F06</bpmn:incoming>
+      <bpmn:incoming>F09</bpmn:incoming>
+      <bpmn:outgoing>F11</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Task_LeaseInfo" name="تکمیل اطلاعات ملک و قرارداد اجاره" camunda:asyncBefore="true" camunda:formKey="FORM_LEASE" camunda:assignee="${starter}">
+      <bpmn:incoming>F12</bpmn:incoming>
+      <bpmn:outgoing>F15</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Task_Referral" name="ارجاع برای پرداخت – مدیریت شعب استان / منطقه" camunda:asyncBefore="true" camunda:formKey="FORM_REFERRAL" camunda:assignee="${starter}">
+      <bpmn:incoming>F17</bpmn:incoming>
+      <bpmn:outgoing>F19</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Task_Inspection" name="رونوشت به اداره کل بازرسی" camunda:asyncBefore="true" camunda:formKey="FORM_INSPECTION" camunda:assignee="${starter}">
+      <bpmn:incoming>F16</bpmn:incoming>
+      <bpmn:outgoing>F18</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Task_Legal" name="اخذ چک صیادی (۱۳۰٪)، اقرارنامه و ضمانت – واحد حقوقی" camunda:asyncBefore="true" camunda:formKey="FORM_LEGAL" camunda:assignee="${starter}">
+      <bpmn:incoming>F18</bpmn:incoming>
+      <bpmn:incoming>F19</bpmn:incoming>
+      <bpmn:outgoing>F20</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Task_File" name="تشکیل پرونده – ذی‌حساب / شعبه" camunda:asyncBefore="true" camunda:formKey="FORM_FILE" camunda:assignee="${starter}">
+      <bpmn:incoming>F20</bpmn:incoming>
+      <bpmn:outgoing>F21</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Task_Payment" name="واریز ودیعه و صدور سند حسابداری" camunda:asyncBefore="true" camunda:formKey="FORM_PAYMENT" camunda:assignee="${starter}">
+      <bpmn:incoming>F21</bpmn:incoming>
+      <bpmn:outgoing>F22</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Task_Database" name="دریافت مستندات و تکمیل بانک اطلاعات دریافت‌کنندگان" camunda:asyncBefore="true" camunda:formKey="FORM_DATABASE" camunda:assignee="${starter}">
+      <bpmn:incoming>F22</bpmn:incoming>
+      <bpmn:outgoing>F23</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="Gateway_Category" name="نوع درخواست؟">
+      <bpmn:incoming>F02</bpmn:incoming>
+      <bpmn:outgoing>F03</bpmn:outgoing>
+      <bpmn:outgoing>F04</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:exclusiveGateway id="Gateway_CEO" name="آیا مورد تأیید است؟">
+      <bpmn:incoming>F05</bpmn:incoming>
+      <bpmn:outgoing>F06</bpmn:outgoing>
+      <bpmn:outgoing>F07</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:exclusiveGateway id="Gateway_Province" name="آیا مورد تأیید است؟">
+      <bpmn:incoming>F08</bpmn:incoming>
+      <bpmn:outgoing>F09</bpmn:outgoing>
+      <bpmn:outgoing>F10</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:exclusiveGateway id="Gateway_HR" name="آیا مورد تأیید است؟">
+      <bpmn:incoming>F11</bpmn:incoming>
+      <bpmn:outgoing>F12</bpmn:outgoing>
+      <bpmn:outgoing>F13</bpmn:outgoing>
+      <bpmn:outgoing>F14</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:exclusiveGateway id="Gateway_Route" name="نوع درخواست؟">
+      <bpmn:incoming>F15</bpmn:incoming>
+      <bpmn:outgoing>F16</bpmn:outgoing>
+      <bpmn:outgoing>F17</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="F01" sourceRef="StartEvent_1" targetRef="Task_Request" />
+    <bpmn:sequenceFlow id="F02" sourceRef="Task_Request" targetRef="Gateway_Category" />
+    <bpmn:sequenceFlow id="F03" name="ستاد" sourceRef="Gateway_Category" targetRef="Task_CEOReview">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression" language="javascript">typeof RequestCategory !== "undefined" &amp;&amp; RequestCategory == "HQ";</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="F04" name="استان" sourceRef="Gateway_Category" targetRef="Task_ProvinceReview">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression" language="javascript">typeof RequestCategory !== "undefined" &amp;&amp; RequestCategory == "Province";</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="F05" sourceRef="Task_CEOReview" targetRef="Gateway_CEO" />
+    <bpmn:sequenceFlow id="F06" name="بله" sourceRef="Gateway_CEO" targetRef="Task_HRReview">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression" language="javascript">typeof CEOApproval !== "undefined" &amp;&amp; CEOApproval == "approved";</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="F07" name="خیر" sourceRef="Gateway_CEO" targetRef="End_Rejected">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression" language="javascript">typeof CEOApproval !== "undefined" &amp;&amp; CEOApproval == "rejected";</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="F08" sourceRef="Task_ProvinceReview" targetRef="Gateway_Province" />
+    <bpmn:sequenceFlow id="F09" name="بله" sourceRef="Gateway_Province" targetRef="Task_HRReview">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression" language="javascript">typeof ProvinceApproval !== "undefined" &amp;&amp; ProvinceApproval == "approved";</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="F10" name="خیر" sourceRef="Gateway_Province" targetRef="End_Rejected">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression" language="javascript">typeof ProvinceApproval !== "undefined" &amp;&amp; ProvinceApproval == "rejected";</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="F11" sourceRef="Task_HRReview" targetRef="Gateway_HR" />
+    <bpmn:sequenceFlow id="F12" name="بله" sourceRef="Gateway_HR" targetRef="Task_LeaseInfo">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression" language="javascript">typeof HRApproval !== "undefined" &amp;&amp; HRApproval == "approved";</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="F13" name="خیر (استان – بازگشت)" sourceRef="Gateway_HR" targetRef="Task_ProvinceReview">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression" language="javascript">typeof HRApproval !== "undefined" &amp;&amp; HRApproval == "rejected" &amp;&amp; RequestCategory == "Province";</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="F14" name="خیر (ستاد)" sourceRef="Gateway_HR" targetRef="End_RejectedHQ">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression" language="javascript">typeof HRApproval !== "undefined" &amp;&amp; HRApproval == "rejected" &amp;&amp; RequestCategory == "HQ";</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="F15" sourceRef="Task_LeaseInfo" targetRef="Gateway_Route" />
+    <bpmn:sequenceFlow id="F16" name="ستاد" sourceRef="Gateway_Route" targetRef="Task_Inspection">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression" language="javascript">typeof RequestCategory !== "undefined" &amp;&amp; RequestCategory == "HQ";</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="F17" name="استان" sourceRef="Gateway_Route" targetRef="Task_Referral">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression" language="javascript">typeof RequestCategory !== "undefined" &amp;&amp; RequestCategory == "Province";</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="F18" sourceRef="Task_Inspection" targetRef="Task_Legal" />
+    <bpmn:sequenceFlow id="F19" sourceRef="Task_Referral" targetRef="Task_Legal" />
+    <bpmn:sequenceFlow id="F20" sourceRef="Task_Legal" targetRef="Task_File" />
+    <bpmn:sequenceFlow id="F21" sourceRef="Task_File" targetRef="Task_Payment" />
+    <bpmn:sequenceFlow id="F22" sourceRef="Task_Payment" targetRef="Task_Database" />
+    <bpmn:sequenceFlow id="F23" sourceRef="Task_Database" targetRef="End_Completed" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1">
+      <bpmndi:BPMNShape id="Participant_di" bpmnElement="Participant_1" isHorizontal="true">
+        <dc:Bounds x="129" y="80" width="2330" height="1120" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Employee_di" bpmnElement="Lane_Employee" isHorizontal="true">
+        <dc:Bounds x="159" y="80" width="2300" height="160" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_CEO_di" bpmnElement="Lane_CEO" isHorizontal="true">
+        <dc:Bounds x="159" y="240" width="2300" height="160" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Province_di" bpmnElement="Lane_Province" isHorizontal="true">
+        <dc:Bounds x="159" y="400" width="2300" height="160" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_HR_di" bpmnElement="Lane_HR" isHorizontal="true">
+        <dc:Bounds x="159" y="560" width="2300" height="160" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Inspection_di" bpmnElement="Lane_Inspection" isHorizontal="true">
+        <dc:Bounds x="159" y="720" width="2300" height="160" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Legal_di" bpmnElement="Lane_Legal" isHorizontal="true">
+        <dc:Bounds x="159" y="880" width="2300" height="160" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Executor_di" bpmnElement="Lane_Executor" isHorizontal="true">
+        <dc:Bounds x="159" y="1040" width="2300" height="160" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="StartEvent_1_di" bpmnElement="StartEvent_1">
+        <dc:Bounds x="212" y="142" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_Rejected_di" bpmnElement="End_Rejected">
+        <dc:Bounds x="820" y="142" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="790" y="185" width="96" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_RejectedHQ_di" bpmnElement="End_RejectedHQ">
+        <dc:Bounds x="1180" y="622" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="1150" y="665" width="96" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_Completed_di" bpmnElement="End_Completed">
+        <dc:Bounds x="2380" y="622" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="2350" y="665" width="96" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Request_di" bpmnElement="Task_Request">
+        <dc:Bounds x="290" y="120" width="120" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_CEOReview_di" bpmnElement="Task_CEOReview">
+        <dc:Bounds x="560" y="280" width="120" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_ProvinceReview_di" bpmnElement="Task_ProvinceReview">
+        <dc:Bounds x="560" y="440" width="120" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_HRReview_di" bpmnElement="Task_HRReview">
+        <dc:Bounds x="900" y="600" width="120" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_LeaseInfo_di" bpmnElement="Task_LeaseInfo">
+        <dc:Bounds x="1180" y="120" width="120" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Referral_di" bpmnElement="Task_Referral">
+        <dc:Bounds x="1480" y="440" width="120" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Inspection_di" bpmnElement="Task_Inspection">
+        <dc:Bounds x="1480" y="760" width="120" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Legal_di" bpmnElement="Task_Legal">
+        <dc:Bounds x="1700" y="920" width="120" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_File_di" bpmnElement="Task_File">
+        <dc:Bounds x="1880" y="1080" width="120" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Payment_di" bpmnElement="Task_Payment">
+        <dc:Bounds x="2040" y="1080" width="120" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Database_di" bpmnElement="Task_Database">
+        <dc:Bounds x="2200" y="600" width="120" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_Category_di" bpmnElement="Gateway_Category" isMarkerVisible="true">
+        <dc:Bounds x="460" y="135" width="50" height="50" />
+        <bpmndi:BPMNLabel><dc:Bounds x="445" y="105" width="80" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_CEO_di" bpmnElement="Gateway_CEO" isMarkerVisible="true">
+        <dc:Bounds x="700" y="295" width="50" height="50" />
+        <bpmndi:BPMNLabel><dc:Bounds x="685" y="265" width="80" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_Province_di" bpmnElement="Gateway_Province" isMarkerVisible="true">
+        <dc:Bounds x="780" y="455" width="50" height="50" />
+        <bpmndi:BPMNLabel><dc:Bounds x="765" y="425" width="80" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_HR_di" bpmnElement="Gateway_HR" isMarkerVisible="true">
+        <dc:Bounds x="1060" y="615" width="50" height="50" />
+        <bpmndi:BPMNLabel><dc:Bounds x="1045" y="585" width="80" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_Route_di" bpmnElement="Gateway_Route" isMarkerVisible="true">
+        <dc:Bounds x="1360" y="135" width="50" height="50" />
+        <bpmndi:BPMNLabel><dc:Bounds x="1345" y="105" width="80" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="F01_di" bpmnElement="F01">
+        <di:waypoint x="248" y="160" />
+        <di:waypoint x="290" y="160" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F02_di" bpmnElement="F02">
+        <di:waypoint x="410" y="160" />
+        <di:waypoint x="460" y="160" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F03_di" bpmnElement="F03">
+        <di:waypoint x="485" y="185" />
+        <di:waypoint x="485" y="320" />
+        <di:waypoint x="560" y="320" />
+        <bpmndi:BPMNLabel><dc:Bounds x="489" y="306" width="60" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F04_di" bpmnElement="F04">
+        <di:waypoint x="510" y="160" />
+        <di:waypoint x="530" y="160" />
+        <di:waypoint x="530" y="480" />
+        <di:waypoint x="560" y="480" />
+        <bpmndi:BPMNLabel><dc:Bounds x="534" y="142" width="60" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F05_di" bpmnElement="F05">
+        <di:waypoint x="680" y="320" />
+        <di:waypoint x="700" y="320" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F06_di" bpmnElement="F06">
+        <di:waypoint x="750" y="320" />
+        <di:waypoint x="880" y="320" />
+        <di:waypoint x="880" y="620" />
+        <di:waypoint x="900" y="620" />
+        <bpmndi:BPMNLabel><dc:Bounds x="884" y="302" width="60" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F07_di" bpmnElement="F07">
+        <di:waypoint x="725" y="295" />
+        <di:waypoint x="725" y="160" />
+        <di:waypoint x="820" y="160" />
+        <bpmndi:BPMNLabel><dc:Bounds x="729" y="146" width="60" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F08_di" bpmnElement="F08">
+        <di:waypoint x="680" y="480" />
+        <di:waypoint x="780" y="480" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F09_di" bpmnElement="F09">
+        <di:waypoint x="830" y="480" />
+        <di:waypoint x="860" y="480" />
+        <di:waypoint x="860" y="660" />
+        <di:waypoint x="900" y="660" />
+        <bpmndi:BPMNLabel><dc:Bounds x="864" y="462" width="60" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F10_di" bpmnElement="F10">
+        <di:waypoint x="805" y="455" />
+        <di:waypoint x="805" y="200" />
+        <di:waypoint x="838" y="200" />
+        <di:waypoint x="838" y="178" />
+        <bpmndi:BPMNLabel><dc:Bounds x="809" y="186" width="60" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F11_di" bpmnElement="F11">
+        <di:waypoint x="1020" y="640" />
+        <di:waypoint x="1060" y="640" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F12_di" bpmnElement="F12">
+        <di:waypoint x="1085" y="615" />
+        <di:waypoint x="1085" y="160" />
+        <di:waypoint x="1180" y="160" />
+        <bpmndi:BPMNLabel><dc:Bounds x="1089" y="146" width="60" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F13_di" bpmnElement="F13">
+        <di:waypoint x="1085" y="665" />
+        <di:waypoint x="1085" y="700" />
+        <di:waypoint x="620" y="700" />
+        <di:waypoint x="620" y="520" />
+        <bpmndi:BPMNLabel><dc:Bounds x="1089" y="686" width="60" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F14_di" bpmnElement="F14">
+        <di:waypoint x="1110" y="640" />
+        <di:waypoint x="1180" y="640" />
+        <bpmndi:BPMNLabel><dc:Bounds x="1184" y="622" width="60" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F15_di" bpmnElement="F15">
+        <di:waypoint x="1300" y="160" />
+        <di:waypoint x="1360" y="160" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F16_di" bpmnElement="F16">
+        <di:waypoint x="1385" y="185" />
+        <di:waypoint x="1385" y="800" />
+        <di:waypoint x="1480" y="800" />
+        <bpmndi:BPMNLabel><dc:Bounds x="1389" y="786" width="60" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F17_di" bpmnElement="F17">
+        <di:waypoint x="1410" y="160" />
+        <di:waypoint x="1440" y="160" />
+        <di:waypoint x="1440" y="480" />
+        <di:waypoint x="1480" y="480" />
+        <bpmndi:BPMNLabel><dc:Bounds x="1444" y="142" width="60" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F18_di" bpmnElement="F18">
+        <di:waypoint x="1600" y="800" />
+        <di:waypoint x="1650" y="800" />
+        <di:waypoint x="1650" y="980" />
+        <di:waypoint x="1700" y="980" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F19_di" bpmnElement="F19">
+        <di:waypoint x="1600" y="480" />
+        <di:waypoint x="1670" y="480" />
+        <di:waypoint x="1670" y="940" />
+        <di:waypoint x="1700" y="940" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F20_di" bpmnElement="F20">
+        <di:waypoint x="1820" y="960" />
+        <di:waypoint x="1850" y="960" />
+        <di:waypoint x="1850" y="1120" />
+        <di:waypoint x="1880" y="1120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F21_di" bpmnElement="F21">
+        <di:waypoint x="2000" y="1120" />
+        <di:waypoint x="2040" y="1120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F22_di" bpmnElement="F22">
+        <di:waypoint x="2160" y="1120" />
+        <di:waypoint x="2180" y="1120" />
+        <di:waypoint x="2180" y="640" />
+        <di:waypoint x="2200" y="640" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F23_di" bpmnElement="F23">
+        <di:waypoint x="2320" y="640" />
+        <di:waypoint x="2380" y="640" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
