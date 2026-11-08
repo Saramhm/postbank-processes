@@ -1310,13 +1310,22 @@
       "tableView": false,
       "components": [
         {
+          "label": "LeaseLookup",
+          "key": "LeaseLookup",
+          "type": "hidden",
+          "input": true,
+          "tableView": false,
+          "calculateValue": "var LEASES = {\"1405000000000001\": {\"LeaseDepositAmount\": 18000000000, \"LeaseStartDate\": \"1405/07/01\", \"LeaseEndDate\": \"1406/07/01\", \"ResidencePostalCode\": \"5166612345\", \"ResidenceAddress\": \"تبریز، خیابان ولیعصر، کوچه گلستان، پلاک ۱۲\", \"LandlordName\": \"احمد رضایی\", \"LandlordNationalCode\": \"0013000012\", \"LandlordIban\": \"IR380170000000100000000001\"}, \"1405000000000002\": {\"LeaseDepositAmount\": 16000000000, \"LeaseStartDate\": \"1405/08/15\", \"LeaseEndDate\": \"1406/08/15\", \"ResidencePostalCode\": \"5157713456\", \"ResidenceAddress\": \"تبریز، ولی‌عصر، خیابان شریعتی، پلاک ۴۰\", \"LandlordName\": \"سیما کاظمی\", \"LandlordNationalCode\": \"0013000020\", \"LandlordIban\": \"IR110170000000100000000002\"}, \"1405000000000003\": {\"LeaseDepositAmount\": 12000000000, \"LeaseStartDate\": \"1405/06/20\", \"LeaseEndDate\": \"1406/06/20\", \"ResidencePostalCode\": \"3185614567\", \"ResidenceAddress\": \"کرج، گوهردشت، خیابان ۱۲۰، پلاک ۷\", \"LandlordName\": \"محسن اکبری\", \"LandlordNationalCode\": \"0013000039\", \"LandlordIban\": \"IR810170000000100000000003\"}};\nvar POSTAL = {\"5166612345\": \"تبریز، خیابان ولیعصر، کوچه گلستان، پلاک ۱۲\", \"5157713456\": \"تبریز، ولی‌عصر، خیابان شریعتی، پلاک ۴۰\", \"3185614567\": \"کرج، گوهردشت، خیابان ۱۲۰، پلاک ۷\"};\nvar LANDLORD = {\"0013000012\": \"احمد رضایی\", \"0013000020\": \"سیما کاظمی\", \"0013000039\": \"محسن اکبری\"};\nfunction nz(v){return String(v||'').replace(/[\\u06F0-\\u06F9]/g,function(c){return String(c.charCodeAt(0)-0x06F0);}).replace(/\\D/g,'');}\nvar tc = nz(data.LeaseTrackingCode), pc = nz(data.ResidencePostalCode), lc = nz(data.LandlordNationalCode);\nvalue = tc + '|' + pc + '|' + lc;\nfunction put(k, v) { var c = instance.root.getComponent(k); if (c && v !== undefined) { c.setValue(v); } }\nif (tc.length === 16 && instance._tc !== tc) {\n  instance._tc = tc;\n  var rec = LEASES[tc];\n  if (rec) { setTimeout(function () { Object.keys(rec).forEach(function (k) { put(k, rec[k]); }); }, 300); }\n}\nif (pc.length === 10 && instance._pc !== pc) {\n  instance._pc = pc;\n  if (POSTAL[pc] && !data.ResidenceAddress) { setTimeout(function () { put('ResidenceAddress', POSTAL[pc]); }, 300); }\n}\nif (lc.length === 10 && instance._lc !== lc) {\n  instance._lc = lc;\n  if (LANDLORD[lc] && !data.LandlordName) { setTimeout(function () { put('LandlordName', LANDLORD[lc]); }, 300); }\n}",
+          "clearOnHide": false
+        },
+        {
           "type": "htmlelement",
           "label": "leaseNote",
           "key": "leaseNote",
           "tag": "div",
           "input": false,
           "tableView": false,
-          "content": "<div class=\"alert alert-info\" style=\"margin-bottom:0\">ودیعه واریز شد. ذی‌حساب اطلاعات قرارداد اجاره‌ی جدید را تکمیل و مستندات را پیوست می‌کند. (در آینده این اطلاعات از سامانه‌ی املاک خوانده می‌شود؛ فعلاً دستی پر می‌شود.)</div>"
+          "content": "<div class=\"alert alert-info\" style=\"margin-bottom:0\">ودیعه واریز شد. ذی‌حساب اطلاعات قرارداد اجاره‌ی جدید را تکمیل و مستندات را پیوست می‌کند. با وارد کردن «کد رهگیری قرارداد» (۱۶ رقم) اطلاعات قرارداد و موجر، با «کد پستی» نشانی و با «کد ملی موجر» نام موجر خودکار پر می‌شود (فعلاً از داده‌ی نمونه؛ بعداً از سامانه‌ی املاک). همه‌ی فیلدها قابل ویرایش‌اند.</div>"
         },
         {
           "label": "Columns",
@@ -3440,6 +3449,15 @@
       "input": false,
       "tableView": false,
       "components": [
+        {
+          "label": "SalaryLookup",
+          "key": "SalaryLookup",
+          "type": "hidden",
+          "input": true,
+          "tableView": false,
+          "calculateValue": "var SAL = {\"0150303191\": \"0212345678001\", \"0010000021\": \"0212345678002\", \"0010000038\": \"0212345678003\", \"0010000046\": \"0212345678004\", \"0010000054\": \"0212345678005\"};\nfunction nz(v){return String(v||'').replace(/[\\u06F0-\\u06F9]/g,function(c){return String(c.charCodeAt(0)-0x06F0);}).replace(/\\D/g,'');}\nvar n = nz(data.ApplicantNationalCode);\nvalue = n;\nif (n.length === 10 && instance._sn !== n) {\n  instance._sn = n;\n  if (SAL[n] && !data.EmployeeSalaryAccount) { setTimeout(function () { var c = instance.root.getComponent('EmployeeSalaryAccount'); if (c) { c.setValue(SAL[n]); } }, 300); }\n}",
+          "clearOnHide": false
+        },
         {
           "title": "مستندات",
           "theme": "default",
