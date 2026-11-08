@@ -77,9 +77,9 @@
       <bpmn:incoming>F09</bpmn:incoming>
       <bpmn:outgoing>F11</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:userTask id="Task_LeaseInfo" name="تکمیل اطلاعات ملک و قرارداد اجاره" camunda:asyncBefore="true" camunda:formKey="FORM_LEASE" camunda:assignee="${starter}">
-      <bpmn:incoming>F15</bpmn:incoming>
-      <bpmn:outgoing>F18</bpmn:outgoing>
+    <bpmn:userTask id="Task_LeaseInfo" name="تکمیل اطلاعات ملک و قرارداد اجاره (ذی‌نفع، پس از واریز)" camunda:asyncBefore="true" camunda:formKey="FORM_LEASE" camunda:assignee="${starter}">
+      <bpmn:incoming>F25</bpmn:incoming>
+      <bpmn:outgoing>F27</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:userTask id="Task_Inspection" name="رونوشت به اداره کل بازرسی" camunda:asyncBefore="true" camunda:formKey="FORM_INSPECTION" camunda:assignee="${starter}">
       <bpmn:incoming>F16</bpmn:incoming>
@@ -107,7 +107,7 @@
       <bpmn:outgoing>F25</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:userTask id="Task_Database" name="دریافت مستندات و تکمیل بانک اطلاعات دریافت‌کنندگان" camunda:asyncBefore="true" camunda:formKey="FORM_DATABASE" camunda:assignee="${starter}">
-      <bpmn:incoming>F25</bpmn:incoming>
+      <bpmn:incoming>F27</bpmn:incoming>
       <bpmn:outgoing>F26</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:exclusiveGateway id="Gateway_Category" name="نوع درخواست؟">
@@ -137,7 +137,7 @@
       <bpmn:outgoing>F16</bpmn:outgoing>
     </bpmn:parallelGateway>
     <bpmn:exclusiveGateway id="Gateway_Route" name="نوع درخواست؟">
-      <bpmn:incoming>F18</bpmn:incoming>
+      <bpmn:incoming>F15</bpmn:incoming>
       <bpmn:outgoing>F19</bpmn:outgoing>
       <bpmn:outgoing>F20</bpmn:outgoing>
     </bpmn:exclusiveGateway>
@@ -173,10 +173,9 @@
     <bpmn:sequenceFlow id="F14" name="خیر (ستاد)" sourceRef="Gateway_HR" targetRef="End_RejectedHQ">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression" language="javascript">typeof HRApproval !== "undefined" &amp;&amp; HRApproval == "rejected" &amp;&amp; RequestCategory == "HQ";</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="F15" sourceRef="Gateway_Fork" targetRef="Task_LeaseInfo" />
+    <bpmn:sequenceFlow id="F15" sourceRef="Gateway_Fork" targetRef="Gateway_Route" />
     <bpmn:sequenceFlow id="F16" sourceRef="Gateway_Fork" targetRef="Task_Inspection" />
     <bpmn:sequenceFlow id="F17" sourceRef="Task_Inspection" targetRef="End_Inspection" />
-    <bpmn:sequenceFlow id="F18" sourceRef="Task_LeaseInfo" targetRef="Gateway_Route" />
     <bpmn:sequenceFlow id="F19" name="ستاد" sourceRef="Gateway_Route" targetRef="Task_ReferralBranch">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression" language="javascript">typeof RequestCategory !== "undefined" &amp;&amp; RequestCategory == "HQ";</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
@@ -187,34 +186,35 @@
     <bpmn:sequenceFlow id="F22" sourceRef="Task_ReferralBranch" targetRef="Task_Legal" />
     <bpmn:sequenceFlow id="F23" sourceRef="Task_Legal" targetRef="Task_File" />
     <bpmn:sequenceFlow id="F24" sourceRef="Task_File" targetRef="Task_Payment" />
-    <bpmn:sequenceFlow id="F25" sourceRef="Task_Payment" targetRef="Task_Database" />
+    <bpmn:sequenceFlow id="F25" sourceRef="Task_Payment" targetRef="Task_LeaseInfo" />
+    <bpmn:sequenceFlow id="F27" sourceRef="Task_LeaseInfo" targetRef="Task_Database" />
     <bpmn:sequenceFlow id="F26" sourceRef="Task_Database" targetRef="End_Completed" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1">
       <bpmndi:BPMNShape id="Participant_di" bpmnElement="Participant_1" isHorizontal="true">
-        <dc:Bounds x="129" y="80" width="2350" height="1120" />
+        <dc:Bounds x="129" y="80" width="2600" height="1120" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_Employee_di" bpmnElement="Lane_Employee" isHorizontal="true">
-        <dc:Bounds x="159" y="80" width="2320" height="160" />
+        <dc:Bounds x="159" y="80" width="2570" height="160" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_CEO_di" bpmnElement="Lane_CEO" isHorizontal="true">
-        <dc:Bounds x="159" y="240" width="2320" height="160" />
+        <dc:Bounds x="159" y="240" width="2570" height="160" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_Province_di" bpmnElement="Lane_Province" isHorizontal="true">
-        <dc:Bounds x="159" y="400" width="2320" height="160" />
+        <dc:Bounds x="159" y="400" width="2570" height="160" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_HR_di" bpmnElement="Lane_HR" isHorizontal="true">
-        <dc:Bounds x="159" y="560" width="2320" height="160" />
+        <dc:Bounds x="159" y="560" width="2570" height="160" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_Inspection_di" bpmnElement="Lane_Inspection" isHorizontal="true">
-        <dc:Bounds x="159" y="720" width="2320" height="160" />
+        <dc:Bounds x="159" y="720" width="2570" height="160" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_Legal_di" bpmnElement="Lane_Legal" isHorizontal="true">
-        <dc:Bounds x="159" y="880" width="2320" height="160" />
+        <dc:Bounds x="159" y="880" width="2570" height="160" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_Executor_di" bpmnElement="Lane_Executor" isHorizontal="true">
-        <dc:Bounds x="159" y="1040" width="2320" height="160" />
+        <dc:Bounds x="159" y="1040" width="2570" height="160" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="StartEvent_1_di" bpmnElement="StartEvent_1">
         <dc:Bounds x="212" y="142" width="36" height="36" />
@@ -232,8 +232,8 @@
         <bpmndi:BPMNLabel><dc:Bounds x="1450" y="825" width="96" height="27" /></bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="End_Completed_di" bpmnElement="End_Completed">
-        <dc:Bounds x="2400" y="622" width="36" height="36" />
-        <bpmndi:BPMNLabel><dc:Bounds x="2370" y="665" width="96" height="27" /></bpmndi:BPMNLabel>
+        <dc:Bounds x="2660" y="622" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="2630" y="665" width="96" height="27" /></bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Task_Request_di" bpmnElement="Task_Request">
         <dc:Bounds x="290" y="120" width="120" height="80" />
@@ -248,7 +248,7 @@
         <dc:Bounds x="900" y="600" width="120" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Task_LeaseInfo_di" bpmnElement="Task_LeaseInfo">
-        <dc:Bounds x="1240" y="120" width="120" height="80" />
+        <dc:Bounds x="2300" y="120" width="120" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Task_Inspection_di" bpmnElement="Task_Inspection">
         <dc:Bounds x="1240" y="760" width="120" height="80" />
@@ -269,7 +269,7 @@
         <dc:Bounds x="2060" y="1080" width="120" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Task_Database_di" bpmnElement="Task_Database">
-        <dc:Bounds x="2220" y="600" width="120" height="80" />
+        <dc:Bounds x="2480" y="600" width="120" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Gateway_Category_di" bpmnElement="Gateway_Category" isMarkerVisible="true">
         <dc:Bounds x="460" y="135" width="50" height="50" />
@@ -375,7 +375,7 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="F15_di" bpmnElement="F15">
         <di:waypoint x="1180" y="160" />
-        <di:waypoint x="1240" y="160" />
+        <di:waypoint x="1420" y="160" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="F16_di" bpmnElement="F16">
         <di:waypoint x="1155" y="185" />
@@ -385,10 +385,6 @@
       <bpmndi:BPMNEdge id="F17_di" bpmnElement="F17">
         <di:waypoint x="1360" y="800" />
         <di:waypoint x="1480" y="800" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="F18_di" bpmnElement="F18">
-        <di:waypoint x="1360" y="160" />
-        <di:waypoint x="1420" y="160" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="F19_di" bpmnElement="F19">
         <di:waypoint x="1445" y="185" />
@@ -427,13 +423,19 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="F25_di" bpmnElement="F25">
         <di:waypoint x="2180" y="1120" />
-        <di:waypoint x="2200" y="1120" />
-        <di:waypoint x="2200" y="640" />
-        <di:waypoint x="2220" y="640" />
+        <di:waypoint x="2260" y="1120" />
+        <di:waypoint x="2260" y="160" />
+        <di:waypoint x="2300" y="160" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F27_di" bpmnElement="F27">
+        <di:waypoint x="2420" y="160" />
+        <di:waypoint x="2450" y="160" />
+        <di:waypoint x="2450" y="640" />
+        <di:waypoint x="2480" y="640" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="F26_di" bpmnElement="F26">
-        <di:waypoint x="2340" y="640" />
-        <di:waypoint x="2400" y="640" />
+        <di:waypoint x="2600" y="640" />
+        <di:waypoint x="2660" y="640" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

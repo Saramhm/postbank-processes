@@ -857,6 +857,15 @@
       "tableView": false,
       "components": [
         {
+          "label": "ApprovedDepositAmount",
+          "key": "ApprovedDepositAmount",
+          "type": "hidden",
+          "input": true,
+          "tableView": false,
+          "calculateValue": "value = data.DepositCap;",
+          "clearOnHide": false
+        },
+        {
           "title": "خلاصه درخواست",
           "theme": "default",
           "collapsible": false,
@@ -1291,10 +1300,10 @@
       "customConditional": "show = (data.StateTask == 3 || data.StateTask === '3' || data.StateTask == '3' || Number(data.StateTask) === 3);"
     },
     {
-      "title": "تکمیل اطلاعات ملک و قرارداد اجاره",
+      "title": "اطلاعات ملک و قرارداد اجاره (ذی‌نفع، پس از واریز)",
       "theme": "info",
       "collapsible": false,
-      "key": "stepLeaseGuarantor",
+      "key": "stepLeaseInfo",
       "type": "panel",
       "label": "Panel",
       "input": false,
@@ -1307,11 +1316,11 @@
           "tag": "div",
           "input": false,
           "tableView": false,
-          "content": "<div class=\"alert alert-info\" style=\"margin-bottom:0\">درخواست شما تأیید شده است. اطلاعات ملک و قرارداد اجاره جدید را تکمیل کنید.</div>"
+          "content": "<div class=\"alert alert-info\" style=\"margin-bottom:0\">ودیعه واریز شد. اطلاعات قرارداد اجاره‌ی جدید را تکمیل و مستندات را پیوست کنید. (در آینده این اطلاعات از سامانه‌ی املاک خوانده می‌شود؛ فعلاً دستی پر می‌شود.)</div>"
         },
         {
           "label": "Columns",
-          "key": "lease0",
+          "key": "payInfo",
           "type": "columns",
           "input": false,
           "tableView": false,
@@ -1319,7 +1328,7 @@
             {
               "components": [
                 {
-                  "label": "مبلغ ودیعه مصوب (ریال) = کمترِ سقف مجاز و مبلغ قرارداد",
+                  "label": "مبلغ ودیعه مصوب (ریال)",
                   "applyMaskOn": "change",
                   "mask": false,
                   "tableView": true,
@@ -1329,44 +1338,66 @@
                   "type": "currency",
                   "delimiter": true,
                   "input": true,
-                  "validate": {},
                   "disabled": true,
-                  "clearOnHide": false,
-                  "calculateValue": "var cap = parseFloat(data.DepositCap) || 0; var lease = parseFloat(data.LeaseDepositAmount) || 0; value = (cap && lease) ? Math.min(cap, lease) : (cap || lease);"
+                  "validate": {},
+                  "clearOnHide": false
                 }
               ],
-              "width": 6,
+              "width": 4,
               "offset": 0,
               "push": 0,
               "pull": 0,
               "size": "md",
-              "currentWidth": 6
+              "currentWidth": 4
             },
             {
               "components": [
                 {
-                  "label": "سقف مجاز ودیعه (ریال)",
+                  "label": "مبلغ واریزشده (ریال)",
                   "applyMaskOn": "change",
                   "mask": false,
                   "tableView": true,
                   "currency": "IRR",
                   "inputFormat": "plain",
-                  "key": "DepositCap",
+                  "key": "PaidAmount",
                   "type": "currency",
                   "delimiter": true,
                   "input": true,
-                  "calculateValue": "var t = {g1:[30000,30000], g2:[23000,23000], g3:[25500,23000], g4:[23000,23000], g5:[21000,21000], g6:[16000,16000], g7:[16000,16000], g8:[30000,30000], g9:[27000,27000], g10:[21000,21000], g11:[25000,25000], g12:[22500,22500], g13:[17500,17500], bP:[16000,14000], b1:[14000,12000], b2:[12000,10000], b3:[10000,8000], b4:[8000,6000]}; var g = data.EligibilityGroup || ''; var dep = g.indexOf('_dep') > 0; var key = g.replace('_head', '').replace('_dep', ''); var row = t[key]; if (!row) { value = 0; } else { var m = row[data.CityType === 'metropolis' ? 0 : 1]; if (dep) { m = m * 0.7; } value = Math.round(m) * 1000000; }",
                   "disabled": true,
-                  "description": "بر اساس جدول مبالغ پیشنهادی ۱۴۰۵ دستورالعمل؛ هر سال به‌روزرسانی شود.",
+                  "validate": {},
                   "clearOnHide": false
                 }
               ],
-              "width": 6,
+              "width": 4,
               "offset": 0,
               "push": 0,
               "pull": 0,
               "size": "md",
-              "currentWidth": 6
+              "currentWidth": 4
+            },
+            {
+              "components": [
+                {
+                  "label": "تاریخ واریز",
+                  "tableView": false,
+                  "key": "PaymentDate",
+                  "type": "jalaliDate",
+                  "input": true,
+                  "widget": {
+                    "type": "input"
+                  },
+                  "format": "YYYY/MM/DD",
+                  "inputType": "text",
+                  "disabled": false,
+                  "clearOnHide": false
+                }
+              ],
+              "width": 4,
+              "offset": 0,
+              "push": 0,
+              "pull": 0,
+              "size": "md",
+              "currentWidth": 4
             }
           ]
         },
@@ -1421,7 +1452,10 @@
                   "format": "YYYY/MM/DD",
                   "inputType": "text",
                   "disabled": false,
-                  "clearOnHide": false
+                  "clearOnHide": false,
+                  "validate": {
+                    "required": true
+                  }
                 }
               ],
               "width": 4,
@@ -1640,6 +1674,22 @@
           }
         },
         {
+          "label": "فیش واریز به حساب موجر",
+          "tableView": false,
+          "storage": "base64",
+          "image": true,
+          "webcam": true,
+          "capture": "user",
+          "fileTypes": [],
+          "validateWhenHidden": false,
+          "key": "LandlordReceiptFile",
+          "type": "file",
+          "input": true,
+          "disabled": false,
+          "multiple": true,
+          "clearOnHide": false
+        },
+        {
           "label": "موجر از بستگان درجه یک (پدر، مادر، خواهر، برادر، همسر، فرزند) نیست.",
           "tableView": false,
           "defaultValue": false,
@@ -1652,21 +1702,6 @@
           "errors": {
             "required": "تأیید «{{ field }}» الزامی است."
           },
-          "clearOnHide": false
-        },
-        {
-          "label": "مبلغ قابل پرداخت (کمترِ مبلغ مصوب و مبلغ قرارداد)",
-          "applyMaskOn": "change",
-          "mask": false,
-          "tableView": true,
-          "currency": "IRR",
-          "inputFormat": "plain",
-          "key": "DepositPayable",
-          "type": "currency",
-          "delimiter": true,
-          "input": true,
-          "calculateValue": "var a = parseFloat(data.ApprovedDepositAmount) || parseFloat(data.DepositCap) || 0; var lease = parseFloat(data.LeaseDepositAmount) || 0; value = (a && lease) ? Math.min(a, lease) : (a || lease);",
-          "disabled": true,
           "clearOnHide": false
         },
         {
@@ -2024,64 +2059,48 @@
                       "clearOnHide": false
                     }
                   ],
-                  "width": 4,
+                  "width": 12,
                   "offset": 0,
                   "push": 0,
                   "pull": 0,
                   "size": "md",
-                  "currentWidth": 4
-                },
-                {
-                  "components": [
-                    {
-                      "label": "مبلغ رهن / ودیعه قرارداد اجاره (ریال)",
-                      "applyMaskOn": "change",
-                      "mask": false,
-                      "tableView": true,
-                      "currency": "IRR",
-                      "inputFormat": "plain",
-                      "key": "LeaseDepositAmount",
-                      "type": "currency",
-                      "delimiter": true,
-                      "input": true,
-                      "validate": {},
-                      "disabled": true,
-                      "clearOnHide": false
-                    }
-                  ],
-                  "width": 4,
-                  "offset": 0,
-                  "push": 0,
-                  "pull": 0,
-                  "size": "md",
-                  "currentWidth": 4
-                },
-                {
-                  "components": [
-                    {
-                      "label": "مبلغ قابل پرداخت (کمترِ سقف و مبلغ قرارداد – تبصره ۹)",
-                      "applyMaskOn": "change",
-                      "mask": false,
-                      "tableView": true,
-                      "currency": "IRR",
-                      "inputFormat": "plain",
-                      "key": "DepositPayable",
-                      "type": "currency",
-                      "delimiter": true,
-                      "input": true,
-                      "calculateValue": "var cap = parseFloat(data.DepositCap) || 0; var lease = parseFloat(data.LeaseDepositAmount) || 0; value = (cap && lease) ? Math.min(cap, lease) : (cap || lease);",
-                      "disabled": true,
-                      "clearOnHide": false
-                    }
-                  ],
-                  "width": 4,
-                  "offset": 0,
-                  "push": 0,
-                  "pull": 0,
-                  "size": "md",
-                  "currentWidth": 4
+                  "currentWidth": 12
                 }
               ]
+            }
+          ]
+        },
+        {
+          "label": "Columns",
+          "key": "refAmt",
+          "type": "columns",
+          "input": false,
+          "tableView": false,
+          "columns": [
+            {
+              "components": [
+                {
+                  "label": "مبلغ ودیعه مصوب (ریال) = سقف مجاز",
+                  "applyMaskOn": "change",
+                  "mask": false,
+                  "tableView": true,
+                  "currency": "IRR",
+                  "inputFormat": "plain",
+                  "key": "ApprovedDepositAmount",
+                  "type": "currency",
+                  "delimiter": true,
+                  "input": true,
+                  "disabled": true,
+                  "validate": {},
+                  "clearOnHide": false
+                }
+              ],
+              "width": 12,
+              "offset": 0,
+              "push": 0,
+              "pull": 0,
+              "size": "md",
+              "currentWidth": 12
             }
           ]
         },
@@ -2449,62 +2468,12 @@
                       "clearOnHide": false
                     }
                   ],
-                  "width": 4,
+                  "width": 12,
                   "offset": 0,
                   "push": 0,
                   "pull": 0,
                   "size": "md",
-                  "currentWidth": 4
-                },
-                {
-                  "components": [
-                    {
-                      "label": "مبلغ رهن / ودیعه قرارداد اجاره (ریال)",
-                      "applyMaskOn": "change",
-                      "mask": false,
-                      "tableView": true,
-                      "currency": "IRR",
-                      "inputFormat": "plain",
-                      "key": "LeaseDepositAmount",
-                      "type": "currency",
-                      "delimiter": true,
-                      "input": true,
-                      "validate": {},
-                      "disabled": true,
-                      "clearOnHide": false
-                    }
-                  ],
-                  "width": 4,
-                  "offset": 0,
-                  "push": 0,
-                  "pull": 0,
-                  "size": "md",
-                  "currentWidth": 4
-                },
-                {
-                  "components": [
-                    {
-                      "label": "مبلغ قابل پرداخت (کمترِ سقف و مبلغ قرارداد – تبصره ۹)",
-                      "applyMaskOn": "change",
-                      "mask": false,
-                      "tableView": true,
-                      "currency": "IRR",
-                      "inputFormat": "plain",
-                      "key": "DepositPayable",
-                      "type": "currency",
-                      "delimiter": true,
-                      "input": true,
-                      "calculateValue": "var cap = parseFloat(data.DepositCap) || 0; var lease = parseFloat(data.LeaseDepositAmount) || 0; value = (cap && lease) ? Math.min(cap, lease) : (cap || lease);",
-                      "disabled": true,
-                      "clearOnHide": false
-                    }
-                  ],
-                  "width": 4,
-                  "offset": 0,
-                  "push": 0,
-                  "pull": 0,
-                  "size": "md",
-                  "currentWidth": 4
+                  "currentWidth": 12
                 }
               ]
             }
@@ -2654,7 +2623,7 @@
                   "delimiter": true,
                   "input": true,
                   "clearOnHide": false,
-                  "calculateValue": "value = Math.round((parseFloat(data.ApprovedDepositAmount) || 0) * 1.3);",
+                  "calculateValue": "var a = parseFloat(data.ApprovedDepositAmount) || parseFloat(data.DepositCap) || 0; value = Math.round(a * 1.3);",
                   "disabled": true
                 }
               ],
@@ -3340,62 +3309,12 @@
                       "clearOnHide": false
                     }
                   ],
-                  "width": 4,
+                  "width": 12,
                   "offset": 0,
                   "push": 0,
                   "pull": 0,
                   "size": "md",
-                  "currentWidth": 4
-                },
-                {
-                  "components": [
-                    {
-                      "label": "مبلغ رهن / ودیعه قرارداد اجاره (ریال)",
-                      "applyMaskOn": "change",
-                      "mask": false,
-                      "tableView": true,
-                      "currency": "IRR",
-                      "inputFormat": "plain",
-                      "key": "LeaseDepositAmount",
-                      "type": "currency",
-                      "delimiter": true,
-                      "input": true,
-                      "validate": {},
-                      "disabled": true,
-                      "clearOnHide": false
-                    }
-                  ],
-                  "width": 4,
-                  "offset": 0,
-                  "push": 0,
-                  "pull": 0,
-                  "size": "md",
-                  "currentWidth": 4
-                },
-                {
-                  "components": [
-                    {
-                      "label": "مبلغ قابل پرداخت (کمترِ سقف و مبلغ قرارداد – تبصره ۹)",
-                      "applyMaskOn": "change",
-                      "mask": false,
-                      "tableView": true,
-                      "currency": "IRR",
-                      "inputFormat": "plain",
-                      "key": "DepositPayable",
-                      "type": "currency",
-                      "delimiter": true,
-                      "input": true,
-                      "calculateValue": "var cap = parseFloat(data.DepositCap) || 0; var lease = parseFloat(data.LeaseDepositAmount) || 0; value = (cap && lease) ? Math.min(cap, lease) : (cap || lease);",
-                      "disabled": true,
-                      "clearOnHide": false
-                    }
-                  ],
-                  "width": 4,
-                  "offset": 0,
-                  "push": 0,
-                  "pull": 0,
-                  "size": "md",
-                  "currentWidth": 4
+                  "currentWidth": 12
                 }
               ]
             }
@@ -3474,16 +3393,6 @@
               "shortcut": ""
             },
             {
-              "label": "اصل اجاره‌نامه با کد رهگیری",
-              "value": "leaseOriginal",
-              "shortcut": ""
-            },
-            {
-              "label": "فیش واریز به حساب موجر",
-              "value": "landlordReceipt",
-              "shortcut": ""
-            },
-            {
               "label": "درخواست تأییدشده",
               "value": "approvedRequest",
               "shortcut": ""
@@ -3532,7 +3441,7 @@
       "tableView": false,
       "components": [
         {
-          "title": "مستندات و کنترل‌های اسکان",
+          "title": "مستندات",
           "theme": "default",
           "collapsible": false,
           "key": "ackPanel",
@@ -3541,62 +3450,6 @@
           "input": false,
           "tableView": false,
           "components": [
-            {
-              "label": "فیش واریز به حساب موجر",
-              "tableView": false,
-              "storage": "base64",
-              "image": true,
-              "webcam": true,
-              "capture": "user",
-              "fileTypes": [],
-              "validateWhenHidden": false,
-              "key": "LandlordReceiptFile",
-              "type": "file",
-              "input": true,
-              "disabled": false,
-              "multiple": true,
-              "clearOnHide": false
-            },
-            {
-              "label": "کنترل‌های اسکان (ماده ۳۱)",
-              "optionsLabelPosition": "right",
-              "tableView": false,
-              "values": [
-                {
-                  "label": "کد پستی محل اجاره (قرارداد جدید) ثبت شد",
-                  "value": "postalCode",
-                  "shortcut": ""
-                },
-                {
-                  "label": "نشانی از سرویس احراز نشانی شرکت ملی پست تأیید شد",
-                  "value": "addressVerified",
-                  "shortcut": ""
-                },
-                {
-                  "label": "مشخصات متقاضی در سامانه املاک و اسکان ثبت شد",
-                  "value": "estateSystem",
-                  "shortcut": ""
-                },
-                {
-                  "label": "عدم خویشاوندی موجر و مستأجر کنترل شد",
-                  "value": "notRelative",
-                  "shortcut": ""
-                }
-              ],
-              "key": "ResidenceControls",
-              "type": "selectboxes",
-              "input": true,
-              "inputType": "checkbox",
-              "validate": {
-                "required": true,
-                "minSelectedCount": 4
-              },
-              "minSelectedCountMessage": "همهٔ موارد باید تأیید شوند.",
-              "clearOnHide": false,
-              "errors": {
-                "required": "{{ field }} بایستی انتخاب شود."
-              }
-            },
             {
               "label": "مستندات کامل و مطابق دستورالعمل است.",
               "tableView": false,
@@ -3649,155 +3502,28 @@
                       "clearOnHide": false
                     }
                   ],
-                  "width": 6,
+                  "width": 12,
                   "offset": 0,
                   "push": 0,
                   "pull": 0,
                   "size": "md",
-                  "currentWidth": 6
-                },
-                {
-                  "components": [
-                    {
-                      "label": "مبلغ رهن / ودیعه قرارداد اجاره (ریال)",
-                      "applyMaskOn": "change",
-                      "mask": false,
-                      "tableView": true,
-                      "currency": "IRR",
-                      "inputFormat": "plain",
-                      "key": "LeaseDepositAmount",
-                      "type": "currency",
-                      "delimiter": true,
-                      "input": true,
-                      "validate": {},
-                      "disabled": true,
-                      "clearOnHide": false
-                    }
-                  ],
-                  "width": 6,
-                  "offset": 0,
-                  "push": 0,
-                  "pull": 0,
-                  "size": "md",
-                  "currentWidth": 6
+                  "currentWidth": 12
                 }
               ]
             },
             {
-              "label": "Columns",
-              "key": "pay0",
-              "type": "columns",
-              "input": false,
-              "tableView": false,
-              "columns": [
-                {
-                  "components": [
-                    {
-                      "label": "مبلغ قابل پرداخت (کمترِ مبلغ مصوب و مبلغ قرارداد)",
-                      "applyMaskOn": "change",
-                      "mask": false,
-                      "tableView": true,
-                      "currency": "IRR",
-                      "inputFormat": "plain",
-                      "key": "DepositPayable",
-                      "type": "currency",
-                      "delimiter": true,
-                      "input": true,
-                      "calculateValue": "var a = parseFloat(data.ApprovedDepositAmount) || parseFloat(data.DepositCap) || 0; var lease = parseFloat(data.LeaseDepositAmount) || 0; value = (a && lease) ? Math.min(a, lease) : (a || lease);",
-                      "disabled": true,
-                      "clearOnHide": false
-                    }
-                  ],
-                  "width": 4,
-                  "offset": 0,
-                  "push": 0,
-                  "pull": 0,
-                  "size": "md",
-                  "currentWidth": 4
-                },
-                {
-                  "components": [
-                    {
-                      "label": "نام و نام خانوادگی موجر",
-                      "tableView": true,
-                      "key": "LandlordName",
-                      "type": "textfield",
-                      "input": true,
-                      "validate": {},
-                      "disabled": true,
-                      "clearOnHide": false
-                    }
-                  ],
-                  "width": 4,
-                  "offset": 0,
-                  "push": 0,
-                  "pull": 0,
-                  "size": "md",
-                  "currentWidth": 4
-                },
-                {
-                  "components": [
-                    {
-                      "label": "شماره شبای موجر",
-                      "tableView": true,
-                      "key": "LandlordIban",
-                      "type": "textfield",
-                      "input": true,
-                      "validate": {},
-                      "disabled": true,
-                      "clearOnHide": false
-                    }
-                  ],
-                  "width": 4,
-                  "offset": 0,
-                  "push": 0,
-                  "pull": 0,
-                  "size": "md",
-                  "currentWidth": 4
-                }
-              ]
-            },
-            {
-              "label": "روش واریز (ماده ۴)",
-              "optionsLabelPosition": "right",
-              "inline": false,
-              "tableView": false,
-              "values": [
-                {
-                  "label": "واریز به حساب حقوقی کارمند (با ارائه فیش واریز به حساب موجر)",
-                  "value": "employee",
-                  "shortcut": ""
-                },
-                {
-                  "label": "واریز مستقیم به حساب موجر",
-                  "value": "landlord",
-                  "shortcut": ""
-                }
-              ],
-              "validateWhenHidden": false,
-              "key": "PaymentMethod",
-              "type": "radio",
-              "input": true,
-              "validate": {
-                "required": true
-              },
-              "errors": {
-                "required": "{{ field }} بایستی انتخاب شود."
-              },
-              "clearOnHide": false
-            },
-            {
-              "label": "شماره حساب حقوقی کارمند",
+              "label": "شماره حساب حقوقی ذی‌نفع (محل واریز ودیعه)",
               "tableView": true,
               "key": "EmployeeSalaryAccount",
               "type": "textfield",
               "input": true,
-              "conditional": {
-                "show": true,
-                "when": "PaymentMethod",
-                "eq": "employee"
+              "clearOnHide": false,
+              "validate": {
+                "required": true
               },
-              "clearOnHide": false
+              "errors": {
+                "required": "تکمیل «{{ field }}» الزامی است."
+              }
             },
             {
               "label": "Columns",
@@ -4618,6 +4344,46 @@
               "currentWidth": 6
             }
           ]
+        },
+        {
+          "label": "کنترل‌های اسکان (ماده ۳۱)",
+          "optionsLabelPosition": "right",
+          "tableView": false,
+          "values": [
+            {
+              "label": "کد پستی محل اجاره (قرارداد جدید) ثبت شد",
+              "value": "postalCode",
+              "shortcut": ""
+            },
+            {
+              "label": "نشانی از سرویس احراز نشانی شرکت ملی پست تأیید شد",
+              "value": "addressVerified",
+              "shortcut": ""
+            },
+            {
+              "label": "مشخصات متقاضی در سامانه املاک و اسکان ثبت شد",
+              "value": "estateSystem",
+              "shortcut": ""
+            },
+            {
+              "label": "عدم خویشاوندی موجر و مستأجر کنترل شد",
+              "value": "notRelative",
+              "shortcut": ""
+            }
+          ],
+          "key": "ResidenceControls",
+          "type": "selectboxes",
+          "input": true,
+          "inputType": "checkbox",
+          "validate": {
+            "required": true,
+            "minSelectedCount": 4
+          },
+          "minSelectedCountMessage": "همهٔ موارد باید تأیید شوند.",
+          "clearOnHide": false,
+          "errors": {
+            "required": "{{ field }} بایستی انتخاب شود."
+          }
         },
         {
           "label": "اطلاعات در بانک اطلاعات دریافت‌کنندگان ودیعه ثبت شد.",

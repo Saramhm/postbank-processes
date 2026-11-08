@@ -535,8 +535,8 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
     </bpmn:endEvent>
     <bpmn:parallelGateway id="Gateway_Fork" name="رونوشت به بازرسی (همزمان)">
       <bpmn:incoming>Flow_HR_Yes</bpmn:incoming>
-      <bpmn:outgoing>Flow_Fork_Lease</bpmn:outgoing>
       <bpmn:outgoing>Flow_Fork_Insp</bpmn:outgoing>
+      <bpmn:outgoing>Flow_Fork_Route</bpmn:outgoing>
     </bpmn:parallelGateway>
     <bpmn:userTask id="Task_LeaseInfo" name="تکمیل اطلاعات ملک و قرارداد اجاره" camunda:formKey="embedded:/camunda/forms/formioWizardCallApi.html?deployment=HousingDepositCompleteWizard.json&#38;var=Submission&#38;DefaultVal=Submission&#38;StateTask=4" camunda:assignee="${PM}">
       <bpmn:extensionElements>
@@ -585,8 +585,8 @@ try {
 </camunda:script>
         </camunda:executionListener>
       </bpmn:extensionElements>
-      <bpmn:incoming>Flow_Fork_Lease</bpmn:incoming>
-      <bpmn:outgoing>Flow_Lease_Route</bpmn:outgoing>
+      <bpmn:incoming>Flow_N_Paid_DB</bpmn:incoming>
+      <bpmn:outgoing>Flow_Lease_DB</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:userTask id="Task_Inspection" name="رونوشت به بازرسی" camunda:formKey="embedded:/camunda/forms/formioWizardCallApi.html?deployment=HousingDepositCompleteWizard.json&#38;var=Submission&#38;DefaultVal=Submission&#38;StateTask=7" camunda:assignee="${PM}" camunda:candidateGroups="PBInspection">
       <bpmn:extensionElements>
@@ -626,7 +626,7 @@ try {
       <bpmn:incoming>Flow_Insp_End</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:exclusiveGateway id="Gateway_Route" name="نوع درخواست؟" default="Flow_Route_Prov">
-      <bpmn:incoming>Flow_Lease_Route</bpmn:incoming>
+      <bpmn:incoming>Flow_Fork_Route</bpmn:incoming>
       <bpmn:outgoing>Flow_Route_HQ</bpmn:outgoing>
       <bpmn:outgoing>Flow_Route_Prov</bpmn:outgoing>
     </bpmn:exclusiveGateway>
@@ -988,7 +988,7 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
 </camunda:script>
         </camunda:executionListener>
       </bpmn:extensionElements>
-      <bpmn:incoming>Flow_N_Paid_DB</bpmn:incoming>
+      <bpmn:incoming>Flow_Lease_DB</bpmn:incoming>
       <bpmn:outgoing>Flow_DB_N</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:intermediateThrowEvent id="Notify_Done" name="اطلاع تکمیل پرونده به متقاضی">
@@ -1240,10 +1240,8 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${_hrApproval != "approved" &amp;&amp; _requestCategory == "HQ"}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_HR_NoProv" name="خیر (استان – بازگشت)" sourceRef="Gateway_HR" targetRef="Task_ProvinceReview" />
-    <bpmn:sequenceFlow id="Flow_Fork_Lease" sourceRef="Gateway_Fork" targetRef="Task_LeaseInfo" />
     <bpmn:sequenceFlow id="Flow_Fork_Insp" sourceRef="Gateway_Fork" targetRef="Task_Inspection" />
     <bpmn:sequenceFlow id="Flow_Insp_End" sourceRef="Task_Inspection" targetRef="End_Inspection" />
-    <bpmn:sequenceFlow id="Flow_Lease_Route" sourceRef="Task_LeaseInfo" targetRef="Gateway_Route" />
     <bpmn:sequenceFlow id="Flow_Route_HQ" name="ستاد" sourceRef="Gateway_Route" targetRef="Task_ReferralBranch">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${_requestCategory == "HQ"}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
@@ -1254,7 +1252,7 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
     <bpmn:sequenceFlow id="Flow_Legal_File" sourceRef="Task_Legal" targetRef="Task_File" />
     <bpmn:sequenceFlow id="Flow_File_Pay" sourceRef="Task_File" targetRef="Task_Payment" />
     <bpmn:sequenceFlow id="Flow_Pay_N" sourceRef="Task_Payment" targetRef="Notify_Paid" />
-    <bpmn:sequenceFlow id="Flow_N_Paid_DB" sourceRef="Notify_Paid" targetRef="Task_Database" />
+    <bpmn:sequenceFlow id="Flow_N_Paid_DB" sourceRef="Notify_Paid" targetRef="Task_LeaseInfo" />
     <bpmn:sequenceFlow id="Flow_DB_N" sourceRef="Task_Database" targetRef="Notify_Done" />
     <bpmn:sequenceFlow id="Flow_N_Done_Wait" sourceRef="Notify_Done" targetRef="Gateway_ExitWait" />
     <bpmn:sequenceFlow id="Flow_Wait_Msg" sourceRef="Gateway_ExitWait" targetRef="Catch_ExitMessage" />
@@ -1263,32 +1261,34 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
     <bpmn:sequenceFlow id="Flow_Due_NExit" name="سررسید" sourceRef="Catch_SettlementDue" targetRef="Notify_Exit" />
     <bpmn:sequenceFlow id="Flow_NExit_NSet" sourceRef="Notify_Exit" targetRef="Notify_Settlement" />
     <bpmn:sequenceFlow id="Flow_NSet_End" sourceRef="Notify_Settlement" targetRef="End_Handover" />
+    <bpmn:sequenceFlow id="Flow_Fork_Route" sourceRef="Gateway_Fork" targetRef="Gateway_Route" />
+    <bpmn:sequenceFlow id="Flow_Lease_DB" sourceRef="Task_LeaseInfo" targetRef="Task_Database" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_HousingDepositComplete">
     <bpmndi:BPMNPlane id="BPMNPlane_HousingDepositComplete" bpmnElement="Collaboration_HousingDepositComplete">
       <bpmndi:BPMNShape id="Participant_HousingDepositComplete_di" bpmnElement="Participant_HousingDepositComplete" isHorizontal="true">
-        <dc:Bounds x="129" y="80" width="3000" height="1120" />
+        <dc:Bounds x="129" y="80" width="3200" height="1120" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_Employee_di" bpmnElement="Lane_Employee" isHorizontal="true">
-        <dc:Bounds x="159" y="80" width="2970" height="160" />
+        <dc:Bounds x="159" y="80" width="3170" height="160" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_CEO_di" bpmnElement="Lane_CEO" isHorizontal="true">
-        <dc:Bounds x="159" y="240" width="2970" height="160" />
+        <dc:Bounds x="159" y="240" width="3170" height="160" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_ProvinceManagement_di" bpmnElement="Lane_ProvinceManagement" isHorizontal="true">
-        <dc:Bounds x="159" y="400" width="2970" height="160" />
+        <dc:Bounds x="159" y="400" width="3170" height="160" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_HR_di" bpmnElement="Lane_HR" isHorizontal="true">
-        <dc:Bounds x="159" y="560" width="2970" height="160" />
+        <dc:Bounds x="159" y="560" width="3170" height="160" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_Inspection_di" bpmnElement="Lane_Inspection" isHorizontal="true">
-        <dc:Bounds x="159" y="720" width="2970" height="160" />
+        <dc:Bounds x="159" y="720" width="3170" height="160" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_Legal_di" bpmnElement="Lane_Legal" isHorizontal="true">
-        <dc:Bounds x="159" y="880" width="2970" height="160" />
+        <dc:Bounds x="159" y="880" width="3170" height="160" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_Executor_di" bpmnElement="Lane_Executor" isHorizontal="true">
-        <dc:Bounds x="159" y="1040" width="2970" height="160" />
+        <dc:Bounds x="159" y="1040" width="3170" height="160" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Start_Request_di" bpmnElement="Start_Request">
         <dc:Bounds x="212" y="142" width="36" height="36" />
@@ -1355,20 +1355,20 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
         <bpmndi:BPMNLabel><dc:Bounds x="1145" y="105" width="80" height="27" /></bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Task_LeaseInfo_di" bpmnElement="Task_LeaseInfo">
-        <dc:Bounds x="1260" y="120" width="120" height="80" />
+        <dc:Bounds x="2440" y="120" width="120" height="80" />
         
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Task_Inspection_di" bpmnElement="Task_Inspection">
-        <dc:Bounds x="1260" y="760" width="120" height="80" />
+        <dc:Bounds x="1400" y="760" width="120" height="80" />
         
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="End_Inspection_di" bpmnElement="End_Inspection">
-        <dc:Bounds x="1500" y="782" width="36" height="36" />
-        <bpmndi:BPMNLabel><dc:Bounds x="1470" y="822" width="96" height="27" /></bpmndi:BPMNLabel>
+        <dc:Bounds x="1580" y="782" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="1550" y="822" width="96" height="27" /></bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Gateway_Route_di" bpmnElement="Gateway_Route" isMarkerVisible="true">
-        <dc:Bounds x="1440" y="135" width="50" height="50" />
-        <bpmndi:BPMNLabel><dc:Bounds x="1425" y="105" width="80" height="27" /></bpmndi:BPMNLabel>
+        <dc:Bounds x="1300" y="135" width="50" height="50" />
+        <bpmndi:BPMNLabel><dc:Bounds x="1285" y="105" width="80" height="27" /></bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Task_Referral_di" bpmnElement="Task_Referral">
         <dc:Bounds x="1600" y="440" width="120" height="80" />
@@ -1399,36 +1399,36 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
         <bpmndi:BPMNLabel><dc:Bounds x="2310" y="1142" width="96" height="27" /></bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Task_Database_di" bpmnElement="Task_Database">
-        <dc:Bounds x="2400" y="600" width="120" height="80" />
+        <dc:Bounds x="2600" y="600" width="120" height="80" />
         
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Notify_Done_di" bpmnElement="Notify_Done">
-        <dc:Bounds x="2560" y="622" width="36" height="36" />
-        <bpmndi:BPMNLabel><dc:Bounds x="2530" y="662" width="96" height="27" /></bpmndi:BPMNLabel>
+        <dc:Bounds x="2760" y="622" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="2730" y="662" width="96" height="27" /></bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Gateway_ExitWait_di" bpmnElement="Gateway_ExitWait">
-        <dc:Bounds x="2640" y="615" width="50" height="50" />
-        <bpmndi:BPMNLabel><dc:Bounds x="2625" y="585" width="80" height="27" /></bpmndi:BPMNLabel>
+        <dc:Bounds x="2840" y="615" width="50" height="50" />
+        <bpmndi:BPMNLabel><dc:Bounds x="2825" y="585" width="80" height="27" /></bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Catch_ExitMessage_di" bpmnElement="Catch_ExitMessage">
-        <dc:Bounds x="2740" y="582" width="36" height="36" />
-        <bpmndi:BPMNLabel><dc:Bounds x="2710" y="622" width="96" height="27" /></bpmndi:BPMNLabel>
+        <dc:Bounds x="2940" y="582" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="2910" y="622" width="96" height="27" /></bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Catch_SettlementDue_di" bpmnElement="Catch_SettlementDue">
-        <dc:Bounds x="2740" y="652" width="36" height="36" />
-        <bpmndi:BPMNLabel><dc:Bounds x="2710" y="692" width="96" height="27" /></bpmndi:BPMNLabel>
+        <dc:Bounds x="2940" y="652" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="2910" y="692" width="96" height="27" /></bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Notify_Exit_di" bpmnElement="Notify_Exit">
-        <dc:Bounds x="2860" y="622" width="36" height="36" />
-        <bpmndi:BPMNLabel><dc:Bounds x="2830" y="662" width="96" height="27" /></bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Notify_Settlement_di" bpmnElement="Notify_Settlement">
-        <dc:Bounds x="2960" y="622" width="36" height="36" />
-        <bpmndi:BPMNLabel><dc:Bounds x="2930" y="662" width="96" height="27" /></bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="End_Handover_di" bpmnElement="End_Handover">
         <dc:Bounds x="3060" y="622" width="36" height="36" />
         <bpmndi:BPMNLabel><dc:Bounds x="3030" y="662" width="96" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Notify_Settlement_di" bpmnElement="Notify_Settlement">
+        <dc:Bounds x="3160" y="622" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="3130" y="662" width="96" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_Handover_di" bpmnElement="End_Handover">
+        <dc:Bounds x="3260" y="622" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="3230" y="662" width="96" height="27" /></bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_Start_Cat_di" bpmnElement="Flow_Start_Cat">
         <di:waypoint x="248" y="160" />
@@ -1508,32 +1508,24 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
         <di:waypoint x="460" y="700" />
         <di:waypoint x="460" y="520" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_Fork_Lease_di" bpmnElement="Flow_Fork_Lease">
-        <di:waypoint x="1210" y="160" />
-        <di:waypoint x="1260" y="160" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_Fork_Insp_di" bpmnElement="Flow_Fork_Insp">
         <di:waypoint x="1185" y="185" />
         <di:waypoint x="1185" y="800" />
-        <di:waypoint x="1260" y="800" />
+        <di:waypoint x="1400" y="800" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_Insp_End_di" bpmnElement="Flow_Insp_End">
-        <di:waypoint x="1380" y="800" />
-        <di:waypoint x="1500" y="800" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_Lease_Route_di" bpmnElement="Flow_Lease_Route">
-        <di:waypoint x="1380" y="160" />
-        <di:waypoint x="1440" y="160" />
+        <di:waypoint x="1520" y="800" />
+        <di:waypoint x="1580" y="800" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_Route_HQ_di" bpmnElement="Flow_Route_HQ">
-        <di:waypoint x="1465" y="185" />
-        <di:waypoint x="1465" y="1120" />
+        <di:waypoint x="1325" y="185" />
+        <di:waypoint x="1325" y="1120" />
         <di:waypoint x="1600" y="1120" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_Route_Prov_di" bpmnElement="Flow_Route_Prov">
-        <di:waypoint x="1490" y="160" />
-        <di:waypoint x="1540" y="160" />
-        <di:waypoint x="1540" y="480" />
+        <di:waypoint x="1350" y="160" />
+        <di:waypoint x="1550" y="160" />
+        <di:waypoint x="1550" y="480" />
         <di:waypoint x="1600" y="480" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_Ref_N_di" bpmnElement="Flow_Ref_N">
@@ -1567,47 +1559,57 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_N_Paid_DB_di" bpmnElement="Flow_N_Paid_DB">
         <di:waypoint x="2376" y="1120" />
-        <di:waypoint x="2390" y="1120" />
-        <di:waypoint x="2390" y="640" />
-        <di:waypoint x="2400" y="640" />
+        <di:waypoint x="2400" y="1120" />
+        <di:waypoint x="2400" y="160" />
+        <di:waypoint x="2440" y="160" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_DB_N_di" bpmnElement="Flow_DB_N">
-        <di:waypoint x="2520" y="640" />
-        <di:waypoint x="2560" y="640" />
+        <di:waypoint x="2720" y="640" />
+        <di:waypoint x="2760" y="640" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_N_Done_Wait_di" bpmnElement="Flow_N_Done_Wait">
-        <di:waypoint x="2596" y="640" />
-        <di:waypoint x="2640" y="640" />
+        <di:waypoint x="2796" y="640" />
+        <di:waypoint x="2840" y="640" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_Wait_Msg_di" bpmnElement="Flow_Wait_Msg">
-        <di:waypoint x="2665" y="615" />
-        <di:waypoint x="2665" y="600" />
-        <di:waypoint x="2740" y="600" />
+        <di:waypoint x="2865" y="615" />
+        <di:waypoint x="2865" y="600" />
+        <di:waypoint x="2940" y="600" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_Wait_Due_di" bpmnElement="Flow_Wait_Due">
-        <di:waypoint x="2665" y="665" />
-        <di:waypoint x="2665" y="670" />
-        <di:waypoint x="2740" y="670" />
+        <di:waypoint x="2865" y="665" />
+        <di:waypoint x="2865" y="670" />
+        <di:waypoint x="2940" y="670" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_Msg_NExit_di" bpmnElement="Flow_Msg_NExit">
-        <di:waypoint x="2776" y="600" />
-        <di:waypoint x="2820" y="600" />
-        <di:waypoint x="2820" y="640" />
-        <di:waypoint x="2860" y="640" />
+        <di:waypoint x="2976" y="600" />
+        <di:waypoint x="3020" y="600" />
+        <di:waypoint x="3020" y="640" />
+        <di:waypoint x="3060" y="640" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_Due_NExit_di" bpmnElement="Flow_Due_NExit">
-        <di:waypoint x="2776" y="670" />
-        <di:waypoint x="2820" y="670" />
-        <di:waypoint x="2820" y="640" />
-        <di:waypoint x="2860" y="640" />
+        <di:waypoint x="2976" y="670" />
+        <di:waypoint x="3020" y="670" />
+        <di:waypoint x="3020" y="640" />
+        <di:waypoint x="3060" y="640" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_NExit_NSet_di" bpmnElement="Flow_NExit_NSet">
-        <di:waypoint x="2896" y="640" />
-        <di:waypoint x="2960" y="640" />
+        <di:waypoint x="3096" y="640" />
+        <di:waypoint x="3160" y="640" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_NSet_End_di" bpmnElement="Flow_NSet_End">
-        <di:waypoint x="2996" y="640" />
-        <di:waypoint x="3060" y="640" />
+        <di:waypoint x="3196" y="640" />
+        <di:waypoint x="3260" y="640" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Fork_Route_di" bpmnElement="Flow_Fork_Route">
+        <di:waypoint x="1210" y="160" />
+        <di:waypoint x="1300" y="160" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Lease_DB_di" bpmnElement="Flow_Lease_DB">
+        <di:waypoint x="2560" y="160" />
+        <di:waypoint x="2580" y="160" />
+        <di:waypoint x="2580" y="640" />
+        <di:waypoint x="2600" y="640" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
