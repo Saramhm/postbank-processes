@@ -1,0 +1,1614 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_HousingDepositComplete" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.51.1" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.17.0">
+  <bpmn:collaboration id="Collaboration_HousingDepositComplete">
+    <bpmn:participant id="Participant_HousingDepositComplete" name="پست بانک ایران" processRef="HousingDepositComplete" />
+  </bpmn:collaboration>
+  <bpmn:message id="Message_HousingDepositExitCoverage" name="HousingDeposit_ExitCoverage" />
+  <bpmn:process id="HousingDepositComplete" name="ودیعه مسکن مدیران غیر بومی (فرآیند کامل)" isExecutable="true">
+    <bpmn:laneSet id="LaneSet_HousingDepositComplete">
+      <bpmn:lane id="Lane_Employee" name="کارکنان مشمول">
+        <bpmn:flowNodeRef>Start_Request</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_Category</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_LeaseInfo</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_Fork</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_Route</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>End_Rejected</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_CEO" name="مدیرعامل">
+        <bpmn:flowNodeRef>Task_CEOReview</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Notify_CEO</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_CEO</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_ProvinceManagement" name="مدیریت شعب استان / منطقه">
+        <bpmn:flowNodeRef>Task_ProvinceReview</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Notify_Province</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_Province</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>End_RejectedProv</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Referral</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_HR" name="اداره کل سرمایه انسانی و رفاه">
+        <bpmn:flowNodeRef>Gateway_ToHR</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_HRReview</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Notify_HR</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_HR</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>End_RejectedHQ</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Database</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Notify_Done</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_ExitWait</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Catch_ExitMessage</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Catch_SettlementDue</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Notify_Exit</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Notify_Settlement</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>End_Handover</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_Inspection" name="اداره کل بازرسی">
+        <bpmn:flowNodeRef>Task_Inspection</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>End_Inspection</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_Legal" name="واحد حقوقی">
+        <bpmn:flowNodeRef>Notify_Legal</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Legal</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_Executor" name="واحد مجری پرداخت (شعبه شهید بهشتی / ذی‌حساب استان)">
+        <bpmn:flowNodeRef>Task_ReferralBranch</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_File</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Payment</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Notify_Paid</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="Start_Request" name="درخواست ودیعه مسکن" camunda:formKey="65" camunda:initiator="PM">
+      <bpmn:extensionElements>
+        <camunda:executionListener event="end">
+          <camunda:script scriptFormat="javascript">
+try {
+  var raw = execution.getVariable("Submission");
+  if (raw === null || raw === undefined) {
+    execution.setVariable("Submission", S("{\"data\":{}}"));
+  } else if (typeof raw === "string") {
+    // string -&gt; Spin
+    execution.setVariable("Submission", S(raw));
+  } else if (raw &amp;&amp; typeof raw.prop === "function") {
+    // already Spin - leave it
+  } else {
+    // Map / other Java object - convert via string
+    try {
+      var str = JSON.stringify(raw);
+      execution.setVariable("Submission", S(str));
+    } catch (e1) {
+      execution.setVariable("Submission", S("{\"data\":{}}"));
+    }
+  }
+} catch (e) {
+  console.error("[PrepareSpin] " + e);
+}
+</camunda:script>
+        </camunda:executionListener>
+        <camunda:executionListener event="end">
+          <camunda:script scriptFormat="javascript">try {
+  var raw = execution.getVariable("Submission");
+  var data = {};
+  if (raw &amp;&amp; typeof raw.prop === "function") {
+    if (raw.hasProp("data") &amp;&amp; !raw.prop("data").isNull()) { data = JSON.parse(raw.prop("data").toString()); }
+    else { data = JSON.parse(raw.toString()); }
+  } else if (typeof raw === "string") {
+    var parsed = JSON.parse(raw); data = (parsed &amp;&amp; parsed.data) ? parsed.data : (parsed || {});
+  } else if (raw) { data = raw.data || raw; }
+  execution.setVariable("_requestCategory", (data.RequestCategory !== undefined &amp;&amp; data.RequestCategory !== null) ? String(data.RequestCategory) : "");
+  console.log("[Start_Request]" + " _requestCategory=" + execution.getVariable("_requestCategory"));
+} catch(e) { console.error("[Start_Request] " + e); }
+</camunda:script>
+        </camunda:executionListener>
+        <camunda:executionListener event="end">
+          <camunda:script scriptFormat="javascript">try {
+  var raw = execution.getVariable("Submission");
+  var obj = null;
+  if (raw === null || raw === undefined) { obj = { data: {} }; }
+  else if (typeof raw === "string") { obj = JSON.parse(raw); }
+  else if (raw &amp;&amp; typeof raw.prop === "function") { obj = JSON.parse(raw.toString()); }
+  else { try { obj = JSON.parse(JSON.stringify(raw)); } catch (e1) { obj = { data: {} }; } }
+  if (!obj.data) { obj = { data: obj }; }
+  var d = obj.data;
+  function hdG2J(gy, gm, gd) { var g_d_m = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334]; var gy2 = (gm &gt; 2) ? (gy + 1) : gy; var days = 355666 + (365 * gy) + Math.floor((gy2 + 3) / 4) - Math.floor((gy2 + 99) / 100) + Math.floor((gy2 + 399) / 400) + gd + g_d_m[gm - 1]; var jy = -1595 + (33 * Math.floor(days / 12053)); days %= 12053; jy += 4 * Math.floor(days / 1461); days %= 1461; if (days &gt; 365) { jy += Math.floor((days - 1) / 365); days = (days - 1) % 365; } var jm, jd; if (days &lt; 186) { jm = 1 + Math.floor(days / 31); jd = 1 + (days % 31); } else { jm = 7 + Math.floor((days - 186) / 30); jd = 1 + ((days - 186) % 30); } return [jy, jm, jd]; }
+function hdJ2G(jy, jm, jd) { jy += 1595; var days = -355668 + (365 * jy) + (Math.floor(jy / 33) * 8) + Math.floor(((jy % 33) + 3) / 4) + jd + ((jm &lt; 7) ? (jm - 1) * 31 : ((jm - 7) * 30) + 186); var gy = 400 * Math.floor(days / 146097); days %= 146097; if (days &gt; 36524) { days--; gy += 100 * Math.floor(days / 36524); days %= 36524; if (days &gt;= 365) { days++; } } gy += 4 * Math.floor(days / 1461); days %= 1461; if (days &gt; 365) { gy += Math.floor((days - 1) / 365); days = (days - 1) % 365; } var gd = days + 1; var ml = [0, 31, ((gy % 4 === 0 &amp;&amp; gy % 100 !== 0) || (gy % 400 === 0)) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]; var gm; for (gm = 0; gm &lt; 13 &amp;&amp; gd &gt; ml[gm]; gm++) { gd -= ml[gm]; } return [gy, gm, gd]; }
+function hdPad(n) { return (n &lt; 10 ? "0" : "") + n; }
+function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.type("java.time.ZoneId"); var z = Z.now(I.of("Asia/Tehran")); var j = hdG2J(z.getYear(), z.getMonthValue(), z.getDayOfMonth()); return j[0] + "/" + hdPad(j[1]) + "/" + hdPad(j[2]) + " " + hdPad(z.getHour()) + ":" + hdPad(z.getMinute()); } catch (e) { var d = new Date(); var j2 = hdG2J(d.getFullYear(), d.getMonth() + 1, d.getDate()); return j2[0] + "/" + hdPad(j2[1]) + "/" + hdPad(j2[2]) + " " + hdPad(d.getHours()) + ":" + hdPad(d.getMinutes()); } }
+  var log = d.InitiatorNotifications || [];
+  log.push({ NoticeTitle: "ثبت درخواست", NoticeText: "درخواست ودیعه مسکن شما ثبت شد و برای بررسی " + (d.RequestCategory === "HQ" ? "به مدیرعامل" : "به مدیریت شعب استان / منطقه") + " ارسال گردید.", NoticeTime: hdNow() });
+  d.InitiatorNotifications = log;
+  execution.setVariable("Submission", S(JSON.stringify(obj)));
+  console.log("[Start_Request] first notice added");
+} catch (e) { console.error("[Start_Request] notice " + e); }
+</camunda:script>
+        </camunda:executionListener>
+        <camunda:executionListener event="end">
+          <camunda:script scriptFormat="javascript">try {
+  var raw = execution.getVariable("Submission");
+  var obj = null;
+  if (raw === null || raw === undefined) { obj = { data: {} }; }
+  else if (typeof raw === "string") { obj = JSON.parse(raw); }
+  else if (raw &amp;&amp; typeof raw.prop === "function") { obj = JSON.parse(raw.toString()); }
+  else { try { obj = JSON.parse(JSON.stringify(raw)); } catch (e1) { obj = { data: {} }; } }
+  if (!obj.data) { obj = { data: obj }; }
+  var d = obj.data;
+  var cat = String(d.RequestCategory || "");
+  var g = String(d.EligibilityGroup || "");
+  var ttl = String(d.PostTitle || "");
+  var grp;
+  if (cat === "HQ") { grp = (g === "g1") ? "PBCEO" : "PBHQDeputy"; }
+  else if (ttl.indexOf("حراست") &gt;= 0) { grp = "PBSecurityAffairs"; }
+  else if (g === "g3") { grp = "PBProvincesAffairs"; }
+  else { grp = "PBProvinceManagement"; }
+  execution.setVariable("_approverGroup", grp);
+  console.log("[ApproverRouting] _approverGroup=" + grp);
+} catch (e) { console.error("[ApproverRouting] " + e); }
+</camunda:script>
+        </camunda:executionListener>
+      </bpmn:extensionElements>
+      <bpmn:outgoing>Flow_Start_Cat</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:exclusiveGateway id="Gateway_Category" name="نوع درخواست؟" default="Flow_Cat_Prov">
+      <bpmn:incoming>Flow_Start_Cat</bpmn:incoming>
+      <bpmn:outgoing>Flow_Cat_CEO</bpmn:outgoing>
+      <bpmn:outgoing>Flow_Cat_Prov</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="Task_CEOReview" name="بررسی درخواست – مدیرعامل" camunda:formKey="embedded:/camunda/forms/formioWizardCallApi.html?deployment=HousingDepositCompleteWizard.json&#38;var=Submission&#38;DefaultVal=Submission&#38;StateTask=1" camunda:assignee="${PM}" camunda:candidateGroups="${_approverGroup}">
+      <bpmn:extensionElements>
+        <camunda:executionListener event="start">
+          <camunda:script scriptFormat="javascript">
+try {
+  var raw = execution.getVariable("Submission");
+  var obj = null;
+  if (raw === null || raw === undefined) {
+    obj = { data: {}, metadata: {} };
+  } else if (typeof raw === "string") {
+    obj = JSON.parse(raw);
+  } else if (raw &amp;&amp; typeof raw.prop === "function") {
+    obj = JSON.parse(raw.toString());
+  } else {
+    try { obj = JSON.parse(JSON.stringify(raw)); } catch(e) { obj = { data: {} }; }
+  }
+  if (!obj.data) {
+    obj = { data: obj, metadata: {} };
+  }
+  // Inject StateTask into form data so panel customConditional works
+  obj.data.StateTask = "1";
+  execution.setVariable("StateTask", "1");
+  execution.setVariable("Submission", S(JSON.stringify(obj)));
+  console.log("[Prepare] StateTask=1 injected into Submission.data");
+} catch (e) {
+  console.error("[Prepare] " + e);
+  execution.setVariable("StateTask", "1");
+}
+</camunda:script>
+        </camunda:executionListener>
+        <camunda:executionListener event="end">
+          <camunda:script scriptFormat="javascript">try {
+  var raw = execution.getVariable("Submission");
+  var data = {};
+  if (raw &amp;&amp; typeof raw.prop === "function") {
+    if (raw.hasProp("data") &amp;&amp; !raw.prop("data").isNull()) { data = JSON.parse(raw.prop("data").toString()); }
+    else { data = JSON.parse(raw.toString()); }
+  } else if (typeof raw === "string") {
+    var parsed = JSON.parse(raw); data = (parsed &amp;&amp; parsed.data) ? parsed.data : (parsed || {});
+  } else if (raw) { data = raw.data || raw; }
+  execution.setVariable("_ceoApproval", (data.CEOApproval !== undefined &amp;&amp; data.CEOApproval !== null) ? String(data.CEOApproval) : "");
+  console.log("[Task_CEOReview]" + " _ceoApproval=" + execution.getVariable("_ceoApproval"));
+} catch(e) { console.error("[Task_CEOReview] " + e); }
+</camunda:script>
+        </camunda:executionListener>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_Cat_CEO</bpmn:incoming>
+      <bpmn:outgoing>Flow_CEO_N</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:intermediateThrowEvent id="Notify_CEO" name="اطلاع نتیجه به متقاضی">
+      <bpmn:extensionElements>
+        <camunda:executionListener event="start">
+          <camunda:script scriptFormat="javascript">try {
+  var raw = execution.getVariable("Submission");
+  var obj = null;
+  if (raw === null || raw === undefined) { obj = { data: {} }; }
+  else if (typeof raw === "string") { obj = JSON.parse(raw); }
+  else if (raw &amp;&amp; typeof raw.prop === "function") { obj = JSON.parse(raw.toString()); }
+  else { try { obj = JSON.parse(JSON.stringify(raw)); } catch (e1) { obj = { data: {} }; } }
+  if (!obj.data) { obj = { data: obj }; }
+  var d = obj.data;
+  function fmt(n) { n = Math.round(Number(n || 0)); return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ","); }
+  function note(s) { return s ? " توضیحات: " + s : ""; }
+  function hdG2J(gy, gm, gd) { var g_d_m = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334]; var gy2 = (gm &gt; 2) ? (gy + 1) : gy; var days = 355666 + (365 * gy) + Math.floor((gy2 + 3) / 4) - Math.floor((gy2 + 99) / 100) + Math.floor((gy2 + 399) / 400) + gd + g_d_m[gm - 1]; var jy = -1595 + (33 * Math.floor(days / 12053)); days %= 12053; jy += 4 * Math.floor(days / 1461); days %= 1461; if (days &gt; 365) { jy += Math.floor((days - 1) / 365); days = (days - 1) % 365; } var jm, jd; if (days &lt; 186) { jm = 1 + Math.floor(days / 31); jd = 1 + (days % 31); } else { jm = 7 + Math.floor((days - 186) / 30); jd = 1 + ((days - 186) % 30); } return [jy, jm, jd]; }
+function hdJ2G(jy, jm, jd) { jy += 1595; var days = -355668 + (365 * jy) + (Math.floor(jy / 33) * 8) + Math.floor(((jy % 33) + 3) / 4) + jd + ((jm &lt; 7) ? (jm - 1) * 31 : ((jm - 7) * 30) + 186); var gy = 400 * Math.floor(days / 146097); days %= 146097; if (days &gt; 36524) { days--; gy += 100 * Math.floor(days / 36524); days %= 36524; if (days &gt;= 365) { days++; } } gy += 4 * Math.floor(days / 1461); days %= 1461; if (days &gt; 365) { gy += Math.floor((days - 1) / 365); days = (days - 1) % 365; } var gd = days + 1; var ml = [0, 31, ((gy % 4 === 0 &amp;&amp; gy % 100 !== 0) || (gy % 400 === 0)) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]; var gm; for (gm = 0; gm &lt; 13 &amp;&amp; gd &gt; ml[gm]; gm++) { gd -= ml[gm]; } return [gy, gm, gd]; }
+function hdPad(n) { return (n &lt; 10 ? "0" : "") + n; }
+function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.type("java.time.ZoneId"); var z = Z.now(I.of("Asia/Tehran")); var j = hdG2J(z.getYear(), z.getMonthValue(), z.getDayOfMonth()); return j[0] + "/" + hdPad(j[1]) + "/" + hdPad(j[2]) + " " + hdPad(z.getHour()) + ":" + hdPad(z.getMinute()); } catch (e) { var d = new Date(); var j2 = hdG2J(d.getFullYear(), d.getMonth() + 1, d.getDate()); return j2[0] + "/" + hdPad(j2[1]) + "/" + hdPad(j2[2]) + " " + hdPad(d.getHours()) + ":" + hdPad(d.getMinutes()); } }
+  var name = ((d.ApplicantFirstName || "") + " " + (d.ApplicantLastName || "")).trim();
+  var title = "نتیجه بررسی مدیرعامل";
+  var text = (d.CEOApproval === "approved" ? "درخواست ودیعه مسکن شما توسط مدیرعامل تأیید شد و برای بررسی به اداره کل سرمایه انسانی و رفاه ارسال گردید." : "درخواست ودیعه مسکن شما توسط مدیرعامل تأیید نشد و فرآیند خاتمه یافت.") + note(d.CEONote);
+  var log = d.InitiatorNotifications || [];
+  log.push({ NoticeTitle: title, NoticeText: text, NoticeTime: hdNow() });
+  d.InitiatorNotifications = log;
+  execution.setVariable("Submission", S(JSON.stringify(obj)));
+  execution.setVariable("_lastNotice", title + ": " + text);
+  var pm = execution.getVariable("PM");
+  if (pm) {
+    var nt = hdNow();
+    try {
+      var nobj = JSON.parse(JSON.stringify(obj));
+      nobj.data.StateTask = "0";
+      nobj.data.NoticeTitle = title;
+      nobj.data.NoticeText = text;
+      nobj.data.NoticeTime = nt;
+      var HashMap = Java.type("java.util.HashMap");
+      var vars = new HashMap();
+      vars.put("PM", String(pm));
+      vars.put("StateTask", "0");
+      vars.put("NoticeTaskName", "اطلاع: " + title);
+      vars.put("NoticeTitle", title);
+      vars.put("NoticeText", text);
+      vars.put("NoticeTime", nt);
+      vars.put("SourceProcessInstanceId", execution.getProcessInstanceId());
+      vars.put("Submission", S(JSON.stringify(nobj)));
+      var rs = execution.getProcessEngineServices().getRuntimeService();
+      var bk = execution.getProcessBusinessKey();
+      if (bk) { rs.startProcessInstanceByKey("HousingDepositNotice", String(bk), vars); }
+      else { rs.startProcessInstanceByKey("HousingDepositNotice", vars); }
+    } catch (eN) {
+      console.error("[Notice] HousingDepositNotice not started, falling back to plain task: " + eN);
+      var ts = execution.getProcessEngineServices().getTaskService();
+      var t = ts.newTask();
+      t.setName("اطلاع: " + title);
+      t.setDescription(text);
+      t.setAssignee(String(pm));
+      ts.saveTask(t);
+    }
+  }
+  console.log("[Notify_CEO] " + title);
+} catch (e) { console.error("[Notify_CEO] " + e); }
+</camunda:script>
+        </camunda:executionListener>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_CEO_N</bpmn:incoming>
+      <bpmn:outgoing>Flow_N_CEO_G</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_Notify_CEO" />
+    </bpmn:intermediateThrowEvent>
+    <bpmn:exclusiveGateway id="Gateway_CEO" name="آیا مورد تأیید می‌باشد؟" default="Flow_CEO_No">
+      <bpmn:incoming>Flow_N_CEO_G</bpmn:incoming>
+      <bpmn:outgoing>Flow_CEO_Yes</bpmn:outgoing>
+      <bpmn:outgoing>Flow_CEO_No</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:endEvent id="End_Rejected" name="پایان (عدم تأیید مدیرعامل)">
+      <bpmn:incoming>Flow_CEO_No</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:userTask id="Task_ProvinceReview" name="بررسی درخواست – مدیریت شعب استان / منطقه" camunda:formKey="embedded:/camunda/forms/formioWizardCallApi.html?deployment=HousingDepositCompleteWizard.json&#38;var=Submission&#38;DefaultVal=Submission&#38;StateTask=2" camunda:assignee="${PM}" camunda:candidateGroups="${_approverGroup}">
+      <bpmn:extensionElements>
+        <camunda:executionListener event="start">
+          <camunda:script scriptFormat="javascript">
+try {
+  var raw = execution.getVariable("Submission");
+  var obj = null;
+  if (raw === null || raw === undefined) {
+    obj = { data: {}, metadata: {} };
+  } else if (typeof raw === "string") {
+    obj = JSON.parse(raw);
+  } else if (raw &amp;&amp; typeof raw.prop === "function") {
+    obj = JSON.parse(raw.toString());
+  } else {
+    try { obj = JSON.parse(JSON.stringify(raw)); } catch(e) { obj = { data: {} }; }
+  }
+  if (!obj.data) {
+    obj = { data: obj, metadata: {} };
+  }
+  // Inject StateTask into form data so panel customConditional works
+  obj.data.StateTask = "2";
+  execution.setVariable("StateTask", "2");
+  execution.setVariable("Submission", S(JSON.stringify(obj)));
+  console.log("[Prepare] StateTask=2 injected into Submission.data");
+} catch (e) {
+  console.error("[Prepare] " + e);
+  execution.setVariable("StateTask", "2");
+}
+</camunda:script>
+        </camunda:executionListener>
+        <camunda:executionListener event="end">
+          <camunda:script scriptFormat="javascript">try {
+  var raw = execution.getVariable("Submission");
+  var data = {};
+  if (raw &amp;&amp; typeof raw.prop === "function") {
+    if (raw.hasProp("data") &amp;&amp; !raw.prop("data").isNull()) { data = JSON.parse(raw.prop("data").toString()); }
+    else { data = JSON.parse(raw.toString()); }
+  } else if (typeof raw === "string") {
+    var parsed = JSON.parse(raw); data = (parsed &amp;&amp; parsed.data) ? parsed.data : (parsed || {});
+  } else if (raw) { data = raw.data || raw; }
+  execution.setVariable("_provinceApproval", (data.ProvinceApproval !== undefined &amp;&amp; data.ProvinceApproval !== null) ? String(data.ProvinceApproval) : "");
+  console.log("[Task_ProvinceReview]" + " _provinceApproval=" + execution.getVariable("_provinceApproval"));
+} catch(e) { console.error("[Task_ProvinceReview] " + e); }
+</camunda:script>
+        </camunda:executionListener>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_Cat_Prov</bpmn:incoming>
+      <bpmn:incoming>Flow_HR_NoProv</bpmn:incoming>
+      <bpmn:outgoing>Flow_Prov_N</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:intermediateThrowEvent id="Notify_Province" name="اطلاع نتیجه به متقاضی">
+      <bpmn:extensionElements>
+        <camunda:executionListener event="start">
+          <camunda:script scriptFormat="javascript">try {
+  var raw = execution.getVariable("Submission");
+  var obj = null;
+  if (raw === null || raw === undefined) { obj = { data: {} }; }
+  else if (typeof raw === "string") { obj = JSON.parse(raw); }
+  else if (raw &amp;&amp; typeof raw.prop === "function") { obj = JSON.parse(raw.toString()); }
+  else { try { obj = JSON.parse(JSON.stringify(raw)); } catch (e1) { obj = { data: {} }; } }
+  if (!obj.data) { obj = { data: obj }; }
+  var d = obj.data;
+  function fmt(n) { n = Math.round(Number(n || 0)); return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ","); }
+  function note(s) { return s ? " توضیحات: " + s : ""; }
+  function hdG2J(gy, gm, gd) { var g_d_m = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334]; var gy2 = (gm &gt; 2) ? (gy + 1) : gy; var days = 355666 + (365 * gy) + Math.floor((gy2 + 3) / 4) - Math.floor((gy2 + 99) / 100) + Math.floor((gy2 + 399) / 400) + gd + g_d_m[gm - 1]; var jy = -1595 + (33 * Math.floor(days / 12053)); days %= 12053; jy += 4 * Math.floor(days / 1461); days %= 1461; if (days &gt; 365) { jy += Math.floor((days - 1) / 365); days = (days - 1) % 365; } var jm, jd; if (days &lt; 186) { jm = 1 + Math.floor(days / 31); jd = 1 + (days % 31); } else { jm = 7 + Math.floor((days - 186) / 30); jd = 1 + ((days - 186) % 30); } return [jy, jm, jd]; }
+function hdJ2G(jy, jm, jd) { jy += 1595; var days = -355668 + (365 * jy) + (Math.floor(jy / 33) * 8) + Math.floor(((jy % 33) + 3) / 4) + jd + ((jm &lt; 7) ? (jm - 1) * 31 : ((jm - 7) * 30) + 186); var gy = 400 * Math.floor(days / 146097); days %= 146097; if (days &gt; 36524) { days--; gy += 100 * Math.floor(days / 36524); days %= 36524; if (days &gt;= 365) { days++; } } gy += 4 * Math.floor(days / 1461); days %= 1461; if (days &gt; 365) { gy += Math.floor((days - 1) / 365); days = (days - 1) % 365; } var gd = days + 1; var ml = [0, 31, ((gy % 4 === 0 &amp;&amp; gy % 100 !== 0) || (gy % 400 === 0)) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]; var gm; for (gm = 0; gm &lt; 13 &amp;&amp; gd &gt; ml[gm]; gm++) { gd -= ml[gm]; } return [gy, gm, gd]; }
+function hdPad(n) { return (n &lt; 10 ? "0" : "") + n; }
+function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.type("java.time.ZoneId"); var z = Z.now(I.of("Asia/Tehran")); var j = hdG2J(z.getYear(), z.getMonthValue(), z.getDayOfMonth()); return j[0] + "/" + hdPad(j[1]) + "/" + hdPad(j[2]) + " " + hdPad(z.getHour()) + ":" + hdPad(z.getMinute()); } catch (e) { var d = new Date(); var j2 = hdG2J(d.getFullYear(), d.getMonth() + 1, d.getDate()); return j2[0] + "/" + hdPad(j2[1]) + "/" + hdPad(j2[2]) + " " + hdPad(d.getHours()) + ":" + hdPad(d.getMinutes()); } }
+  var name = ((d.ApplicantFirstName || "") + " " + (d.ApplicantLastName || "")).trim();
+  var title = "نتیجه بررسی مدیریت شعب";
+  var text = (d.ProvinceApproval === "approved" ? "درخواست ودیعه مسکن شما توسط مدیریت شعب استان / منطقه تأیید شد و برای بررسی به اداره کل سرمایه انسانی و رفاه ارسال گردید." : "درخواست ودیعه مسکن شما توسط مدیریت شعب استان / منطقه تأیید نشد و فرآیند خاتمه یافت.") + note(d.ProvinceNote);
+  var log = d.InitiatorNotifications || [];
+  log.push({ NoticeTitle: title, NoticeText: text, NoticeTime: hdNow() });
+  d.InitiatorNotifications = log;
+  execution.setVariable("Submission", S(JSON.stringify(obj)));
+  execution.setVariable("_lastNotice", title + ": " + text);
+  var pm = execution.getVariable("PM");
+  if (pm) {
+    var nt = hdNow();
+    try {
+      var nobj = JSON.parse(JSON.stringify(obj));
+      nobj.data.StateTask = "0";
+      nobj.data.NoticeTitle = title;
+      nobj.data.NoticeText = text;
+      nobj.data.NoticeTime = nt;
+      var HashMap = Java.type("java.util.HashMap");
+      var vars = new HashMap();
+      vars.put("PM", String(pm));
+      vars.put("StateTask", "0");
+      vars.put("NoticeTaskName", "اطلاع: " + title);
+      vars.put("NoticeTitle", title);
+      vars.put("NoticeText", text);
+      vars.put("NoticeTime", nt);
+      vars.put("SourceProcessInstanceId", execution.getProcessInstanceId());
+      vars.put("Submission", S(JSON.stringify(nobj)));
+      var rs = execution.getProcessEngineServices().getRuntimeService();
+      var bk = execution.getProcessBusinessKey();
+      if (bk) { rs.startProcessInstanceByKey("HousingDepositNotice", String(bk), vars); }
+      else { rs.startProcessInstanceByKey("HousingDepositNotice", vars); }
+    } catch (eN) {
+      console.error("[Notice] HousingDepositNotice not started, falling back to plain task: " + eN);
+      var ts = execution.getProcessEngineServices().getTaskService();
+      var t = ts.newTask();
+      t.setName("اطلاع: " + title);
+      t.setDescription(text);
+      t.setAssignee(String(pm));
+      ts.saveTask(t);
+    }
+  }
+  console.log("[Notify_Province] " + title);
+} catch (e) { console.error("[Notify_Province] " + e); }
+</camunda:script>
+        </camunda:executionListener>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_Prov_N</bpmn:incoming>
+      <bpmn:outgoing>Flow_N_Prov_G</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_Notify_Province" />
+    </bpmn:intermediateThrowEvent>
+    <bpmn:exclusiveGateway id="Gateway_Province" name="آیا مورد تأیید می‌باشد؟" default="Flow_Prov_No">
+      <bpmn:incoming>Flow_N_Prov_G</bpmn:incoming>
+      <bpmn:outgoing>Flow_Prov_Yes</bpmn:outgoing>
+      <bpmn:outgoing>Flow_Prov_No</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:endEvent id="End_RejectedProv" name="پایان (عدم تأیید استان)">
+      <bpmn:incoming>Flow_Prov_No</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:exclusiveGateway id="Gateway_ToHR" name="">
+      <bpmn:incoming>Flow_CEO_Yes</bpmn:incoming>
+      <bpmn:incoming>Flow_Prov_Yes</bpmn:incoming>
+      <bpmn:outgoing>Flow_ToHR</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="Task_HRReview" name="بررسی درخواست – اداره کل سرمایه انسانی و رفاه" camunda:formKey="embedded:/camunda/forms/formioWizardCallApi.html?deployment=HousingDepositCompleteWizard.json&#38;var=Submission&#38;DefaultVal=Submission&#38;StateTask=3" camunda:assignee="${PM}" camunda:candidateGroups="PBHRWelfare">
+      <bpmn:extensionElements>
+        <camunda:executionListener event="start">
+          <camunda:script scriptFormat="javascript">
+try {
+  var raw = execution.getVariable("Submission");
+  var obj = null;
+  if (raw === null || raw === undefined) {
+    obj = { data: {}, metadata: {} };
+  } else if (typeof raw === "string") {
+    obj = JSON.parse(raw);
+  } else if (raw &amp;&amp; typeof raw.prop === "function") {
+    obj = JSON.parse(raw.toString());
+  } else {
+    try { obj = JSON.parse(JSON.stringify(raw)); } catch(e) { obj = { data: {} }; }
+  }
+  if (!obj.data) {
+    obj = { data: obj, metadata: {} };
+  }
+  // Inject StateTask into form data so panel customConditional works
+  obj.data.StateTask = "3";
+  execution.setVariable("StateTask", "3");
+  execution.setVariable("Submission", S(JSON.stringify(obj)));
+  console.log("[Prepare] StateTask=3 injected into Submission.data");
+} catch (e) {
+  console.error("[Prepare] " + e);
+  execution.setVariable("StateTask", "3");
+}
+</camunda:script>
+        </camunda:executionListener>
+        <camunda:executionListener event="end">
+          <camunda:script scriptFormat="javascript">try {
+  var raw = execution.getVariable("Submission");
+  var data = {};
+  if (raw &amp;&amp; typeof raw.prop === "function") {
+    if (raw.hasProp("data") &amp;&amp; !raw.prop("data").isNull()) { data = JSON.parse(raw.prop("data").toString()); }
+    else { data = JSON.parse(raw.toString()); }
+  } else if (typeof raw === "string") {
+    var parsed = JSON.parse(raw); data = (parsed &amp;&amp; parsed.data) ? parsed.data : (parsed || {});
+  } else if (raw) { data = raw.data || raw; }
+  execution.setVariable("_hrApproval", (data.HRApproval !== undefined &amp;&amp; data.HRApproval !== null) ? String(data.HRApproval) : "");
+  console.log("[Task_HRReview]" + " _hrApproval=" + execution.getVariable("_hrApproval"));
+} catch(e) { console.error("[Task_HRReview] " + e); }
+</camunda:script>
+        </camunda:executionListener>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_ToHR</bpmn:incoming>
+      <bpmn:outgoing>Flow_HR_N</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:intermediateThrowEvent id="Notify_HR" name="اطلاع نتیجه به متقاضی">
+      <bpmn:extensionElements>
+        <camunda:executionListener event="start">
+          <camunda:script scriptFormat="javascript">try {
+  var raw = execution.getVariable("Submission");
+  var obj = null;
+  if (raw === null || raw === undefined) { obj = { data: {} }; }
+  else if (typeof raw === "string") { obj = JSON.parse(raw); }
+  else if (raw &amp;&amp; typeof raw.prop === "function") { obj = JSON.parse(raw.toString()); }
+  else { try { obj = JSON.parse(JSON.stringify(raw)); } catch (e1) { obj = { data: {} }; } }
+  if (!obj.data) { obj = { data: obj }; }
+  var d = obj.data;
+  function fmt(n) { n = Math.round(Number(n || 0)); return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ","); }
+  function note(s) { return s ? " توضیحات: " + s : ""; }
+  function hdG2J(gy, gm, gd) { var g_d_m = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334]; var gy2 = (gm &gt; 2) ? (gy + 1) : gy; var days = 355666 + (365 * gy) + Math.floor((gy2 + 3) / 4) - Math.floor((gy2 + 99) / 100) + Math.floor((gy2 + 399) / 400) + gd + g_d_m[gm - 1]; var jy = -1595 + (33 * Math.floor(days / 12053)); days %= 12053; jy += 4 * Math.floor(days / 1461); days %= 1461; if (days &gt; 365) { jy += Math.floor((days - 1) / 365); days = (days - 1) % 365; } var jm, jd; if (days &lt; 186) { jm = 1 + Math.floor(days / 31); jd = 1 + (days % 31); } else { jm = 7 + Math.floor((days - 186) / 30); jd = 1 + ((days - 186) % 30); } return [jy, jm, jd]; }
+function hdJ2G(jy, jm, jd) { jy += 1595; var days = -355668 + (365 * jy) + (Math.floor(jy / 33) * 8) + Math.floor(((jy % 33) + 3) / 4) + jd + ((jm &lt; 7) ? (jm - 1) * 31 : ((jm - 7) * 30) + 186); var gy = 400 * Math.floor(days / 146097); days %= 146097; if (days &gt; 36524) { days--; gy += 100 * Math.floor(days / 36524); days %= 36524; if (days &gt;= 365) { days++; } } gy += 4 * Math.floor(days / 1461); days %= 1461; if (days &gt; 365) { gy += Math.floor((days - 1) / 365); days = (days - 1) % 365; } var gd = days + 1; var ml = [0, 31, ((gy % 4 === 0 &amp;&amp; gy % 100 !== 0) || (gy % 400 === 0)) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]; var gm; for (gm = 0; gm &lt; 13 &amp;&amp; gd &gt; ml[gm]; gm++) { gd -= ml[gm]; } return [gy, gm, gd]; }
+function hdPad(n) { return (n &lt; 10 ? "0" : "") + n; }
+function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.type("java.time.ZoneId"); var z = Z.now(I.of("Asia/Tehran")); var j = hdG2J(z.getYear(), z.getMonthValue(), z.getDayOfMonth()); return j[0] + "/" + hdPad(j[1]) + "/" + hdPad(j[2]) + " " + hdPad(z.getHour()) + ":" + hdPad(z.getMinute()); } catch (e) { var d = new Date(); var j2 = hdG2J(d.getFullYear(), d.getMonth() + 1, d.getDate()); return j2[0] + "/" + hdPad(j2[1]) + "/" + hdPad(j2[2]) + " " + hdPad(d.getHours()) + ":" + hdPad(d.getMinutes()); } }
+  var name = ((d.ApplicantFirstName || "") + " " + (d.ApplicantLastName || "")).trim();
+  var title = "نتیجه بررسی اداره کل سرمایه انسانی و رفاه";
+  var text = (d.HRApproval === "approved" ? ("درخواست شما با مبلغ ودیعه مصوب " + fmt(d.ApprovedDepositAmount) + " ریال تأیید شد. لطفاً اطلاعات ملک و قرارداد اجاره را تکمیل و ضامن خود را معرفی کنید.") : (d.RequestCategory === "HQ" ? "درخواست شما توسط اداره کل سرمایه انسانی و رفاه تأیید نشد و فرآیند خاتمه یافت." : "درخواست شما برای اصلاح به مدیریت شعب استان / منطقه بازگشت داده شد.")) + note(d.HRNote);
+  var log = d.InitiatorNotifications || [];
+  log.push({ NoticeTitle: title, NoticeText: text, NoticeTime: hdNow() });
+  d.InitiatorNotifications = log;
+  execution.setVariable("Submission", S(JSON.stringify(obj)));
+  execution.setVariable("_lastNotice", title + ": " + text);
+  var pm = execution.getVariable("PM");
+  if (pm) {
+    var nt = hdNow();
+    try {
+      var nobj = JSON.parse(JSON.stringify(obj));
+      nobj.data.StateTask = "0";
+      nobj.data.NoticeTitle = title;
+      nobj.data.NoticeText = text;
+      nobj.data.NoticeTime = nt;
+      var HashMap = Java.type("java.util.HashMap");
+      var vars = new HashMap();
+      vars.put("PM", String(pm));
+      vars.put("StateTask", "0");
+      vars.put("NoticeTaskName", "اطلاع: " + title);
+      vars.put("NoticeTitle", title);
+      vars.put("NoticeText", text);
+      vars.put("NoticeTime", nt);
+      vars.put("SourceProcessInstanceId", execution.getProcessInstanceId());
+      vars.put("Submission", S(JSON.stringify(nobj)));
+      var rs = execution.getProcessEngineServices().getRuntimeService();
+      var bk = execution.getProcessBusinessKey();
+      if (bk) { rs.startProcessInstanceByKey("HousingDepositNotice", String(bk), vars); }
+      else { rs.startProcessInstanceByKey("HousingDepositNotice", vars); }
+    } catch (eN) {
+      console.error("[Notice] HousingDepositNotice not started, falling back to plain task: " + eN);
+      var ts = execution.getProcessEngineServices().getTaskService();
+      var t = ts.newTask();
+      t.setName("اطلاع: " + title);
+      t.setDescription(text);
+      t.setAssignee(String(pm));
+      ts.saveTask(t);
+    }
+  }
+  console.log("[Notify_HR] " + title);
+} catch (e) { console.error("[Notify_HR] " + e); }
+</camunda:script>
+        </camunda:executionListener>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_HR_N</bpmn:incoming>
+      <bpmn:outgoing>Flow_N_HR_G</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_Notify_HR" />
+    </bpmn:intermediateThrowEvent>
+    <bpmn:exclusiveGateway id="Gateway_HR" name="آیا مورد تأیید می‌باشد؟" default="Flow_HR_NoProv">
+      <bpmn:incoming>Flow_N_HR_G</bpmn:incoming>
+      <bpmn:outgoing>Flow_HR_Yes</bpmn:outgoing>
+      <bpmn:outgoing>Flow_HR_NoHQ</bpmn:outgoing>
+      <bpmn:outgoing>Flow_HR_NoProv</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:endEvent id="End_RejectedHQ" name="پایان (عدم تأیید اداره کل)">
+      <bpmn:incoming>Flow_HR_NoHQ</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:parallelGateway id="Gateway_Fork" name="رونوشت به بازرسی (همزمان)">
+      <bpmn:incoming>Flow_HR_Yes</bpmn:incoming>
+      <bpmn:outgoing>Flow_Fork_Lease</bpmn:outgoing>
+      <bpmn:outgoing>Flow_Fork_Insp</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    <bpmn:userTask id="Task_LeaseInfo" name="تکمیل اطلاعات ملک و قرارداد اجاره" camunda:formKey="embedded:/camunda/forms/formioWizardCallApi.html?deployment=HousingDepositCompleteWizard.json&#38;var=Submission&#38;DefaultVal=Submission&#38;StateTask=4" camunda:assignee="${PM}">
+      <bpmn:extensionElements>
+        <camunda:executionListener event="start">
+          <camunda:script scriptFormat="javascript">
+try {
+  var raw = execution.getVariable("Submission");
+  var obj = null;
+  if (raw === null || raw === undefined) {
+    obj = { data: {}, metadata: {} };
+  } else if (typeof raw === "string") {
+    obj = JSON.parse(raw);
+  } else if (raw &amp;&amp; typeof raw.prop === "function") {
+    obj = JSON.parse(raw.toString());
+  } else {
+    try { obj = JSON.parse(JSON.stringify(raw)); } catch(e) { obj = { data: {} }; }
+  }
+  if (!obj.data) {
+    obj = { data: obj, metadata: {} };
+  }
+  // Inject StateTask into form data so panel customConditional works
+  obj.data.StateTask = "4";
+  execution.setVariable("StateTask", "4");
+  execution.setVariable("Submission", S(JSON.stringify(obj)));
+  console.log("[Prepare] StateTask=4 injected into Submission.data");
+} catch (e) {
+  console.error("[Prepare] " + e);
+  execution.setVariable("StateTask", "4");
+}
+</camunda:script>
+        </camunda:executionListener>
+        <camunda:executionListener event="end">
+          <camunda:script scriptFormat="javascript">try {
+  var raw = execution.getVariable("Submission");
+  var data = {};
+  if (raw &amp;&amp; typeof raw.prop === "function") {
+    if (raw.hasProp("data") &amp;&amp; !raw.prop("data").isNull()) { data = JSON.parse(raw.prop("data").toString()); }
+    else { data = JSON.parse(raw.toString()); }
+  } else if (typeof raw === "string") {
+    var parsed = JSON.parse(raw); data = (parsed &amp;&amp; parsed.data) ? parsed.data : (parsed || {});
+  } else if (raw) { data = raw.data || raw; }
+  var _guarantorUser = data; "GuarantorSelected.userId".split(".").forEach(function (k) { _guarantorUser = (_guarantorUser &amp;&amp; _guarantorUser[k] !== undefined &amp;&amp; _guarantorUser[k] !== null) ? _guarantorUser[k] : null; });
+  execution.setVariable("_guarantorUser", _guarantorUser === null ? "" : String(_guarantorUser));
+  console.log("[Task_LeaseInfo]" + " _guarantorUser=" + execution.getVariable("_guarantorUser"));
+} catch(e) { console.error("[Task_LeaseInfo] " + e); }
+</camunda:script>
+        </camunda:executionListener>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_Fork_Lease</bpmn:incoming>
+      <bpmn:outgoing>Flow_Lease_Route</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Task_Inspection" name="رونوشت به بازرسی" camunda:formKey="embedded:/camunda/forms/formioWizardCallApi.html?deployment=HousingDepositCompleteWizard.json&#38;var=Submission&#38;DefaultVal=Submission&#38;StateTask=7" camunda:assignee="${PM}" camunda:candidateGroups="PBInspection">
+      <bpmn:extensionElements>
+        <camunda:executionListener event="start">
+          <camunda:script scriptFormat="javascript">
+try {
+  var raw = execution.getVariable("Submission");
+  var obj = null;
+  if (raw === null || raw === undefined) {
+    obj = { data: {}, metadata: {} };
+  } else if (typeof raw === "string") {
+    obj = JSON.parse(raw);
+  } else if (raw &amp;&amp; typeof raw.prop === "function") {
+    obj = JSON.parse(raw.toString());
+  } else {
+    try { obj = JSON.parse(JSON.stringify(raw)); } catch(e) { obj = { data: {} }; }
+  }
+  if (!obj.data) {
+    obj = { data: obj, metadata: {} };
+  }
+  // Inject StateTask into form data so panel customConditional works
+  obj.data.StateTask = "7";
+  execution.setVariable("StateTask", "7");
+  execution.setVariable("Submission", S(JSON.stringify(obj)));
+  console.log("[Prepare] StateTask=7 injected into Submission.data");
+} catch (e) {
+  console.error("[Prepare] " + e);
+  execution.setVariable("StateTask", "7");
+}
+</camunda:script>
+        </camunda:executionListener>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_Fork_Insp</bpmn:incoming>
+      <bpmn:outgoing>Flow_Insp_End</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:endEvent id="End_Inspection" name="پایان (رونوشت بازرسی)">
+      <bpmn:incoming>Flow_Insp_End</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:exclusiveGateway id="Gateway_Route" name="نوع درخواست؟" default="Flow_Route_Prov">
+      <bpmn:incoming>Flow_Lease_Route</bpmn:incoming>
+      <bpmn:outgoing>Flow_Route_HQ</bpmn:outgoing>
+      <bpmn:outgoing>Flow_Route_Prov</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="Task_Referral" name="ارجاع برای پرداخت – مدیر استان" camunda:formKey="embedded:/camunda/forms/formioWizardCallApi.html?deployment=HousingDepositCompleteWizard.json&#38;var=Submission&#38;DefaultVal=Submission&#38;StateTask=6" camunda:assignee="${PM}" camunda:candidateGroups="PBProvinceManagement">
+      <bpmn:extensionElements>
+        <camunda:executionListener event="start">
+          <camunda:script scriptFormat="javascript">
+try {
+  var raw = execution.getVariable("Submission");
+  var obj = null;
+  if (raw === null || raw === undefined) {
+    obj = { data: {}, metadata: {} };
+  } else if (typeof raw === "string") {
+    obj = JSON.parse(raw);
+  } else if (raw &amp;&amp; typeof raw.prop === "function") {
+    obj = JSON.parse(raw.toString());
+  } else {
+    try { obj = JSON.parse(JSON.stringify(raw)); } catch(e) { obj = { data: {} }; }
+  }
+  if (!obj.data) {
+    obj = { data: obj, metadata: {} };
+  }
+  // Inject StateTask into form data so panel customConditional works
+  obj.data.StateTask = "6";
+  execution.setVariable("StateTask", "6");
+  execution.setVariable("Submission", S(JSON.stringify(obj)));
+  console.log("[Prepare] StateTask=6 injected into Submission.data");
+} catch (e) {
+  console.error("[Prepare] " + e);
+  execution.setVariable("StateTask", "6");
+}
+</camunda:script>
+        </camunda:executionListener>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_Route_Prov</bpmn:incoming>
+      <bpmn:outgoing>Flow_Ref_N</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Task_ReferralBranch" name="ارجاع برای پرداخت – شعبه" camunda:formKey="embedded:/camunda/forms/formioWizardCallApi.html?deployment=HousingDepositCompleteWizard.json&#38;var=Submission&#38;DefaultVal=Submission&#38;StateTask=6" camunda:assignee="${PM}" camunda:candidateGroups="PBBeheshtiBranch">
+      <bpmn:extensionElements>
+        <camunda:executionListener event="start">
+          <camunda:script scriptFormat="javascript">
+try {
+  var raw = execution.getVariable("Submission");
+  var obj = null;
+  if (raw === null || raw === undefined) {
+    obj = { data: {}, metadata: {} };
+  } else if (typeof raw === "string") {
+    obj = JSON.parse(raw);
+  } else if (raw &amp;&amp; typeof raw.prop === "function") {
+    obj = JSON.parse(raw.toString());
+  } else {
+    try { obj = JSON.parse(JSON.stringify(raw)); } catch(e) { obj = { data: {} }; }
+  }
+  if (!obj.data) {
+    obj = { data: obj, metadata: {} };
+  }
+  // Inject StateTask into form data so panel customConditional works
+  obj.data.StateTask = "6";
+  execution.setVariable("StateTask", "6");
+  execution.setVariable("Submission", S(JSON.stringify(obj)));
+  console.log("[Prepare] StateTask=6 injected into Submission.data");
+} catch (e) {
+  console.error("[Prepare] " + e);
+  execution.setVariable("StateTask", "6");
+}
+</camunda:script>
+        </camunda:executionListener>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_Route_HQ</bpmn:incoming>
+      <bpmn:outgoing>Flow_RefB_N</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:intermediateThrowEvent id="Notify_Legal" name="اطلاع مراجعه به واحد حقوقی">
+      <bpmn:extensionElements>
+        <camunda:executionListener event="start">
+          <camunda:script scriptFormat="javascript">try {
+  var raw = execution.getVariable("Submission");
+  var obj = null;
+  if (raw === null || raw === undefined) { obj = { data: {} }; }
+  else if (typeof raw === "string") { obj = JSON.parse(raw); }
+  else if (raw &amp;&amp; typeof raw.prop === "function") { obj = JSON.parse(raw.toString()); }
+  else { try { obj = JSON.parse(JSON.stringify(raw)); } catch (e1) { obj = { data: {} }; } }
+  if (!obj.data) { obj = { data: obj }; }
+  var d = obj.data;
+  function fmt(n) { n = Math.round(Number(n || 0)); return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ","); }
+  function note(s) { return s ? " توضیحات: " + s : ""; }
+  function hdG2J(gy, gm, gd) { var g_d_m = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334]; var gy2 = (gm &gt; 2) ? (gy + 1) : gy; var days = 355666 + (365 * gy) + Math.floor((gy2 + 3) / 4) - Math.floor((gy2 + 99) / 100) + Math.floor((gy2 + 399) / 400) + gd + g_d_m[gm - 1]; var jy = -1595 + (33 * Math.floor(days / 12053)); days %= 12053; jy += 4 * Math.floor(days / 1461); days %= 1461; if (days &gt; 365) { jy += Math.floor((days - 1) / 365); days = (days - 1) % 365; } var jm, jd; if (days &lt; 186) { jm = 1 + Math.floor(days / 31); jd = 1 + (days % 31); } else { jm = 7 + Math.floor((days - 186) / 30); jd = 1 + ((days - 186) % 30); } return [jy, jm, jd]; }
+function hdJ2G(jy, jm, jd) { jy += 1595; var days = -355668 + (365 * jy) + (Math.floor(jy / 33) * 8) + Math.floor(((jy % 33) + 3) / 4) + jd + ((jm &lt; 7) ? (jm - 1) * 31 : ((jm - 7) * 30) + 186); var gy = 400 * Math.floor(days / 146097); days %= 146097; if (days &gt; 36524) { days--; gy += 100 * Math.floor(days / 36524); days %= 36524; if (days &gt;= 365) { days++; } } gy += 4 * Math.floor(days / 1461); days %= 1461; if (days &gt; 365) { gy += Math.floor((days - 1) / 365); days = (days - 1) % 365; } var gd = days + 1; var ml = [0, 31, ((gy % 4 === 0 &amp;&amp; gy % 100 !== 0) || (gy % 400 === 0)) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]; var gm; for (gm = 0; gm &lt; 13 &amp;&amp; gd &gt; ml[gm]; gm++) { gd -= ml[gm]; } return [gy, gm, gd]; }
+function hdPad(n) { return (n &lt; 10 ? "0" : "") + n; }
+function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.type("java.time.ZoneId"); var z = Z.now(I.of("Asia/Tehran")); var j = hdG2J(z.getYear(), z.getMonthValue(), z.getDayOfMonth()); return j[0] + "/" + hdPad(j[1]) + "/" + hdPad(j[2]) + " " + hdPad(z.getHour()) + ":" + hdPad(z.getMinute()); } catch (e) { var d = new Date(); var j2 = hdG2J(d.getFullYear(), d.getMonth() + 1, d.getDate()); return j2[0] + "/" + hdPad(j2[1]) + "/" + hdPad(j2[2]) + " " + hdPad(d.getHours()) + ":" + hdPad(d.getMinutes()); } }
+  var name = ((d.ApplicantFirstName || "") + " " + (d.ApplicantLastName || "")).trim();
+  var title = "مراجعه به واحد حقوقی";
+  var text = "لطفاً برای تحویل یک فقره چک صیادی به مبلغ " + fmt(Number(d.ApprovedDepositAmount || 0) * 1.3) + " ریال (۱۳۰٪ ودیعه مصوب) با ضمانت یکی از کارکنان بانک در ظهر چک و تکمیل فرم ضمانت (نمونه ۲۲۲۷) به واحد حقوقی مراجعه کنید.";
+  var log = d.InitiatorNotifications || [];
+  log.push({ NoticeTitle: title, NoticeText: text, NoticeTime: hdNow() });
+  d.InitiatorNotifications = log;
+  execution.setVariable("Submission", S(JSON.stringify(obj)));
+  execution.setVariable("_lastNotice", title + ": " + text);
+  var pm = execution.getVariable("PM");
+  if (pm) {
+    var nt = hdNow();
+    try {
+      var nobj = JSON.parse(JSON.stringify(obj));
+      nobj.data.StateTask = "0";
+      nobj.data.NoticeTitle = title;
+      nobj.data.NoticeText = text;
+      nobj.data.NoticeTime = nt;
+      var HashMap = Java.type("java.util.HashMap");
+      var vars = new HashMap();
+      vars.put("PM", String(pm));
+      vars.put("StateTask", "0");
+      vars.put("NoticeTaskName", "اطلاع: " + title);
+      vars.put("NoticeTitle", title);
+      vars.put("NoticeText", text);
+      vars.put("NoticeTime", nt);
+      vars.put("SourceProcessInstanceId", execution.getProcessInstanceId());
+      vars.put("Submission", S(JSON.stringify(nobj)));
+      var rs = execution.getProcessEngineServices().getRuntimeService();
+      var bk = execution.getProcessBusinessKey();
+      if (bk) { rs.startProcessInstanceByKey("HousingDepositNotice", String(bk), vars); }
+      else { rs.startProcessInstanceByKey("HousingDepositNotice", vars); }
+    } catch (eN) {
+      console.error("[Notice] HousingDepositNotice not started, falling back to plain task: " + eN);
+      var ts = execution.getProcessEngineServices().getTaskService();
+      var t = ts.newTask();
+      t.setName("اطلاع: " + title);
+      t.setDescription(text);
+      t.setAssignee(String(pm));
+      ts.saveTask(t);
+    }
+  }
+  console.log("[Notify_Legal] " + title);
+} catch (e) { console.error("[Notify_Legal] " + e); }
+</camunda:script>
+        </camunda:executionListener>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_Ref_N</bpmn:incoming>
+      <bpmn:incoming>Flow_RefB_N</bpmn:incoming>
+      <bpmn:outgoing>Flow_N_Legal</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_Notify_Legal" />
+    </bpmn:intermediateThrowEvent>
+    <bpmn:userTask id="Task_Legal" name="اخذ چک صیادی (۱۳۰٪)، اقرارنامه و ضمانت" camunda:formKey="embedded:/camunda/forms/formioWizardCallApi.html?deployment=HousingDepositCompleteWizard.json&#38;var=Submission&#38;DefaultVal=Submission&#38;StateTask=8" camunda:assignee="${PM}" camunda:candidateGroups="PBLegal">
+      <bpmn:extensionElements>
+        <camunda:executionListener event="start">
+          <camunda:script scriptFormat="javascript">
+try {
+  var raw = execution.getVariable("Submission");
+  var obj = null;
+  if (raw === null || raw === undefined) {
+    obj = { data: {}, metadata: {} };
+  } else if (typeof raw === "string") {
+    obj = JSON.parse(raw);
+  } else if (raw &amp;&amp; typeof raw.prop === "function") {
+    obj = JSON.parse(raw.toString());
+  } else {
+    try { obj = JSON.parse(JSON.stringify(raw)); } catch(e) { obj = { data: {} }; }
+  }
+  if (!obj.data) {
+    obj = { data: obj, metadata: {} };
+  }
+  // Inject StateTask into form data so panel customConditional works
+  obj.data.StateTask = "8";
+  execution.setVariable("StateTask", "8");
+  execution.setVariable("Submission", S(JSON.stringify(obj)));
+  console.log("[Prepare] StateTask=8 injected into Submission.data");
+} catch (e) {
+  console.error("[Prepare] " + e);
+  execution.setVariable("StateTask", "8");
+}
+</camunda:script>
+        </camunda:executionListener>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_N_Legal</bpmn:incoming>
+      <bpmn:outgoing>Flow_Legal_File</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Task_File" name="تشکیل پرونده" camunda:formKey="embedded:/camunda/forms/formioWizardCallApi.html?deployment=HousingDepositCompleteWizard.json&#38;var=Submission&#38;DefaultVal=Submission&#38;StateTask=9" camunda:assignee="${PM}" camunda:candidateGroups="${_requestCategory == &#34;HQ&#34; ? &#34;PBBeheshtiBranch&#34; : &#34;PBProvinceFinance&#34;}">
+      <bpmn:extensionElements>
+        <camunda:executionListener event="start">
+          <camunda:script scriptFormat="javascript">
+try {
+  var raw = execution.getVariable("Submission");
+  var obj = null;
+  if (raw === null || raw === undefined) {
+    obj = { data: {}, metadata: {} };
+  } else if (typeof raw === "string") {
+    obj = JSON.parse(raw);
+  } else if (raw &amp;&amp; typeof raw.prop === "function") {
+    obj = JSON.parse(raw.toString());
+  } else {
+    try { obj = JSON.parse(JSON.stringify(raw)); } catch(e) { obj = { data: {} }; }
+  }
+  if (!obj.data) {
+    obj = { data: obj, metadata: {} };
+  }
+  // Inject StateTask into form data so panel customConditional works
+  obj.data.StateTask = "9";
+  execution.setVariable("StateTask", "9");
+  execution.setVariable("Submission", S(JSON.stringify(obj)));
+  console.log("[Prepare] StateTask=9 injected into Submission.data");
+} catch (e) {
+  console.error("[Prepare] " + e);
+  execution.setVariable("StateTask", "9");
+}
+</camunda:script>
+        </camunda:executionListener>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_Legal_File</bpmn:incoming>
+      <bpmn:outgoing>Flow_File_Pay</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Task_Payment" name="واریز ودیعه و صدور سند حسابداری" camunda:formKey="embedded:/camunda/forms/formioWizardCallApi.html?deployment=HousingDepositCompleteWizard.json&#38;var=Submission&#38;DefaultVal=Submission&#38;StateTask=10" camunda:assignee="${PM}" camunda:candidateGroups="${_requestCategory == &#34;HQ&#34; ? &#34;PBBeheshtiBranch&#34; : &#34;PBProvinceFinance&#34;}">
+      <bpmn:extensionElements>
+        <camunda:executionListener event="start">
+          <camunda:script scriptFormat="javascript">
+try {
+  var raw = execution.getVariable("Submission");
+  var obj = null;
+  if (raw === null || raw === undefined) {
+    obj = { data: {}, metadata: {} };
+  } else if (typeof raw === "string") {
+    obj = JSON.parse(raw);
+  } else if (raw &amp;&amp; typeof raw.prop === "function") {
+    obj = JSON.parse(raw.toString());
+  } else {
+    try { obj = JSON.parse(JSON.stringify(raw)); } catch(e) { obj = { data: {} }; }
+  }
+  if (!obj.data) {
+    obj = { data: obj, metadata: {} };
+  }
+  // Inject StateTask into form data so panel customConditional works
+  obj.data.StateTask = "10";
+  execution.setVariable("StateTask", "10");
+  execution.setVariable("Submission", S(JSON.stringify(obj)));
+  console.log("[Prepare] StateTask=10 injected into Submission.data");
+} catch (e) {
+  console.error("[Prepare] " + e);
+  execution.setVariable("StateTask", "10");
+}
+</camunda:script>
+        </camunda:executionListener>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_File_Pay</bpmn:incoming>
+      <bpmn:outgoing>Flow_Pay_N</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:intermediateThrowEvent id="Notify_Paid" name="اطلاع واریز به متقاضی">
+      <bpmn:extensionElements>
+        <camunda:executionListener event="start">
+          <camunda:script scriptFormat="javascript">try {
+  var raw = execution.getVariable("Submission");
+  var obj = null;
+  if (raw === null || raw === undefined) { obj = { data: {} }; }
+  else if (typeof raw === "string") { obj = JSON.parse(raw); }
+  else if (raw &amp;&amp; typeof raw.prop === "function") { obj = JSON.parse(raw.toString()); }
+  else { try { obj = JSON.parse(JSON.stringify(raw)); } catch (e1) { obj = { data: {} }; } }
+  if (!obj.data) { obj = { data: obj }; }
+  var d = obj.data;
+  function fmt(n) { n = Math.round(Number(n || 0)); return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ","); }
+  function note(s) { return s ? " توضیحات: " + s : ""; }
+  function hdG2J(gy, gm, gd) { var g_d_m = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334]; var gy2 = (gm &gt; 2) ? (gy + 1) : gy; var days = 355666 + (365 * gy) + Math.floor((gy2 + 3) / 4) - Math.floor((gy2 + 99) / 100) + Math.floor((gy2 + 399) / 400) + gd + g_d_m[gm - 1]; var jy = -1595 + (33 * Math.floor(days / 12053)); days %= 12053; jy += 4 * Math.floor(days / 1461); days %= 1461; if (days &gt; 365) { jy += Math.floor((days - 1) / 365); days = (days - 1) % 365; } var jm, jd; if (days &lt; 186) { jm = 1 + Math.floor(days / 31); jd = 1 + (days % 31); } else { jm = 7 + Math.floor((days - 186) / 30); jd = 1 + ((days - 186) % 30); } return [jy, jm, jd]; }
+function hdJ2G(jy, jm, jd) { jy += 1595; var days = -355668 + (365 * jy) + (Math.floor(jy / 33) * 8) + Math.floor(((jy % 33) + 3) / 4) + jd + ((jm &lt; 7) ? (jm - 1) * 31 : ((jm - 7) * 30) + 186); var gy = 400 * Math.floor(days / 146097); days %= 146097; if (days &gt; 36524) { days--; gy += 100 * Math.floor(days / 36524); days %= 36524; if (days &gt;= 365) { days++; } } gy += 4 * Math.floor(days / 1461); days %= 1461; if (days &gt; 365) { gy += Math.floor((days - 1) / 365); days = (days - 1) % 365; } var gd = days + 1; var ml = [0, 31, ((gy % 4 === 0 &amp;&amp; gy % 100 !== 0) || (gy % 400 === 0)) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]; var gm; for (gm = 0; gm &lt; 13 &amp;&amp; gd &gt; ml[gm]; gm++) { gd -= ml[gm]; } return [gy, gm, gd]; }
+function hdPad(n) { return (n &lt; 10 ? "0" : "") + n; }
+function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.type("java.time.ZoneId"); var z = Z.now(I.of("Asia/Tehran")); var j = hdG2J(z.getYear(), z.getMonthValue(), z.getDayOfMonth()); return j[0] + "/" + hdPad(j[1]) + "/" + hdPad(j[2]) + " " + hdPad(z.getHour()) + ":" + hdPad(z.getMinute()); } catch (e) { var d = new Date(); var j2 = hdG2J(d.getFullYear(), d.getMonth() + 1, d.getDate()); return j2[0] + "/" + hdPad(j2[1]) + "/" + hdPad(j2[2]) + " " + hdPad(d.getHours()) + ":" + hdPad(d.getMinutes()); } }
+  var name = ((d.ApplicantFirstName || "") + " " + (d.ApplicantLastName || "")).trim();
+  var title = "واریز ودیعه";
+  var text = "مبلغ " + fmt(d.PaidAmount) + " ریال در تاریخ " + (d.PaymentDate || "-") + (d.PaymentMethod === "landlord" ? " مستقیماً به حساب موجر" : " به حساب حقوقی شما") + " واریز شد. شماره پیگیری: " + (d.PaymentReference || "-") + ".";
+  var log = d.InitiatorNotifications || [];
+  log.push({ NoticeTitle: title, NoticeText: text, NoticeTime: hdNow() });
+  d.InitiatorNotifications = log;
+  execution.setVariable("Submission", S(JSON.stringify(obj)));
+  execution.setVariable("_lastNotice", title + ": " + text);
+  var pm = execution.getVariable("PM");
+  if (pm) {
+    var nt = hdNow();
+    try {
+      var nobj = JSON.parse(JSON.stringify(obj));
+      nobj.data.StateTask = "0";
+      nobj.data.NoticeTitle = title;
+      nobj.data.NoticeText = text;
+      nobj.data.NoticeTime = nt;
+      var HashMap = Java.type("java.util.HashMap");
+      var vars = new HashMap();
+      vars.put("PM", String(pm));
+      vars.put("StateTask", "0");
+      vars.put("NoticeTaskName", "اطلاع: " + title);
+      vars.put("NoticeTitle", title);
+      vars.put("NoticeText", text);
+      vars.put("NoticeTime", nt);
+      vars.put("SourceProcessInstanceId", execution.getProcessInstanceId());
+      vars.put("Submission", S(JSON.stringify(nobj)));
+      var rs = execution.getProcessEngineServices().getRuntimeService();
+      var bk = execution.getProcessBusinessKey();
+      if (bk) { rs.startProcessInstanceByKey("HousingDepositNotice", String(bk), vars); }
+      else { rs.startProcessInstanceByKey("HousingDepositNotice", vars); }
+    } catch (eN) {
+      console.error("[Notice] HousingDepositNotice not started, falling back to plain task: " + eN);
+      var ts = execution.getProcessEngineServices().getTaskService();
+      var t = ts.newTask();
+      t.setName("اطلاع: " + title);
+      t.setDescription(text);
+      t.setAssignee(String(pm));
+      ts.saveTask(t);
+    }
+  }
+  console.log("[Notify_Paid] " + title);
+} catch (e) { console.error("[Notify_Paid] " + e); }
+</camunda:script>
+        </camunda:executionListener>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_Pay_N</bpmn:incoming>
+      <bpmn:outgoing>Flow_N_Paid_DB</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_Notify_Paid" />
+    </bpmn:intermediateThrowEvent>
+    <bpmn:userTask id="Task_Database" name="دریافت مستندات و تکمیل بانک اطلاعات دریافت‌کنندگان" camunda:formKey="embedded:/camunda/forms/formioWizardCallApi.html?deployment=HousingDepositCompleteWizard.json&#38;var=Submission&#38;DefaultVal=Submission&#38;StateTask=11" camunda:assignee="${PM}" camunda:candidateGroups="PBHRWelfare">
+      <bpmn:extensionElements>
+        <camunda:executionListener event="start">
+          <camunda:script scriptFormat="javascript">
+try {
+  var raw = execution.getVariable("Submission");
+  var obj = null;
+  if (raw === null || raw === undefined) {
+    obj = { data: {}, metadata: {} };
+  } else if (typeof raw === "string") {
+    obj = JSON.parse(raw);
+  } else if (raw &amp;&amp; typeof raw.prop === "function") {
+    obj = JSON.parse(raw.toString());
+  } else {
+    try { obj = JSON.parse(JSON.stringify(raw)); } catch(e) { obj = { data: {} }; }
+  }
+  if (!obj.data) {
+    obj = { data: obj, metadata: {} };
+  }
+  // Inject StateTask into form data so panel customConditional works
+  obj.data.StateTask = "11";
+  execution.setVariable("StateTask", "11");
+  execution.setVariable("Submission", S(JSON.stringify(obj)));
+  console.log("[Prepare] StateTask=11 injected into Submission.data");
+} catch (e) {
+  console.error("[Prepare] " + e);
+  execution.setVariable("StateTask", "11");
+}
+</camunda:script>
+        </camunda:executionListener>
+        <camunda:executionListener event="end">
+          <camunda:script scriptFormat="javascript">try {
+  var raw = execution.getVariable("Submission");
+  var d = {};
+  if (raw &amp;&amp; typeof raw.prop === "function") { var o = JSON.parse(raw.toString()); d = o.data || o; }
+  else if (typeof raw === "string") { var o2 = JSON.parse(raw); d = o2.data || o2; }
+  function hdG2J(gy, gm, gd) { var g_d_m = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334]; var gy2 = (gm &gt; 2) ? (gy + 1) : gy; var days = 355666 + (365 * gy) + Math.floor((gy2 + 3) / 4) - Math.floor((gy2 + 99) / 100) + Math.floor((gy2 + 399) / 400) + gd + g_d_m[gm - 1]; var jy = -1595 + (33 * Math.floor(days / 12053)); days %= 12053; jy += 4 * Math.floor(days / 1461); days %= 1461; if (days &gt; 365) { jy += Math.floor((days - 1) / 365); days = (days - 1) % 365; } var jm, jd; if (days &lt; 186) { jm = 1 + Math.floor(days / 31); jd = 1 + (days % 31); } else { jm = 7 + Math.floor((days - 186) / 30); jd = 1 + ((days - 186) % 30); } return [jy, jm, jd]; }
+function hdJ2G(jy, jm, jd) { jy += 1595; var days = -355668 + (365 * jy) + (Math.floor(jy / 33) * 8) + Math.floor(((jy % 33) + 3) / 4) + jd + ((jm &lt; 7) ? (jm - 1) * 31 : ((jm - 7) * 30) + 186); var gy = 400 * Math.floor(days / 146097); days %= 146097; if (days &gt; 36524) { days--; gy += 100 * Math.floor(days / 36524); days %= 36524; if (days &gt;= 365) { days++; } } gy += 4 * Math.floor(days / 1461); days %= 1461; if (days &gt; 365) { gy += Math.floor((days - 1) / 365); days = (days - 1) % 365; } var gd = days + 1; var ml = [0, 31, ((gy % 4 === 0 &amp;&amp; gy % 100 !== 0) || (gy % 400 === 0)) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]; var gm; for (gm = 0; gm &lt; 13 &amp;&amp; gd &gt; ml[gm]; gm++) { gd -= ml[gm]; } return [gy, gm, gd]; }
+function hdPad(n) { return (n &lt; 10 ? "0" : "") + n; }
+function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.type("java.time.ZoneId"); var z = Z.now(I.of("Asia/Tehran")); var j = hdG2J(z.getYear(), z.getMonthValue(), z.getDayOfMonth()); return j[0] + "/" + hdPad(j[1]) + "/" + hdPad(j[2]) + " " + hdPad(z.getHour()) + ":" + hdPad(z.getMinute()); } catch (e) { var d = new Date(); var j2 = hdG2J(d.getFullYear(), d.getMonth() + 1, d.getDate()); return j2[0] + "/" + hdPad(j2[1]) + "/" + hdPad(j2[2]) + " " + hdPad(d.getHours()) + ":" + hdPad(d.getMinutes()); } }
+  function hdParse(v) { var p = String(v || "").replace(/[\u06F0-\u06F9]/g, function (c) { return String(c.charCodeAt(0) - 0x06F0); }).match(/\d+/g); return (p &amp;&amp; p.length &gt;= 3) ? [parseInt(p[0], 10), parseInt(p[1], 10), parseInt(p[2], 10)] : null; }
+  var j = hdParse(d.SettlementDueDate) || hdParse(d.LeaseEndDate);
+  var iso;
+  if (j &amp;&amp; j[0] &gt; 1300 &amp;&amp; j[0] &lt; 1500) { var g = hdJ2G(j[0], j[1], j[2]); iso = g[0] + "-" + hdPad(g[1]) + "-" + hdPad(g[2]) + "T08:00:00"; }
+  else { var n = new Date(); iso = (n.getFullYear() + 1) + "-" + hdPad(n.getMonth() + 1) + "-" + hdPad(n.getDate()) + "T08:00:00"; }
+  execution.setVariable("_exitDueDate", iso);
+  console.log("[Task_Database] _exitDueDate=" + iso);
+} catch (e) { console.error("[Task_Database] " + e); execution.setVariable("_exitDueDate", "2099-01-01T08:00:00"); }
+</camunda:script>
+        </camunda:executionListener>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_N_Paid_DB</bpmn:incoming>
+      <bpmn:outgoing>Flow_DB_N</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:intermediateThrowEvent id="Notify_Done" name="اطلاع تکمیل پرونده به متقاضی">
+      <bpmn:extensionElements>
+        <camunda:executionListener event="start">
+          <camunda:script scriptFormat="javascript">try {
+  var raw = execution.getVariable("Submission");
+  var obj = null;
+  if (raw === null || raw === undefined) { obj = { data: {} }; }
+  else if (typeof raw === "string") { obj = JSON.parse(raw); }
+  else if (raw &amp;&amp; typeof raw.prop === "function") { obj = JSON.parse(raw.toString()); }
+  else { try { obj = JSON.parse(JSON.stringify(raw)); } catch (e1) { obj = { data: {} }; } }
+  if (!obj.data) { obj = { data: obj }; }
+  var d = obj.data;
+  function fmt(n) { n = Math.round(Number(n || 0)); return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ","); }
+  function note(s) { return s ? " توضیحات: " + s : ""; }
+  function hdG2J(gy, gm, gd) { var g_d_m = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334]; var gy2 = (gm &gt; 2) ? (gy + 1) : gy; var days = 355666 + (365 * gy) + Math.floor((gy2 + 3) / 4) - Math.floor((gy2 + 99) / 100) + Math.floor((gy2 + 399) / 400) + gd + g_d_m[gm - 1]; var jy = -1595 + (33 * Math.floor(days / 12053)); days %= 12053; jy += 4 * Math.floor(days / 1461); days %= 1461; if (days &gt; 365) { jy += Math.floor((days - 1) / 365); days = (days - 1) % 365; } var jm, jd; if (days &lt; 186) { jm = 1 + Math.floor(days / 31); jd = 1 + (days % 31); } else { jm = 7 + Math.floor((days - 186) / 30); jd = 1 + ((days - 186) % 30); } return [jy, jm, jd]; }
+function hdJ2G(jy, jm, jd) { jy += 1595; var days = -355668 + (365 * jy) + (Math.floor(jy / 33) * 8) + Math.floor(((jy % 33) + 3) / 4) + jd + ((jm &lt; 7) ? (jm - 1) * 31 : ((jm - 7) * 30) + 186); var gy = 400 * Math.floor(days / 146097); days %= 146097; if (days &gt; 36524) { days--; gy += 100 * Math.floor(days / 36524); days %= 36524; if (days &gt;= 365) { days++; } } gy += 4 * Math.floor(days / 1461); days %= 1461; if (days &gt; 365) { gy += Math.floor((days - 1) / 365); days = (days - 1) % 365; } var gd = days + 1; var ml = [0, 31, ((gy % 4 === 0 &amp;&amp; gy % 100 !== 0) || (gy % 400 === 0)) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]; var gm; for (gm = 0; gm &lt; 13 &amp;&amp; gd &gt; ml[gm]; gm++) { gd -= ml[gm]; } return [gy, gm, gd]; }
+function hdPad(n) { return (n &lt; 10 ? "0" : "") + n; }
+function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.type("java.time.ZoneId"); var z = Z.now(I.of("Asia/Tehran")); var j = hdG2J(z.getYear(), z.getMonthValue(), z.getDayOfMonth()); return j[0] + "/" + hdPad(j[1]) + "/" + hdPad(j[2]) + " " + hdPad(z.getHour()) + ":" + hdPad(z.getMinute()); } catch (e) { var d = new Date(); var j2 = hdG2J(d.getFullYear(), d.getMonth() + 1, d.getDate()); return j2[0] + "/" + hdPad(j2[1]) + "/" + hdPad(j2[2]) + " " + hdPad(d.getHours()) + ":" + hdPad(d.getMinutes()); } }
+  var name = ((d.ApplicantFirstName || "") + " " + (d.ApplicantLastName || "")).trim();
+  var title = "تکمیل پرونده ودیعه";
+  var text = "پرونده ودیعه مسکن شما تکمیل و در بانک اطلاعات دریافت‌کنندگان ثبت شد. تاریخ الزام به تسویه: " + (d.SettlementDueDate || "-") + ". لطفاً یک ماه پیش از پایان قرارداد اجاره، وضعیت تمدید یا تخلیه را اعلام کنید.";
+  var log = d.InitiatorNotifications || [];
+  log.push({ NoticeTitle: title, NoticeText: text, NoticeTime: hdNow() });
+  d.InitiatorNotifications = log;
+  execution.setVariable("Submission", S(JSON.stringify(obj)));
+  execution.setVariable("_lastNotice", title + ": " + text);
+  var pm = execution.getVariable("PM");
+  if (pm) {
+    var nt = hdNow();
+    try {
+      var nobj = JSON.parse(JSON.stringify(obj));
+      nobj.data.StateTask = "0";
+      nobj.data.NoticeTitle = title;
+      nobj.data.NoticeText = text;
+      nobj.data.NoticeTime = nt;
+      var HashMap = Java.type("java.util.HashMap");
+      var vars = new HashMap();
+      vars.put("PM", String(pm));
+      vars.put("StateTask", "0");
+      vars.put("NoticeTaskName", "اطلاع: " + title);
+      vars.put("NoticeTitle", title);
+      vars.put("NoticeText", text);
+      vars.put("NoticeTime", nt);
+      vars.put("SourceProcessInstanceId", execution.getProcessInstanceId());
+      vars.put("Submission", S(JSON.stringify(nobj)));
+      var rs = execution.getProcessEngineServices().getRuntimeService();
+      var bk = execution.getProcessBusinessKey();
+      if (bk) { rs.startProcessInstanceByKey("HousingDepositNotice", String(bk), vars); }
+      else { rs.startProcessInstanceByKey("HousingDepositNotice", vars); }
+    } catch (eN) {
+      console.error("[Notice] HousingDepositNotice not started, falling back to plain task: " + eN);
+      var ts = execution.getProcessEngineServices().getTaskService();
+      var t = ts.newTask();
+      t.setName("اطلاع: " + title);
+      t.setDescription(text);
+      t.setAssignee(String(pm));
+      ts.saveTask(t);
+    }
+  }
+  console.log("[Notify_Done] " + title);
+} catch (e) { console.error("[Notify_Done] " + e); }
+</camunda:script>
+        </camunda:executionListener>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_DB_N</bpmn:incoming>
+      <bpmn:outgoing>Flow_N_Done_Wait</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_Notify_Done" />
+    </bpmn:intermediateThrowEvent>
+    <bpmn:eventBasedGateway id="Gateway_ExitWait" name="انتظار رویداد خروج از شمول">
+      <bpmn:incoming>Flow_N_Done_Wait</bpmn:incoming>
+      <bpmn:outgoing>Flow_Wait_Msg</bpmn:outgoing>
+      <bpmn:outgoing>Flow_Wait_Due</bpmn:outgoing>
+    </bpmn:eventBasedGateway>
+    <bpmn:intermediateCatchEvent id="Catch_ExitMessage" name="اعلام خروج از شمول (فوت، انفصال، تغییر محل خدمت و ...)">
+      <bpmn:extensionElements>
+        <camunda:executionListener event="end">
+          <camunda:script scriptFormat="javascript">try {
+  var raw = execution.getVariable("Submission");
+  var obj = (raw &amp;&amp; typeof raw.prop === "function") ? JSON.parse(raw.toString()) : (typeof raw === "string" ? JSON.parse(raw) : { data: {} });
+  if (!obj.data) { obj = { data: obj }; }
+  var reason = execution.getVariable("ExitReason");
+  if (reason !== null &amp;&amp; reason !== undefined &amp;&amp; String(reason) !== "") { obj.data.ExitReason = String(reason); }
+  else if (!obj.data.ExitReason) { obj.data.ExitReason = ""; }
+  execution.setVariable("Submission", S(JSON.stringify(obj)));
+  console.log("[Catch_ExitMessage] ExitReason=" + obj.data.ExitReason);
+} catch (e) { console.error("[Catch_ExitMessage] " + e); }
+</camunda:script>
+        </camunda:executionListener>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_Wait_Msg</bpmn:incoming>
+      <bpmn:outgoing>Flow_Msg_NExit</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_ExitCoverage" messageRef="Message_HousingDepositExitCoverage" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:intermediateCatchEvent id="Catch_SettlementDue" name="سررسید تسویه / پایان مهلت استفاده">
+      <bpmn:extensionElements>
+        <camunda:executionListener event="end">
+          <camunda:script scriptFormat="javascript">try {
+  var raw = execution.getVariable("Submission");
+  var obj = (raw &amp;&amp; typeof raw.prop === "function") ? JSON.parse(raw.toString()) : (typeof raw === "string" ? JSON.parse(raw) : { data: {} });
+  if (!obj.data) { obj = { data: obj }; }
+  var reason = execution.getVariable("ExitReason");
+  if (reason !== null &amp;&amp; reason !== undefined &amp;&amp; String(reason) !== "") { obj.data.ExitReason = String(reason); }
+  else if (!obj.data.ExitReason) { obj.data.ExitReason = "periodEnd"; }
+  execution.setVariable("Submission", S(JSON.stringify(obj)));
+  console.log("[Catch_SettlementDue] ExitReason=" + obj.data.ExitReason);
+} catch (e) { console.error("[Catch_SettlementDue] " + e); }
+</camunda:script>
+        </camunda:executionListener>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_Wait_Due</bpmn:incoming>
+      <bpmn:outgoing>Flow_Due_NExit</bpmn:outgoing>
+      <bpmn:timerEventDefinition id="TimerEventDefinition_SettlementDue">
+        <bpmn:timeDate xsi:type="bpmn:tFormalExpression">${_exitDueDate}</bpmn:timeDate>
+      </bpmn:timerEventDefinition>
+    </bpmn:intermediateCatchEvent>
+    <bpmn:intermediateThrowEvent id="Notify_Exit" name="اطلاع الزام به تسویه به متقاضی">
+      <bpmn:extensionElements>
+        <camunda:executionListener event="start">
+          <camunda:script scriptFormat="javascript">try {
+  var raw = execution.getVariable("Submission");
+  var obj = null;
+  if (raw === null || raw === undefined) { obj = { data: {} }; }
+  else if (typeof raw === "string") { obj = JSON.parse(raw); }
+  else if (raw &amp;&amp; typeof raw.prop === "function") { obj = JSON.parse(raw.toString()); }
+  else { try { obj = JSON.parse(JSON.stringify(raw)); } catch (e1) { obj = { data: {} }; } }
+  if (!obj.data) { obj = { data: obj }; }
+  var d = obj.data;
+  function fmt(n) { n = Math.round(Number(n || 0)); return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ","); }
+  function note(s) { return s ? " توضیحات: " + s : ""; }
+  function hdG2J(gy, gm, gd) { var g_d_m = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334]; var gy2 = (gm &gt; 2) ? (gy + 1) : gy; var days = 355666 + (365 * gy) + Math.floor((gy2 + 3) / 4) - Math.floor((gy2 + 99) / 100) + Math.floor((gy2 + 399) / 400) + gd + g_d_m[gm - 1]; var jy = -1595 + (33 * Math.floor(days / 12053)); days %= 12053; jy += 4 * Math.floor(days / 1461); days %= 1461; if (days &gt; 365) { jy += Math.floor((days - 1) / 365); days = (days - 1) % 365; } var jm, jd; if (days &lt; 186) { jm = 1 + Math.floor(days / 31); jd = 1 + (days % 31); } else { jm = 7 + Math.floor((days - 186) / 30); jd = 1 + ((days - 186) % 30); } return [jy, jm, jd]; }
+function hdJ2G(jy, jm, jd) { jy += 1595; var days = -355668 + (365 * jy) + (Math.floor(jy / 33) * 8) + Math.floor(((jy % 33) + 3) / 4) + jd + ((jm &lt; 7) ? (jm - 1) * 31 : ((jm - 7) * 30) + 186); var gy = 400 * Math.floor(days / 146097); days %= 146097; if (days &gt; 36524) { days--; gy += 100 * Math.floor(days / 36524); days %= 36524; if (days &gt;= 365) { days++; } } gy += 4 * Math.floor(days / 1461); days %= 1461; if (days &gt; 365) { gy += Math.floor((days - 1) / 365); days = (days - 1) % 365; } var gd = days + 1; var ml = [0, 31, ((gy % 4 === 0 &amp;&amp; gy % 100 !== 0) || (gy % 400 === 0)) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]; var gm; for (gm = 0; gm &lt; 13 &amp;&amp; gd &gt; ml[gm]; gm++) { gd -= ml[gm]; } return [gy, gm, gd]; }
+function hdPad(n) { return (n &lt; 10 ? "0" : "") + n; }
+function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.type("java.time.ZoneId"); var z = Z.now(I.of("Asia/Tehran")); var j = hdG2J(z.getYear(), z.getMonthValue(), z.getDayOfMonth()); return j[0] + "/" + hdPad(j[1]) + "/" + hdPad(j[2]) + " " + hdPad(z.getHour()) + ":" + hdPad(z.getMinute()); } catch (e) { var d = new Date(); var j2 = hdG2J(d.getFullYear(), d.getMonth() + 1, d.getDate()); return j2[0] + "/" + hdPad(j2[1]) + "/" + hdPad(j2[2]) + " " + hdPad(d.getHours()) + ":" + hdPad(d.getMinutes()); } }
+  var name = ((d.ApplicantFirstName || "") + " " + (d.ApplicantLastName || "")).trim();
+  var title = "الزام به تسویه ودیعه";
+  var text = "به علت خروج از شمول دستورالعمل، ودیعه مسکن به مبلغ " + fmt(d.ApprovedDepositAmount) + " ریال باید حداکثر تا تاریخ " + (d.SettlementDueDate || "-") + " تسویه شود." + note(d.ExitNote);
+  var log = d.InitiatorNotifications || [];
+  log.push({ NoticeTitle: title, NoticeText: text, NoticeTime: hdNow() });
+  d.InitiatorNotifications = log;
+  execution.setVariable("Submission", S(JSON.stringify(obj)));
+  execution.setVariable("_lastNotice", title + ": " + text);
+  var pm = execution.getVariable("PM");
+  if (pm) {
+    var nt = hdNow();
+    try {
+      var nobj = JSON.parse(JSON.stringify(obj));
+      nobj.data.StateTask = "0";
+      nobj.data.NoticeTitle = title;
+      nobj.data.NoticeText = text;
+      nobj.data.NoticeTime = nt;
+      var HashMap = Java.type("java.util.HashMap");
+      var vars = new HashMap();
+      vars.put("PM", String(pm));
+      vars.put("StateTask", "0");
+      vars.put("NoticeTaskName", "اطلاع: " + title);
+      vars.put("NoticeTitle", title);
+      vars.put("NoticeText", text);
+      vars.put("NoticeTime", nt);
+      vars.put("SourceProcessInstanceId", execution.getProcessInstanceId());
+      vars.put("Submission", S(JSON.stringify(nobj)));
+      var rs = execution.getProcessEngineServices().getRuntimeService();
+      var bk = execution.getProcessBusinessKey();
+      if (bk) { rs.startProcessInstanceByKey("HousingDepositNotice", String(bk), vars); }
+      else { rs.startProcessInstanceByKey("HousingDepositNotice", vars); }
+    } catch (eN) {
+      console.error("[Notice] HousingDepositNotice not started, falling back to plain task: " + eN);
+      var ts = execution.getProcessEngineServices().getTaskService();
+      var t = ts.newTask();
+      t.setName("اطلاع: " + title);
+      t.setDescription(text);
+      t.setAssignee(String(pm));
+      ts.saveTask(t);
+    }
+  }
+  console.log("[Notify_Exit] " + title);
+} catch (e) { console.error("[Notify_Exit] " + e); }
+</camunda:script>
+        </camunda:executionListener>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_Msg_NExit</bpmn:incoming>
+      <bpmn:incoming>Flow_Due_NExit</bpmn:incoming>
+      <bpmn:outgoing>Flow_NExit_NSet</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_Notify_Exit" />
+    </bpmn:intermediateThrowEvent>
+    <bpmn:intermediateThrowEvent id="Notify_Settlement" name="ارجاع به فرآیند تسویه حساب">
+      <bpmn:documentation>خروج از شمول یا سررسید تسویه اعلام شده است. ادامه کار (اعلام تسویه، دریافت وجه، اسناد معکوس، خسارت تأخیر و اقدام حقوقی) در فرآیند مستقل HousingDepositSettlement انجام می‌شود.</bpmn:documentation>
+      <bpmn:extensionElements>
+        <camunda:executionListener event="start">
+          <camunda:script scriptFormat="javascript">try {
+  var raw = execution.getVariable("Submission");
+  var obj = null;
+  if (raw === null || raw === undefined) { obj = { data: {} }; }
+  else if (typeof raw === "string") { obj = JSON.parse(raw); }
+  else if (raw &amp;&amp; typeof raw.prop === "function") { obj = JSON.parse(raw.toString()); }
+  else { try { obj = JSON.parse(JSON.stringify(raw)); } catch (e1) { obj = { data: {} }; } }
+  if (!obj.data) { obj = { data: obj }; }
+  obj.data.SettlementTrigger = "exit";
+  obj.data.StateTask = "1";
+  var HashMap = Java.type("java.util.HashMap");
+  var vars = new HashMap();
+  var pm = execution.getVariable("PM");
+  if (pm) { vars.put("PM", String(pm)); }
+  vars.put("StateTask", "1");
+  vars.put("_requestCategory", String(obj.data.RequestCategory || ""));
+  vars.put("SourceProcessInstanceId", execution.getProcessInstanceId());
+  vars.put("Submission", S(JSON.stringify(obj)));
+  var rs = execution.getProcessEngineServices().getRuntimeService();
+  var bk = execution.getProcessBusinessKey();
+  if (bk) { rs.startProcessInstanceByKey("HousingDepositSettlement", String(bk), vars); }
+  else { rs.startProcessInstanceByKey("HousingDepositSettlement", vars); }
+  console.log("[Notify_Settlement] HousingDepositSettlement started");
+} catch (e) { console.error("[Notify_Settlement] " + e); }
+</camunda:script>
+        </camunda:executionListener>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_NExit_NSet</bpmn:incoming>
+      <bpmn:outgoing>Flow_NSet_End</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_Notify_Settlement" />
+    </bpmn:intermediateThrowEvent>
+    <bpmn:endEvent id="End_Handover" name="پایان (ادامه در فرآیند تسویه حساب)">
+      <bpmn:incoming>Flow_NSet_End</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_Start_Cat" sourceRef="Start_Request" targetRef="Gateway_Category" />
+    <bpmn:sequenceFlow id="Flow_Cat_CEO" name="ستاد" sourceRef="Gateway_Category" targetRef="Task_CEOReview">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${_requestCategory == "HQ"}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_Cat_Prov" sourceRef="Gateway_Category" targetRef="Task_ProvinceReview" />
+    <bpmn:sequenceFlow id="Flow_CEO_N" sourceRef="Task_CEOReview" targetRef="Notify_CEO" />
+    <bpmn:sequenceFlow id="Flow_N_CEO_G" sourceRef="Notify_CEO" targetRef="Gateway_CEO" />
+    <bpmn:sequenceFlow id="Flow_CEO_Yes" name="بله" sourceRef="Gateway_CEO" targetRef="Gateway_ToHR">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${_ceoApproval == "approved"}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_CEO_No" name="خیر" sourceRef="Gateway_CEO" targetRef="End_Rejected" />
+    <bpmn:sequenceFlow id="Flow_Prov_N" sourceRef="Task_ProvinceReview" targetRef="Notify_Province" />
+    <bpmn:sequenceFlow id="Flow_N_Prov_G" sourceRef="Notify_Province" targetRef="Gateway_Province" />
+    <bpmn:sequenceFlow id="Flow_Prov_Yes" name="بله" sourceRef="Gateway_Province" targetRef="Gateway_ToHR">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${_provinceApproval == "approved"}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_Prov_No" name="خیر" sourceRef="Gateway_Province" targetRef="End_RejectedProv" />
+    <bpmn:sequenceFlow id="Flow_ToHR" sourceRef="Gateway_ToHR" targetRef="Task_HRReview" />
+    <bpmn:sequenceFlow id="Flow_HR_N" sourceRef="Task_HRReview" targetRef="Notify_HR" />
+    <bpmn:sequenceFlow id="Flow_N_HR_G" sourceRef="Notify_HR" targetRef="Gateway_HR" />
+    <bpmn:sequenceFlow id="Flow_HR_Yes" name="بله" sourceRef="Gateway_HR" targetRef="Gateway_Fork">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${_hrApproval == "approved"}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_HR_NoHQ" name="خیر (ستاد)" sourceRef="Gateway_HR" targetRef="End_RejectedHQ">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${_hrApproval != "approved" &amp;&amp; _requestCategory == "HQ"}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_HR_NoProv" name="خیر (استان – بازگشت)" sourceRef="Gateway_HR" targetRef="Task_ProvinceReview" />
+    <bpmn:sequenceFlow id="Flow_Fork_Lease" sourceRef="Gateway_Fork" targetRef="Task_LeaseInfo" />
+    <bpmn:sequenceFlow id="Flow_Fork_Insp" sourceRef="Gateway_Fork" targetRef="Task_Inspection" />
+    <bpmn:sequenceFlow id="Flow_Insp_End" sourceRef="Task_Inspection" targetRef="End_Inspection" />
+    <bpmn:sequenceFlow id="Flow_Lease_Route" sourceRef="Task_LeaseInfo" targetRef="Gateway_Route" />
+    <bpmn:sequenceFlow id="Flow_Route_HQ" name="ستاد" sourceRef="Gateway_Route" targetRef="Task_ReferralBranch">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${_requestCategory == "HQ"}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_Route_Prov" name="استان" sourceRef="Gateway_Route" targetRef="Task_Referral" />
+    <bpmn:sequenceFlow id="Flow_Ref_N" sourceRef="Task_Referral" targetRef="Notify_Legal" />
+    <bpmn:sequenceFlow id="Flow_RefB_N" sourceRef="Task_ReferralBranch" targetRef="Notify_Legal" />
+    <bpmn:sequenceFlow id="Flow_N_Legal" sourceRef="Notify_Legal" targetRef="Task_Legal" />
+    <bpmn:sequenceFlow id="Flow_Legal_File" sourceRef="Task_Legal" targetRef="Task_File" />
+    <bpmn:sequenceFlow id="Flow_File_Pay" sourceRef="Task_File" targetRef="Task_Payment" />
+    <bpmn:sequenceFlow id="Flow_Pay_N" sourceRef="Task_Payment" targetRef="Notify_Paid" />
+    <bpmn:sequenceFlow id="Flow_N_Paid_DB" sourceRef="Notify_Paid" targetRef="Task_Database" />
+    <bpmn:sequenceFlow id="Flow_DB_N" sourceRef="Task_Database" targetRef="Notify_Done" />
+    <bpmn:sequenceFlow id="Flow_N_Done_Wait" sourceRef="Notify_Done" targetRef="Gateway_ExitWait" />
+    <bpmn:sequenceFlow id="Flow_Wait_Msg" sourceRef="Gateway_ExitWait" targetRef="Catch_ExitMessage" />
+    <bpmn:sequenceFlow id="Flow_Wait_Due" sourceRef="Gateway_ExitWait" targetRef="Catch_SettlementDue" />
+    <bpmn:sequenceFlow id="Flow_Msg_NExit" name="رویداد خاص" sourceRef="Catch_ExitMessage" targetRef="Notify_Exit" />
+    <bpmn:sequenceFlow id="Flow_Due_NExit" name="سررسید" sourceRef="Catch_SettlementDue" targetRef="Notify_Exit" />
+    <bpmn:sequenceFlow id="Flow_NExit_NSet" sourceRef="Notify_Exit" targetRef="Notify_Settlement" />
+    <bpmn:sequenceFlow id="Flow_NSet_End" sourceRef="Notify_Settlement" targetRef="End_Handover" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_HousingDepositComplete">
+    <bpmndi:BPMNPlane id="BPMNPlane_HousingDepositComplete" bpmnElement="Collaboration_HousingDepositComplete">
+      <bpmndi:BPMNShape id="Participant_HousingDepositComplete_di" bpmnElement="Participant_HousingDepositComplete" isHorizontal="true">
+        <dc:Bounds x="129" y="80" width="3000" height="1120" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Employee_di" bpmnElement="Lane_Employee" isHorizontal="true">
+        <dc:Bounds x="159" y="80" width="2970" height="160" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_CEO_di" bpmnElement="Lane_CEO" isHorizontal="true">
+        <dc:Bounds x="159" y="240" width="2970" height="160" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_ProvinceManagement_di" bpmnElement="Lane_ProvinceManagement" isHorizontal="true">
+        <dc:Bounds x="159" y="400" width="2970" height="160" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_HR_di" bpmnElement="Lane_HR" isHorizontal="true">
+        <dc:Bounds x="159" y="560" width="2970" height="160" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Inspection_di" bpmnElement="Lane_Inspection" isHorizontal="true">
+        <dc:Bounds x="159" y="720" width="2970" height="160" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Legal_di" bpmnElement="Lane_Legal" isHorizontal="true">
+        <dc:Bounds x="159" y="880" width="2970" height="160" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Executor_di" bpmnElement="Lane_Executor" isHorizontal="true">
+        <dc:Bounds x="159" y="1040" width="2970" height="160" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Start_Request_di" bpmnElement="Start_Request">
+        <dc:Bounds x="212" y="142" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="182" y="182" width="96" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_Category_di" bpmnElement="Gateway_Category" isMarkerVisible="true">
+        <dc:Bounds x="300" y="135" width="50" height="50" />
+        <bpmndi:BPMNLabel><dc:Bounds x="285" y="105" width="80" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_CEOReview_di" bpmnElement="Task_CEOReview">
+        <dc:Bounds x="400" y="280" width="120" height="80" />
+        
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Notify_CEO_di" bpmnElement="Notify_CEO">
+        <dc:Bounds x="570" y="302" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="540" y="342" width="96" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_CEO_di" bpmnElement="Gateway_CEO" isMarkerVisible="true">
+        <dc:Bounds x="660" y="295" width="50" height="50" />
+        <bpmndi:BPMNLabel><dc:Bounds x="645" y="265" width="80" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_Rejected_di" bpmnElement="End_Rejected">
+        <dc:Bounds x="800" y="142" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="770" y="182" width="96" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_ProvinceReview_di" bpmnElement="Task_ProvinceReview">
+        <dc:Bounds x="400" y="440" width="120" height="80" />
+        
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Notify_Province_di" bpmnElement="Notify_Province">
+        <dc:Bounds x="570" y="462" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="540" y="502" width="96" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_Province_di" bpmnElement="Gateway_Province" isMarkerVisible="true">
+        <dc:Bounds x="660" y="455" width="50" height="50" />
+        <bpmndi:BPMNLabel><dc:Bounds x="645" y="425" width="80" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_RejectedProv_di" bpmnElement="End_RejectedProv">
+        <dc:Bounds x="667" y="520" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="637" y="560" width="96" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_ToHR_di" bpmnElement="Gateway_ToHR" isMarkerVisible="true">
+        <dc:Bounds x="780" y="615" width="50" height="50" />
+        <bpmndi:BPMNLabel><dc:Bounds x="765" y="585" width="80" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_HRReview_di" bpmnElement="Task_HRReview">
+        <dc:Bounds x="860" y="600" width="120" height="80" />
+        
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Notify_HR_di" bpmnElement="Notify_HR">
+        <dc:Bounds x="1010" y="622" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="980" y="662" width="96" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_HR_di" bpmnElement="Gateway_HR" isMarkerVisible="true">
+        <dc:Bounds x="1090" y="615" width="50" height="50" />
+        <bpmndi:BPMNLabel><dc:Bounds x="1075" y="585" width="80" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_RejectedHQ_di" bpmnElement="End_RejectedHQ">
+        <dc:Bounds x="1200" y="622" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="1170" y="662" width="96" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_Fork_di" bpmnElement="Gateway_Fork">
+        <dc:Bounds x="1160" y="135" width="50" height="50" />
+        <bpmndi:BPMNLabel><dc:Bounds x="1145" y="105" width="80" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_LeaseInfo_di" bpmnElement="Task_LeaseInfo">
+        <dc:Bounds x="1260" y="120" width="120" height="80" />
+        
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Inspection_di" bpmnElement="Task_Inspection">
+        <dc:Bounds x="1260" y="760" width="120" height="80" />
+        
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_Inspection_di" bpmnElement="End_Inspection">
+        <dc:Bounds x="1500" y="782" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="1470" y="822" width="96" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_Route_di" bpmnElement="Gateway_Route" isMarkerVisible="true">
+        <dc:Bounds x="1440" y="135" width="50" height="50" />
+        <bpmndi:BPMNLabel><dc:Bounds x="1425" y="105" width="80" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Referral_di" bpmnElement="Task_Referral">
+        <dc:Bounds x="1600" y="440" width="120" height="80" />
+        
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_ReferralBranch_di" bpmnElement="Task_ReferralBranch">
+        <dc:Bounds x="1600" y="1080" width="120" height="80" />
+        
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Notify_Legal_di" bpmnElement="Notify_Legal">
+        <dc:Bounds x="1760" y="942" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="1730" y="982" width="96" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Legal_di" bpmnElement="Task_Legal">
+        <dc:Bounds x="1840" y="920" width="120" height="80" />
+        
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_File_di" bpmnElement="Task_File">
+        <dc:Bounds x="2020" y="1080" width="120" height="80" />
+        
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Payment_di" bpmnElement="Task_Payment">
+        <dc:Bounds x="2180" y="1080" width="120" height="80" />
+        
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Notify_Paid_di" bpmnElement="Notify_Paid">
+        <dc:Bounds x="2340" y="1102" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="2310" y="1142" width="96" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Database_di" bpmnElement="Task_Database">
+        <dc:Bounds x="2400" y="600" width="120" height="80" />
+        
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Notify_Done_di" bpmnElement="Notify_Done">
+        <dc:Bounds x="2560" y="622" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="2530" y="662" width="96" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_ExitWait_di" bpmnElement="Gateway_ExitWait">
+        <dc:Bounds x="2640" y="615" width="50" height="50" />
+        <bpmndi:BPMNLabel><dc:Bounds x="2625" y="585" width="80" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Catch_ExitMessage_di" bpmnElement="Catch_ExitMessage">
+        <dc:Bounds x="2740" y="582" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="2710" y="622" width="96" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Catch_SettlementDue_di" bpmnElement="Catch_SettlementDue">
+        <dc:Bounds x="2740" y="652" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="2710" y="692" width="96" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Notify_Exit_di" bpmnElement="Notify_Exit">
+        <dc:Bounds x="2860" y="622" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="2830" y="662" width="96" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Notify_Settlement_di" bpmnElement="Notify_Settlement">
+        <dc:Bounds x="2960" y="622" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="2930" y="662" width="96" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_Handover_di" bpmnElement="End_Handover">
+        <dc:Bounds x="3060" y="622" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="3030" y="662" width="96" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_Start_Cat_di" bpmnElement="Flow_Start_Cat">
+        <di:waypoint x="248" y="160" />
+        <di:waypoint x="300" y="160" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Cat_CEO_di" bpmnElement="Flow_Cat_CEO">
+        <di:waypoint x="325" y="185" />
+        <di:waypoint x="325" y="320" />
+        <di:waypoint x="400" y="320" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Cat_Prov_di" bpmnElement="Flow_Cat_Prov">
+        <di:waypoint x="350" y="160" />
+        <di:waypoint x="370" y="160" />
+        <di:waypoint x="370" y="480" />
+        <di:waypoint x="400" y="480" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_CEO_N_di" bpmnElement="Flow_CEO_N">
+        <di:waypoint x="520" y="320" />
+        <di:waypoint x="570" y="320" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_N_CEO_G_di" bpmnElement="Flow_N_CEO_G">
+        <di:waypoint x="606" y="320" />
+        <di:waypoint x="660" y="320" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_CEO_Yes_di" bpmnElement="Flow_CEO_Yes">
+        <di:waypoint x="710" y="320" />
+        <di:waypoint x="805" y="320" />
+        <di:waypoint x="805" y="615" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_CEO_No_di" bpmnElement="Flow_CEO_No">
+        <di:waypoint x="685" y="295" />
+        <di:waypoint x="685" y="160" />
+        <di:waypoint x="800" y="160" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Prov_N_di" bpmnElement="Flow_Prov_N">
+        <di:waypoint x="520" y="480" />
+        <di:waypoint x="570" y="480" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_N_Prov_G_di" bpmnElement="Flow_N_Prov_G">
+        <di:waypoint x="606" y="480" />
+        <di:waypoint x="660" y="480" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Prov_Yes_di" bpmnElement="Flow_Prov_Yes">
+        <di:waypoint x="710" y="480" />
+        <di:waypoint x="740" y="480" />
+        <di:waypoint x="740" y="640" />
+        <di:waypoint x="780" y="640" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Prov_No_di" bpmnElement="Flow_Prov_No">
+        <di:waypoint x="685" y="505" />
+        <di:waypoint x="685" y="520" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_ToHR_di" bpmnElement="Flow_ToHR">
+        <di:waypoint x="830" y="640" />
+        <di:waypoint x="860" y="640" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_HR_N_di" bpmnElement="Flow_HR_N">
+        <di:waypoint x="980" y="640" />
+        <di:waypoint x="1010" y="640" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_N_HR_G_di" bpmnElement="Flow_N_HR_G">
+        <di:waypoint x="1046" y="640" />
+        <di:waypoint x="1090" y="640" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_HR_Yes_di" bpmnElement="Flow_HR_Yes">
+        <di:waypoint x="1115" y="615" />
+        <di:waypoint x="1115" y="160" />
+        <di:waypoint x="1160" y="160" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_HR_NoHQ_di" bpmnElement="Flow_HR_NoHQ">
+        <di:waypoint x="1140" y="640" />
+        <di:waypoint x="1200" y="640" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_HR_NoProv_di" bpmnElement="Flow_HR_NoProv">
+        <di:waypoint x="1115" y="665" />
+        <di:waypoint x="1115" y="700" />
+        <di:waypoint x="460" y="700" />
+        <di:waypoint x="460" y="520" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Fork_Lease_di" bpmnElement="Flow_Fork_Lease">
+        <di:waypoint x="1210" y="160" />
+        <di:waypoint x="1260" y="160" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Fork_Insp_di" bpmnElement="Flow_Fork_Insp">
+        <di:waypoint x="1185" y="185" />
+        <di:waypoint x="1185" y="800" />
+        <di:waypoint x="1260" y="800" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Insp_End_di" bpmnElement="Flow_Insp_End">
+        <di:waypoint x="1380" y="800" />
+        <di:waypoint x="1500" y="800" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Lease_Route_di" bpmnElement="Flow_Lease_Route">
+        <di:waypoint x="1380" y="160" />
+        <di:waypoint x="1440" y="160" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Route_HQ_di" bpmnElement="Flow_Route_HQ">
+        <di:waypoint x="1465" y="185" />
+        <di:waypoint x="1465" y="1120" />
+        <di:waypoint x="1600" y="1120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Route_Prov_di" bpmnElement="Flow_Route_Prov">
+        <di:waypoint x="1490" y="160" />
+        <di:waypoint x="1540" y="160" />
+        <di:waypoint x="1540" y="480" />
+        <di:waypoint x="1600" y="480" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Ref_N_di" bpmnElement="Flow_Ref_N">
+        <di:waypoint x="1720" y="480" />
+        <di:waypoint x="1740" y="480" />
+        <di:waypoint x="1740" y="960" />
+        <di:waypoint x="1760" y="960" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_RefB_N_di" bpmnElement="Flow_RefB_N">
+        <di:waypoint x="1720" y="1120" />
+        <di:waypoint x="1778" y="1120" />
+        <di:waypoint x="1778" y="978" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_N_Legal_di" bpmnElement="Flow_N_Legal">
+        <di:waypoint x="1796" y="960" />
+        <di:waypoint x="1840" y="960" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Legal_File_di" bpmnElement="Flow_Legal_File">
+        <di:waypoint x="1960" y="960" />
+        <di:waypoint x="1990" y="960" />
+        <di:waypoint x="1990" y="1120" />
+        <di:waypoint x="2020" y="1120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_File_Pay_di" bpmnElement="Flow_File_Pay">
+        <di:waypoint x="2140" y="1120" />
+        <di:waypoint x="2180" y="1120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Pay_N_di" bpmnElement="Flow_Pay_N">
+        <di:waypoint x="2300" y="1120" />
+        <di:waypoint x="2340" y="1120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_N_Paid_DB_di" bpmnElement="Flow_N_Paid_DB">
+        <di:waypoint x="2376" y="1120" />
+        <di:waypoint x="2390" y="1120" />
+        <di:waypoint x="2390" y="640" />
+        <di:waypoint x="2400" y="640" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_DB_N_di" bpmnElement="Flow_DB_N">
+        <di:waypoint x="2520" y="640" />
+        <di:waypoint x="2560" y="640" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_N_Done_Wait_di" bpmnElement="Flow_N_Done_Wait">
+        <di:waypoint x="2596" y="640" />
+        <di:waypoint x="2640" y="640" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Wait_Msg_di" bpmnElement="Flow_Wait_Msg">
+        <di:waypoint x="2665" y="615" />
+        <di:waypoint x="2665" y="600" />
+        <di:waypoint x="2740" y="600" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Wait_Due_di" bpmnElement="Flow_Wait_Due">
+        <di:waypoint x="2665" y="665" />
+        <di:waypoint x="2665" y="670" />
+        <di:waypoint x="2740" y="670" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Msg_NExit_di" bpmnElement="Flow_Msg_NExit">
+        <di:waypoint x="2776" y="600" />
+        <di:waypoint x="2820" y="600" />
+        <di:waypoint x="2820" y="640" />
+        <di:waypoint x="2860" y="640" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Due_NExit_di" bpmnElement="Flow_Due_NExit">
+        <di:waypoint x="2776" y="670" />
+        <di:waypoint x="2820" y="670" />
+        <di:waypoint x="2820" y="640" />
+        <di:waypoint x="2860" y="640" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_NExit_NSet_di" bpmnElement="Flow_NExit_NSet">
+        <di:waypoint x="2896" y="640" />
+        <di:waypoint x="2960" y="640" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_NSet_End_di" bpmnElement="Flow_NSet_End">
+        <di:waypoint x="2996" y="640" />
+        <di:waypoint x="3060" y="640" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
