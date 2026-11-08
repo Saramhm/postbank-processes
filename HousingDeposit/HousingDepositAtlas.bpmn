@@ -7,7 +7,6 @@
     <bpmn:laneSet id="LaneSet_1">
       <bpmn:lane id="Lane_Employee" name="کارکنان مشمول">
         <bpmn:flowNodeRef>Task_Request</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Task_LeaseInfo</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Gateway_Category</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Gateway_Fork</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Gateway_Route</bpmn:flowNodeRef>
@@ -38,6 +37,7 @@
         <bpmn:flowNodeRef>Task_Legal</bpmn:flowNodeRef>
       </bpmn:lane>
       <bpmn:lane id="Lane_Executor" name="ذی‌حساب / شعبه (واحد مجری پرداخت)">
+        <bpmn:flowNodeRef>Task_LeaseInfo</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Task_ReferralBranch</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Task_File</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Task_Payment</bpmn:flowNodeRef>
@@ -77,7 +77,7 @@
       <bpmn:incoming>F09</bpmn:incoming>
       <bpmn:outgoing>F11</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:userTask id="Task_LeaseInfo" name="تکمیل اطلاعات ملک و قرارداد اجاره (ذی‌نفع، پس از واریز)" camunda:asyncBefore="true" camunda:formKey="FORM_LEASE" camunda:assignee="${starter}">
+    <bpmn:userTask id="Task_LeaseInfo" name="تکمیل اطلاعات ملک و قرارداد اجاره (ذی‌حساب، پس از واریز)" camunda:asyncBefore="true" camunda:formKey="FORM_LEASE" camunda:assignee="${starter}">
       <bpmn:incoming>F25</bpmn:incoming>
       <bpmn:outgoing>F27</bpmn:outgoing>
     </bpmn:userTask>
@@ -248,7 +248,7 @@
         <dc:Bounds x="900" y="600" width="120" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Task_LeaseInfo_di" bpmnElement="Task_LeaseInfo">
-        <dc:Bounds x="2300" y="120" width="120" height="80" />
+        <dc:Bounds x="2220" y="1080" width="120" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Task_Inspection_di" bpmnElement="Task_Inspection">
         <dc:Bounds x="1240" y="760" width="120" height="80" />
@@ -423,14 +423,12 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="F25_di" bpmnElement="F25">
         <di:waypoint x="2180" y="1120" />
-        <di:waypoint x="2260" y="1120" />
-        <di:waypoint x="2260" y="160" />
-        <di:waypoint x="2300" y="160" />
+        <di:waypoint x="2220" y="1120" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="F27_di" bpmnElement="F27">
-        <di:waypoint x="2420" y="160" />
-        <di:waypoint x="2450" y="160" />
-        <di:waypoint x="2450" y="640" />
+        <di:waypoint x="2340" y="1120" />
+        <di:waypoint x="2420" y="1120" />
+        <di:waypoint x="2420" y="640" />
         <di:waypoint x="2480" y="640" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="F26_di" bpmnElement="F26">

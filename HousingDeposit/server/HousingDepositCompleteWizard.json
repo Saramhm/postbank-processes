@@ -1300,7 +1300,7 @@
       "customConditional": "show = (data.StateTask == 3 || data.StateTask === '3' || data.StateTask == '3' || Number(data.StateTask) === 3);"
     },
     {
-      "title": "اطلاعات ملک و قرارداد اجاره (ذی‌نفع، پس از واریز)",
+      "title": "اطلاعات ملک و قرارداد اجاره (ذی‌حساب، پس از واریز)",
       "theme": "info",
       "collapsible": false,
       "key": "stepLeaseInfo",
@@ -1316,7 +1316,7 @@
           "tag": "div",
           "input": false,
           "tableView": false,
-          "content": "<div class=\"alert alert-info\" style=\"margin-bottom:0\">ودیعه واریز شد. اطلاعات قرارداد اجاره‌ی جدید را تکمیل و مستندات را پیوست کنید. (در آینده این اطلاعات از سامانه‌ی املاک خوانده می‌شود؛ فعلاً دستی پر می‌شود.)</div>"
+          "content": "<div class=\"alert alert-info\" style=\"margin-bottom:0\">ودیعه واریز شد. ذی‌حساب اطلاعات قرارداد اجاره‌ی جدید را تکمیل و مستندات را پیوست می‌کند. (در آینده این اطلاعات از سامانه‌ی املاک خوانده می‌شود؛ فعلاً دستی پر می‌شود.)</div>"
         },
         {
           "label": "Columns",

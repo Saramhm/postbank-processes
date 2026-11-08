@@ -9,7 +9,6 @@
       <bpmn:lane id="Lane_Employee" name="کارکنان مشمول">
         <bpmn:flowNodeRef>Start_Request</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Gateway_Category</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Task_LeaseInfo</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Gateway_Fork</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Gateway_Route</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>End_Rejected</bpmn:flowNodeRef>
@@ -54,6 +53,7 @@
         <bpmn:flowNodeRef>Task_File</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Task_Payment</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Notify_Paid</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_LeaseInfo</bpmn:flowNodeRef>
       </bpmn:lane>
     </bpmn:laneSet>
     <bpmn:startEvent id="Start_Request" name="درخواست ودیعه مسکن" camunda:formKey="65" camunda:initiator="PM">
@@ -538,7 +538,7 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
       <bpmn:outgoing>Flow_Fork_Insp</bpmn:outgoing>
       <bpmn:outgoing>Flow_Fork_Route</bpmn:outgoing>
     </bpmn:parallelGateway>
-    <bpmn:userTask id="Task_LeaseInfo" name="تکمیل اطلاعات ملک و قرارداد اجاره" camunda:formKey="embedded:/camunda/forms/formioWizardCallApi.html?deployment=HousingDepositCompleteWizard.json&#38;var=Submission&#38;DefaultVal=Submission&#38;StateTask=4" camunda:assignee="${PM}">
+    <bpmn:userTask id="Task_LeaseInfo" name="تکمیل اطلاعات ملک و قرارداد اجاره" camunda:formKey="embedded:/camunda/forms/formioWizardCallApi.html?deployment=HousingDepositCompleteWizard.json&#38;var=Submission&#38;DefaultVal=Submission&#38;StateTask=4" camunda:assignee="${PM}" camunda:candidateGroups="${_requestCategory == &#34;HQ&#34; ? &#34;PBBeheshtiBranch&#34; : &#34;PBProvinceFinance&#34;}">
       <bpmn:extensionElements>
         <camunda:executionListener event="start">
           <camunda:script scriptFormat="javascript">
@@ -1355,7 +1355,7 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
         <bpmndi:BPMNLabel><dc:Bounds x="1145" y="105" width="80" height="27" /></bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Task_LeaseInfo_di" bpmnElement="Task_LeaseInfo">
-        <dc:Bounds x="2440" y="120" width="120" height="80" />
+        <dc:Bounds x="2440" y="1080" width="120" height="80" />
         
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Task_Inspection_di" bpmnElement="Task_Inspection">
@@ -1559,9 +1559,7 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_N_Paid_DB_di" bpmnElement="Flow_N_Paid_DB">
         <di:waypoint x="2376" y="1120" />
-        <di:waypoint x="2400" y="1120" />
-        <di:waypoint x="2400" y="160" />
-        <di:waypoint x="2440" y="160" />
+        <di:waypoint x="2440" y="1120" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_DB_N_di" bpmnElement="Flow_DB_N">
         <di:waypoint x="2720" y="640" />
@@ -1606,8 +1604,8 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
         <di:waypoint x="1300" y="160" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_Lease_DB_di" bpmnElement="Flow_Lease_DB">
-        <di:waypoint x="2560" y="160" />
-        <di:waypoint x="2580" y="160" />
+        <di:waypoint x="2560" y="1120" />
+        <di:waypoint x="2580" y="1120" />
         <di:waypoint x="2580" y="640" />
         <di:waypoint x="2600" y="640" />
       </bpmndi:BPMNEdge>
