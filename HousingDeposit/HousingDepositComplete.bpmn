@@ -12,7 +12,7 @@
 3- اصل اجاره‌نامه با کد رهگیری
 4- فیش واریز به حساب موجر
 5- درخواست تأییدشده
-6- فرم ضمانت (نمونه ۲۲۲۷)</bpmn:text>
+6- فرم ضمانت</bpmn:text>
     </bpmn:textAnnotation>
     <bpmn:association id="Association_1" associationDirection="None" sourceRef="Task_File" targetRef="TextAnnotation_1" />
   </bpmn:collaboration>
@@ -71,7 +71,7 @@
         <bpmn:flowNodeRef>Notify_Paid</bpmn:flowNodeRef>
       </bpmn:lane>
     </bpmn:laneSet>
-    <bpmn:startEvent id="Start_Request" name="درخواست ودیعه مسکن (تکمیل فرم ۲۲۲۵ / ۲۲۲۴)" camunda:formKey="65" camunda:initiator="PM">
+    <bpmn:startEvent id="Start_Request" name="درخواست ودیعه مسکن" camunda:formKey="65" camunda:initiator="PM">
       <bpmn:extensionElements>
         <camunda:executionListener event="end">
           <camunda:script scriptFormat="javascript">
@@ -103,8 +103,8 @@ try {
   var raw = execution.getVariable("Submission");
   var data = {};
   if (raw &amp;&amp; typeof raw.prop === "function") {
-    if (raw.hasProp("data") &amp;&amp; !raw.prop("data").isNull()) { data = JSON.parse(raw.prop("data").toString()); }
-    else { data = JSON.parse(raw.toString()); }
+    if (raw.hasProp("data") &amp;&amp; !raw.prop("data").isNull) { data = JSON.parse(raw.prop("data").toString); }
+    else { data = JSON.parse(raw.toString); }
   } else if (typeof raw === "string") {
     var parsed = JSON.parse(raw); data = (parsed &amp;&amp; parsed.data) ? parsed.data : (parsed || {});
   } else if (raw) { data = raw.data || raw; }
@@ -119,16 +119,16 @@ try {
   var obj = null;
   if (raw === null || raw === undefined) { obj = { data: {} }; }
   else if (typeof raw === "string") { obj = JSON.parse(raw); }
-  else if (raw &amp;&amp; typeof raw.prop === "function") { obj = JSON.parse(raw.toString()); }
+  else if (raw &amp;&amp; typeof raw.prop === "function") { obj = JSON.parse(raw.toString); }
   else { try { obj = JSON.parse(JSON.stringify(raw)); } catch (e1) { obj = { data: {} }; } }
   if (!obj.data) { obj = { data: obj }; }
   var d = obj.data;
   function hdG2J(gy, gm, gd) { var g_d_m = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334]; var gy2 = (gm &gt; 2) ? (gy + 1) : gy; var days = 355666 + (365 * gy) + Math.floor((gy2 + 3) / 4) - Math.floor((gy2 + 99) / 100) + Math.floor((gy2 + 399) / 400) + gd + g_d_m[gm - 1]; var jy = -1595 + (33 * Math.floor(days / 12053)); days %= 12053; jy += 4 * Math.floor(days / 1461); days %= 1461; if (days &gt; 365) { jy += Math.floor((days - 1) / 365); days = (days - 1) % 365; } var jm, jd; if (days &lt; 186) { jm = 1 + Math.floor(days / 31); jd = 1 + (days % 31); } else { jm = 7 + Math.floor((days - 186) / 30); jd = 1 + ((days - 186) % 30); } return [jy, jm, jd]; }
 function hdJ2G(jy, jm, jd) { jy += 1595; var days = -355668 + (365 * jy) + (Math.floor(jy / 33) * 8) + Math.floor(((jy % 33) + 3) / 4) + jd + ((jm &lt; 7) ? (jm - 1) * 31 : ((jm - 7) * 30) + 186); var gy = 400 * Math.floor(days / 146097); days %= 146097; if (days &gt; 36524) { days--; gy += 100 * Math.floor(days / 36524); days %= 36524; if (days &gt;= 365) { days++; } } gy += 4 * Math.floor(days / 1461); days %= 1461; if (days &gt; 365) { gy += Math.floor((days - 1) / 365); days = (days - 1) % 365; } var gd = days + 1; var ml = [0, 31, ((gy % 4 === 0 &amp;&amp; gy % 100 !== 0) || (gy % 400 === 0)) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]; var gm; for (gm = 0; gm &lt; 13 &amp;&amp; gd &gt; ml[gm]; gm++) { gd -= ml[gm]; } return [gy, gm, gd]; }
 function hdPad(n) { return (n &lt; 10 ? "0" : "") + n; }
-function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.type("java.time.ZoneId"); var z = Z.now(I.of("Asia/Tehran")); var j = hdG2J(z.getYear(), z.getMonthValue(), z.getDayOfMonth()); return j[0] + "/" + hdPad(j[1]) + "/" + hdPad(j[2]) + " " + hdPad(z.getHour()) + ":" + hdPad(z.getMinute()); } catch (e) { var d = new Date(); var j2 = hdG2J(d.getFullYear(), d.getMonth() + 1, d.getDate()); return j2[0] + "/" + hdPad(j2[1]) + "/" + hdPad(j2[2]) + " " + hdPad(d.getHours()) + ":" + hdPad(d.getMinutes()); } }
+function hdNow { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.type("java.time.ZoneId"); var z = Z.now(I.of("Asia/Tehran")); var j = hdG2J(z.getYear, z.getMonthValue, z.getDayOfMonth); return j[0] + "/" + hdPad(j[1]) + "/" + hdPad(j[2]) + " " + hdPad(z.getHour) + ":" + hdPad(z.getMinute); } catch (e) { var d = new Date; var j2 = hdG2J(d.getFullYear, d.getMonth + 1, d.getDate); return j2[0] + "/" + hdPad(j2[1]) + "/" + hdPad(j2[2]) + " " + hdPad(d.getHours) + ":" + hdPad(d.getMinutes); } }
   var log = d.InitiatorNotifications || [];
-  log.push({ NoticeTitle: "ثبت درخواست", NoticeText: "درخواست ودیعه مسکن شما ثبت شد و برای بررسی " + (d.RequestCategory === "HQ" ? "به مدیرعامل" : "به مدیریت شعب استان / منطقه") + " ارسال گردید.", NoticeTime: hdNow() });
+  log.push({ NoticeTitle: "ثبت درخواست", NoticeText: "درخواست ودیعه مسکن شما ثبت شد و برای بررسی " + (d.RequestCategory === "HQ" ? "به مدیرعامل" : "به مدیریت شعب استان / منطقه") + " ارسال گردید.", NoticeTime: hdNow });
   d.InitiatorNotifications = log;
   execution.setVariable("Submission", S(JSON.stringify(obj)));
   console.log("[Start_Request] first notice added");
@@ -141,7 +141,7 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
   var obj = null;
   if (raw === null || raw === undefined) { obj = { data: {} }; }
   else if (typeof raw === "string") { obj = JSON.parse(raw); }
-  else if (raw &amp;&amp; typeof raw.prop === "function") { obj = JSON.parse(raw.toString()); }
+  else if (raw &amp;&amp; typeof raw.prop === "function") { obj = JSON.parse(raw.toString); }
   else { try { obj = JSON.parse(JSON.stringify(raw)); } catch (e1) { obj = { data: {} }; } }
   if (!obj.data) { obj = { data: obj }; }
   var d = obj.data;
@@ -178,7 +178,7 @@ try {
   } else if (typeof raw === "string") {
     obj = JSON.parse(raw);
   } else if (raw &amp;&amp; typeof raw.prop === "function") {
-    obj = JSON.parse(raw.toString());
+    obj = JSON.parse(raw.toString);
   } else {
     try { obj = JSON.parse(JSON.stringify(raw)); } catch(e) { obj = { data: {} }; }
   }
@@ -201,8 +201,8 @@ try {
   var raw = execution.getVariable("Submission");
   var data = {};
   if (raw &amp;&amp; typeof raw.prop === "function") {
-    if (raw.hasProp("data") &amp;&amp; !raw.prop("data").isNull()) { data = JSON.parse(raw.prop("data").toString()); }
-    else { data = JSON.parse(raw.toString()); }
+    if (raw.hasProp("data") &amp;&amp; !raw.prop("data").isNull) { data = JSON.parse(raw.prop("data").toString); }
+    else { data = JSON.parse(raw.toString); }
   } else if (typeof raw === "string") {
     var parsed = JSON.parse(raw); data = (parsed &amp;&amp; parsed.data) ? parsed.data : (parsed || {});
   } else if (raw) { data = raw.data || raw; }
@@ -223,7 +223,7 @@ try {
   var obj = null;
   if (raw === null || raw === undefined) { obj = { data: {} }; }
   else if (typeof raw === "string") { obj = JSON.parse(raw); }
-  else if (raw &amp;&amp; typeof raw.prop === "function") { obj = JSON.parse(raw.toString()); }
+  else if (raw &amp;&amp; typeof raw.prop === "function") { obj = JSON.parse(raw.toString); }
   else { try { obj = JSON.parse(JSON.stringify(raw)); } catch (e1) { obj = { data: {} }; } }
   if (!obj.data) { obj = { data: obj }; }
   var d = obj.data;
@@ -232,18 +232,18 @@ try {
   function hdG2J(gy, gm, gd) { var g_d_m = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334]; var gy2 = (gm &gt; 2) ? (gy + 1) : gy; var days = 355666 + (365 * gy) + Math.floor((gy2 + 3) / 4) - Math.floor((gy2 + 99) / 100) + Math.floor((gy2 + 399) / 400) + gd + g_d_m[gm - 1]; var jy = -1595 + (33 * Math.floor(days / 12053)); days %= 12053; jy += 4 * Math.floor(days / 1461); days %= 1461; if (days &gt; 365) { jy += Math.floor((days - 1) / 365); days = (days - 1) % 365; } var jm, jd; if (days &lt; 186) { jm = 1 + Math.floor(days / 31); jd = 1 + (days % 31); } else { jm = 7 + Math.floor((days - 186) / 30); jd = 1 + ((days - 186) % 30); } return [jy, jm, jd]; }
 function hdJ2G(jy, jm, jd) { jy += 1595; var days = -355668 + (365 * jy) + (Math.floor(jy / 33) * 8) + Math.floor(((jy % 33) + 3) / 4) + jd + ((jm &lt; 7) ? (jm - 1) * 31 : ((jm - 7) * 30) + 186); var gy = 400 * Math.floor(days / 146097); days %= 146097; if (days &gt; 36524) { days--; gy += 100 * Math.floor(days / 36524); days %= 36524; if (days &gt;= 365) { days++; } } gy += 4 * Math.floor(days / 1461); days %= 1461; if (days &gt; 365) { gy += Math.floor((days - 1) / 365); days = (days - 1) % 365; } var gd = days + 1; var ml = [0, 31, ((gy % 4 === 0 &amp;&amp; gy % 100 !== 0) || (gy % 400 === 0)) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]; var gm; for (gm = 0; gm &lt; 13 &amp;&amp; gd &gt; ml[gm]; gm++) { gd -= ml[gm]; } return [gy, gm, gd]; }
 function hdPad(n) { return (n &lt; 10 ? "0" : "") + n; }
-function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.type("java.time.ZoneId"); var z = Z.now(I.of("Asia/Tehran")); var j = hdG2J(z.getYear(), z.getMonthValue(), z.getDayOfMonth()); return j[0] + "/" + hdPad(j[1]) + "/" + hdPad(j[2]) + " " + hdPad(z.getHour()) + ":" + hdPad(z.getMinute()); } catch (e) { var d = new Date(); var j2 = hdG2J(d.getFullYear(), d.getMonth() + 1, d.getDate()); return j2[0] + "/" + hdPad(j2[1]) + "/" + hdPad(j2[2]) + " " + hdPad(d.getHours()) + ":" + hdPad(d.getMinutes()); } }
-  var name = ((d.ApplicantFirstName || "") + " " + (d.ApplicantLastName || "")).trim();
+function hdNow { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.type("java.time.ZoneId"); var z = Z.now(I.of("Asia/Tehran")); var j = hdG2J(z.getYear, z.getMonthValue, z.getDayOfMonth); return j[0] + "/" + hdPad(j[1]) + "/" + hdPad(j[2]) + " " + hdPad(z.getHour) + ":" + hdPad(z.getMinute); } catch (e) { var d = new Date; var j2 = hdG2J(d.getFullYear, d.getMonth + 1, d.getDate); return j2[0] + "/" + hdPad(j2[1]) + "/" + hdPad(j2[2]) + " " + hdPad(d.getHours) + ":" + hdPad(d.getMinutes); } }
+  var name = ((d.ApplicantFirstName || "") + " " + (d.ApplicantLastName || "")).trim;
   var title = "نتیجه بررسی مدیرعامل";
   var text = (d.CEOApproval === "approved" ? "درخواست ودیعه مسکن شما توسط مدیرعامل تأیید شد و برای بررسی به اداره کل سرمایه انسانی و رفاه ارسال گردید." : "درخواست ودیعه مسکن شما توسط مدیرعامل تأیید نشد و فرآیند خاتمه یافت.") + note(d.CEONote);
   var log = d.InitiatorNotifications || [];
-  log.push({ NoticeTitle: title, NoticeText: text, NoticeTime: hdNow() });
+  log.push({ NoticeTitle: title, NoticeText: text, NoticeTime: hdNow });
   d.InitiatorNotifications = log;
   execution.setVariable("Submission", S(JSON.stringify(obj)));
   execution.setVariable("_lastNotice", title + ": " + text);
   var pm = execution.getVariable("PM");
   if (pm) {
-    var nt = hdNow();
+    var nt = hdNow;
     try {
       var nobj = JSON.parse(JSON.stringify(obj));
       nobj.data.StateTask = "0";
@@ -251,23 +251,23 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
       nobj.data.NoticeText = text;
       nobj.data.NoticeTime = nt;
       var HashMap = Java.type("java.util.HashMap");
-      var vars = new HashMap();
+      var vars = new HashMap;
       vars.put("PM", String(pm));
       vars.put("StateTask", "0");
       vars.put("NoticeTaskName", "اطلاع: " + title);
       vars.put("NoticeTitle", title);
       vars.put("NoticeText", text);
       vars.put("NoticeTime", nt);
-      vars.put("SourceProcessInstanceId", execution.getProcessInstanceId());
+      vars.put("SourceProcessInstanceId", execution.getProcessInstanceId);
       vars.put("Submission", S(JSON.stringify(nobj)));
-      var rs = execution.getProcessEngineServices().getRuntimeService();
-      var bk = execution.getProcessBusinessKey();
+      var rs = execution.getProcessEngineServices.getRuntimeService;
+      var bk = execution.getProcessBusinessKey;
       if (bk) { rs.startProcessInstanceByKey("HousingDepositNotice", String(bk), vars); }
       else { rs.startProcessInstanceByKey("HousingDepositNotice", vars); }
     } catch (eN) {
       console.error("[Notice] HousingDepositNotice not started, falling back to plain task: " + eN);
-      var ts = execution.getProcessEngineServices().getTaskService();
-      var t = ts.newTask();
+      var ts = execution.getProcessEngineServices.getTaskService;
+      var t = ts.newTask;
       t.setName("اطلاع: " + title);
       t.setDescription(text);
       t.setAssignee(String(pm));
@@ -295,7 +295,7 @@ try {
   } else if (typeof raw === "string") {
     obj = JSON.parse(raw);
   } else if (raw &amp;&amp; typeof raw.prop === "function") {
-    obj = JSON.parse(raw.toString());
+    obj = JSON.parse(raw.toString);
   } else {
     try { obj = JSON.parse(JSON.stringify(raw)); } catch(e) { obj = { data: {} }; }
   }
@@ -318,8 +318,8 @@ try {
   var raw = execution.getVariable("Submission");
   var data = {};
   if (raw &amp;&amp; typeof raw.prop === "function") {
-    if (raw.hasProp("data") &amp;&amp; !raw.prop("data").isNull()) { data = JSON.parse(raw.prop("data").toString()); }
-    else { data = JSON.parse(raw.toString()); }
+    if (raw.hasProp("data") &amp;&amp; !raw.prop("data").isNull) { data = JSON.parse(raw.prop("data").toString); }
+    else { data = JSON.parse(raw.toString); }
   } else if (typeof raw === "string") {
     var parsed = JSON.parse(raw); data = (parsed &amp;&amp; parsed.data) ? parsed.data : (parsed || {});
   } else if (raw) { data = raw.data || raw; }
@@ -341,7 +341,7 @@ try {
   var obj = null;
   if (raw === null || raw === undefined) { obj = { data: {} }; }
   else if (typeof raw === "string") { obj = JSON.parse(raw); }
-  else if (raw &amp;&amp; typeof raw.prop === "function") { obj = JSON.parse(raw.toString()); }
+  else if (raw &amp;&amp; typeof raw.prop === "function") { obj = JSON.parse(raw.toString); }
   else { try { obj = JSON.parse(JSON.stringify(raw)); } catch (e1) { obj = { data: {} }; } }
   if (!obj.data) { obj = { data: obj }; }
   var d = obj.data;
@@ -350,18 +350,18 @@ try {
   function hdG2J(gy, gm, gd) { var g_d_m = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334]; var gy2 = (gm &gt; 2) ? (gy + 1) : gy; var days = 355666 + (365 * gy) + Math.floor((gy2 + 3) / 4) - Math.floor((gy2 + 99) / 100) + Math.floor((gy2 + 399) / 400) + gd + g_d_m[gm - 1]; var jy = -1595 + (33 * Math.floor(days / 12053)); days %= 12053; jy += 4 * Math.floor(days / 1461); days %= 1461; if (days &gt; 365) { jy += Math.floor((days - 1) / 365); days = (days - 1) % 365; } var jm, jd; if (days &lt; 186) { jm = 1 + Math.floor(days / 31); jd = 1 + (days % 31); } else { jm = 7 + Math.floor((days - 186) / 30); jd = 1 + ((days - 186) % 30); } return [jy, jm, jd]; }
 function hdJ2G(jy, jm, jd) { jy += 1595; var days = -355668 + (365 * jy) + (Math.floor(jy / 33) * 8) + Math.floor(((jy % 33) + 3) / 4) + jd + ((jm &lt; 7) ? (jm - 1) * 31 : ((jm - 7) * 30) + 186); var gy = 400 * Math.floor(days / 146097); days %= 146097; if (days &gt; 36524) { days--; gy += 100 * Math.floor(days / 36524); days %= 36524; if (days &gt;= 365) { days++; } } gy += 4 * Math.floor(days / 1461); days %= 1461; if (days &gt; 365) { gy += Math.floor((days - 1) / 365); days = (days - 1) % 365; } var gd = days + 1; var ml = [0, 31, ((gy % 4 === 0 &amp;&amp; gy % 100 !== 0) || (gy % 400 === 0)) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]; var gm; for (gm = 0; gm &lt; 13 &amp;&amp; gd &gt; ml[gm]; gm++) { gd -= ml[gm]; } return [gy, gm, gd]; }
 function hdPad(n) { return (n &lt; 10 ? "0" : "") + n; }
-function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.type("java.time.ZoneId"); var z = Z.now(I.of("Asia/Tehran")); var j = hdG2J(z.getYear(), z.getMonthValue(), z.getDayOfMonth()); return j[0] + "/" + hdPad(j[1]) + "/" + hdPad(j[2]) + " " + hdPad(z.getHour()) + ":" + hdPad(z.getMinute()); } catch (e) { var d = new Date(); var j2 = hdG2J(d.getFullYear(), d.getMonth() + 1, d.getDate()); return j2[0] + "/" + hdPad(j2[1]) + "/" + hdPad(j2[2]) + " " + hdPad(d.getHours()) + ":" + hdPad(d.getMinutes()); } }
-  var name = ((d.ApplicantFirstName || "") + " " + (d.ApplicantLastName || "")).trim();
+function hdNow { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.type("java.time.ZoneId"); var z = Z.now(I.of("Asia/Tehran")); var j = hdG2J(z.getYear, z.getMonthValue, z.getDayOfMonth); return j[0] + "/" + hdPad(j[1]) + "/" + hdPad(j[2]) + " " + hdPad(z.getHour) + ":" + hdPad(z.getMinute); } catch (e) { var d = new Date; var j2 = hdG2J(d.getFullYear, d.getMonth + 1, d.getDate); return j2[0] + "/" + hdPad(j2[1]) + "/" + hdPad(j2[2]) + " " + hdPad(d.getHours) + ":" + hdPad(d.getMinutes); } }
+  var name = ((d.ApplicantFirstName || "") + " " + (d.ApplicantLastName || "")).trim;
   var title = "نتیجه بررسی مدیریت شعب";
   var text = (d.ProvinceApproval === "approved" ? "درخواست ودیعه مسکن شما توسط مدیریت شعب استان / منطقه تأیید شد و برای بررسی به اداره کل سرمایه انسانی و رفاه ارسال گردید." : "درخواست ودیعه مسکن شما توسط مدیریت شعب استان / منطقه تأیید نشد و فرآیند خاتمه یافت.") + note(d.ProvinceNote);
   var log = d.InitiatorNotifications || [];
-  log.push({ NoticeTitle: title, NoticeText: text, NoticeTime: hdNow() });
+  log.push({ NoticeTitle: title, NoticeText: text, NoticeTime: hdNow });
   d.InitiatorNotifications = log;
   execution.setVariable("Submission", S(JSON.stringify(obj)));
   execution.setVariable("_lastNotice", title + ": " + text);
   var pm = execution.getVariable("PM");
   if (pm) {
-    var nt = hdNow();
+    var nt = hdNow;
     try {
       var nobj = JSON.parse(JSON.stringify(obj));
       nobj.data.StateTask = "0";
@@ -369,23 +369,23 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
       nobj.data.NoticeText = text;
       nobj.data.NoticeTime = nt;
       var HashMap = Java.type("java.util.HashMap");
-      var vars = new HashMap();
+      var vars = new HashMap;
       vars.put("PM", String(pm));
       vars.put("StateTask", "0");
       vars.put("NoticeTaskName", "اطلاع: " + title);
       vars.put("NoticeTitle", title);
       vars.put("NoticeText", text);
       vars.put("NoticeTime", nt);
-      vars.put("SourceProcessInstanceId", execution.getProcessInstanceId());
+      vars.put("SourceProcessInstanceId", execution.getProcessInstanceId);
       vars.put("Submission", S(JSON.stringify(nobj)));
-      var rs = execution.getProcessEngineServices().getRuntimeService();
-      var bk = execution.getProcessBusinessKey();
+      var rs = execution.getProcessEngineServices.getRuntimeService;
+      var bk = execution.getProcessBusinessKey;
       if (bk) { rs.startProcessInstanceByKey("HousingDepositNotice", String(bk), vars); }
       else { rs.startProcessInstanceByKey("HousingDepositNotice", vars); }
     } catch (eN) {
       console.error("[Notice] HousingDepositNotice not started, falling back to plain task: " + eN);
-      var ts = execution.getProcessEngineServices().getTaskService();
-      var t = ts.newTask();
+      var ts = execution.getProcessEngineServices.getTaskService;
+      var t = ts.newTask;
       t.setName("اطلاع: " + title);
       t.setDescription(text);
       t.setAssignee(String(pm));
@@ -423,7 +423,7 @@ try {
   } else if (typeof raw === "string") {
     obj = JSON.parse(raw);
   } else if (raw &amp;&amp; typeof raw.prop === "function") {
-    obj = JSON.parse(raw.toString());
+    obj = JSON.parse(raw.toString);
   } else {
     try { obj = JSON.parse(JSON.stringify(raw)); } catch(e) { obj = { data: {} }; }
   }
@@ -446,8 +446,8 @@ try {
   var raw = execution.getVariable("Submission");
   var data = {};
   if (raw &amp;&amp; typeof raw.prop === "function") {
-    if (raw.hasProp("data") &amp;&amp; !raw.prop("data").isNull()) { data = JSON.parse(raw.prop("data").toString()); }
-    else { data = JSON.parse(raw.toString()); }
+    if (raw.hasProp("data") &amp;&amp; !raw.prop("data").isNull) { data = JSON.parse(raw.prop("data").toString); }
+    else { data = JSON.parse(raw.toString); }
   } else if (typeof raw === "string") {
     var parsed = JSON.parse(raw); data = (parsed &amp;&amp; parsed.data) ? parsed.data : (parsed || {});
   } else if (raw) { data = raw.data || raw; }
@@ -468,7 +468,7 @@ try {
   var obj = null;
   if (raw === null || raw === undefined) { obj = { data: {} }; }
   else if (typeof raw === "string") { obj = JSON.parse(raw); }
-  else if (raw &amp;&amp; typeof raw.prop === "function") { obj = JSON.parse(raw.toString()); }
+  else if (raw &amp;&amp; typeof raw.prop === "function") { obj = JSON.parse(raw.toString); }
   else { try { obj = JSON.parse(JSON.stringify(raw)); } catch (e1) { obj = { data: {} }; } }
   if (!obj.data) { obj = { data: obj }; }
   var d = obj.data;
@@ -477,18 +477,18 @@ try {
   function hdG2J(gy, gm, gd) { var g_d_m = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334]; var gy2 = (gm &gt; 2) ? (gy + 1) : gy; var days = 355666 + (365 * gy) + Math.floor((gy2 + 3) / 4) - Math.floor((gy2 + 99) / 100) + Math.floor((gy2 + 399) / 400) + gd + g_d_m[gm - 1]; var jy = -1595 + (33 * Math.floor(days / 12053)); days %= 12053; jy += 4 * Math.floor(days / 1461); days %= 1461; if (days &gt; 365) { jy += Math.floor((days - 1) / 365); days = (days - 1) % 365; } var jm, jd; if (days &lt; 186) { jm = 1 + Math.floor(days / 31); jd = 1 + (days % 31); } else { jm = 7 + Math.floor((days - 186) / 30); jd = 1 + ((days - 186) % 30); } return [jy, jm, jd]; }
 function hdJ2G(jy, jm, jd) { jy += 1595; var days = -355668 + (365 * jy) + (Math.floor(jy / 33) * 8) + Math.floor(((jy % 33) + 3) / 4) + jd + ((jm &lt; 7) ? (jm - 1) * 31 : ((jm - 7) * 30) + 186); var gy = 400 * Math.floor(days / 146097); days %= 146097; if (days &gt; 36524) { days--; gy += 100 * Math.floor(days / 36524); days %= 36524; if (days &gt;= 365) { days++; } } gy += 4 * Math.floor(days / 1461); days %= 1461; if (days &gt; 365) { gy += Math.floor((days - 1) / 365); days = (days - 1) % 365; } var gd = days + 1; var ml = [0, 31, ((gy % 4 === 0 &amp;&amp; gy % 100 !== 0) || (gy % 400 === 0)) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]; var gm; for (gm = 0; gm &lt; 13 &amp;&amp; gd &gt; ml[gm]; gm++) { gd -= ml[gm]; } return [gy, gm, gd]; }
 function hdPad(n) { return (n &lt; 10 ? "0" : "") + n; }
-function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.type("java.time.ZoneId"); var z = Z.now(I.of("Asia/Tehran")); var j = hdG2J(z.getYear(), z.getMonthValue(), z.getDayOfMonth()); return j[0] + "/" + hdPad(j[1]) + "/" + hdPad(j[2]) + " " + hdPad(z.getHour()) + ":" + hdPad(z.getMinute()); } catch (e) { var d = new Date(); var j2 = hdG2J(d.getFullYear(), d.getMonth() + 1, d.getDate()); return j2[0] + "/" + hdPad(j2[1]) + "/" + hdPad(j2[2]) + " " + hdPad(d.getHours()) + ":" + hdPad(d.getMinutes()); } }
-  var name = ((d.ApplicantFirstName || "") + " " + (d.ApplicantLastName || "")).trim();
+function hdNow { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.type("java.time.ZoneId"); var z = Z.now(I.of("Asia/Tehran")); var j = hdG2J(z.getYear, z.getMonthValue, z.getDayOfMonth); return j[0] + "/" + hdPad(j[1]) + "/" + hdPad(j[2]) + " " + hdPad(z.getHour) + ":" + hdPad(z.getMinute); } catch (e) { var d = new Date; var j2 = hdG2J(d.getFullYear, d.getMonth + 1, d.getDate); return j2[0] + "/" + hdPad(j2[1]) + "/" + hdPad(j2[2]) + " " + hdPad(d.getHours) + ":" + hdPad(d.getMinutes); } }
+  var name = ((d.ApplicantFirstName || "") + " " + (d.ApplicantLastName || "")).trim;
   var title = "نتیجه بررسی اداره کل سرمایه انسانی و رفاه";
   var text = (d.HRApproval === "approved" ? ("درخواست شما با مبلغ ودیعه مصوب " + fmt(d.ApprovedDepositAmount) + " ریال تأیید شد. لطفاً اطلاعات ملک و قرارداد اجاره را تکمیل و ضامن خود را معرفی کنید.") : (d.RequestCategory === "HQ" ? "درخواست شما توسط اداره کل سرمایه انسانی و رفاه تأیید نشد و فرآیند خاتمه یافت." : "درخواست شما برای اصلاح به مدیریت شعب استان / منطقه بازگشت داده شد.")) + note(d.HRNote);
   var log = d.InitiatorNotifications || [];
-  log.push({ NoticeTitle: title, NoticeText: text, NoticeTime: hdNow() });
+  log.push({ NoticeTitle: title, NoticeText: text, NoticeTime: hdNow });
   d.InitiatorNotifications = log;
   execution.setVariable("Submission", S(JSON.stringify(obj)));
   execution.setVariable("_lastNotice", title + ": " + text);
   var pm = execution.getVariable("PM");
   if (pm) {
-    var nt = hdNow();
+    var nt = hdNow;
     try {
       var nobj = JSON.parse(JSON.stringify(obj));
       nobj.data.StateTask = "0";
@@ -496,23 +496,23 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
       nobj.data.NoticeText = text;
       nobj.data.NoticeTime = nt;
       var HashMap = Java.type("java.util.HashMap");
-      var vars = new HashMap();
+      var vars = new HashMap;
       vars.put("PM", String(pm));
       vars.put("StateTask", "0");
       vars.put("NoticeTaskName", "اطلاع: " + title);
       vars.put("NoticeTitle", title);
       vars.put("NoticeText", text);
       vars.put("NoticeTime", nt);
-      vars.put("SourceProcessInstanceId", execution.getProcessInstanceId());
+      vars.put("SourceProcessInstanceId", execution.getProcessInstanceId);
       vars.put("Submission", S(JSON.stringify(nobj)));
-      var rs = execution.getProcessEngineServices().getRuntimeService();
-      var bk = execution.getProcessBusinessKey();
+      var rs = execution.getProcessEngineServices.getRuntimeService;
+      var bk = execution.getProcessBusinessKey;
       if (bk) { rs.startProcessInstanceByKey("HousingDepositNotice", String(bk), vars); }
       else { rs.startProcessInstanceByKey("HousingDepositNotice", vars); }
     } catch (eN) {
       console.error("[Notice] HousingDepositNotice not started, falling back to plain task: " + eN);
-      var ts = execution.getProcessEngineServices().getTaskService();
-      var t = ts.newTask();
+      var ts = execution.getProcessEngineServices.getTaskService;
+      var t = ts.newTask;
       t.setName("اطلاع: " + title);
       t.setDescription(text);
       t.setAssignee(String(pm));
@@ -546,7 +546,7 @@ try {
   } else if (typeof raw === "string") {
     obj = JSON.parse(raw);
   } else if (raw &amp;&amp; typeof raw.prop === "function") {
-    obj = JSON.parse(raw.toString());
+    obj = JSON.parse(raw.toString);
   } else {
     try { obj = JSON.parse(JSON.stringify(raw)); } catch(e) { obj = { data: {} }; }
   }
@@ -569,8 +569,8 @@ try {
   var raw = execution.getVariable("Submission");
   var data = {};
   if (raw &amp;&amp; typeof raw.prop === "function") {
-    if (raw.hasProp("data") &amp;&amp; !raw.prop("data").isNull()) { data = JSON.parse(raw.prop("data").toString()); }
-    else { data = JSON.parse(raw.toString()); }
+    if (raw.hasProp("data") &amp;&amp; !raw.prop("data").isNull) { data = JSON.parse(raw.prop("data").toString); }
+    else { data = JSON.parse(raw.toString); }
   } else if (typeof raw === "string") {
     var parsed = JSON.parse(raw); data = (parsed &amp;&amp; parsed.data) ? parsed.data : (parsed || {});
   } else if (raw) { data = raw.data || raw; }
@@ -597,7 +597,7 @@ try {
   } else if (typeof raw === "string") {
     obj = JSON.parse(raw);
   } else if (raw &amp;&amp; typeof raw.prop === "function") {
-    obj = JSON.parse(raw.toString());
+    obj = JSON.parse(raw.toString);
   } else {
     try { obj = JSON.parse(JSON.stringify(raw)); } catch(e) { obj = { data: {} }; }
   }
@@ -620,8 +620,8 @@ try {
   var raw = execution.getVariable("Submission");
   var data = {};
   if (raw &amp;&amp; typeof raw.prop === "function") {
-    if (raw.hasProp("data") &amp;&amp; !raw.prop("data").isNull()) { data = JSON.parse(raw.prop("data").toString()); }
-    else { data = JSON.parse(raw.toString()); }
+    if (raw.hasProp("data") &amp;&amp; !raw.prop("data").isNull) { data = JSON.parse(raw.prop("data").toString); }
+    else { data = JSON.parse(raw.toString); }
   } else if (typeof raw === "string") {
     var parsed = JSON.parse(raw); data = (parsed &amp;&amp; parsed.data) ? parsed.data : (parsed || {});
   } else if (raw) { data = raw.data || raw; }
@@ -642,7 +642,7 @@ try {
   var obj = null;
   if (raw === null || raw === undefined) { obj = { data: {} }; }
   else if (typeof raw === "string") { obj = JSON.parse(raw); }
-  else if (raw &amp;&amp; typeof raw.prop === "function") { obj = JSON.parse(raw.toString()); }
+  else if (raw &amp;&amp; typeof raw.prop === "function") { obj = JSON.parse(raw.toString); }
   else { try { obj = JSON.parse(JSON.stringify(raw)); } catch (e1) { obj = { data: {} }; } }
   if (!obj.data) { obj = { data: obj }; }
   var d = obj.data;
@@ -651,18 +651,18 @@ try {
   function hdG2J(gy, gm, gd) { var g_d_m = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334]; var gy2 = (gm &gt; 2) ? (gy + 1) : gy; var days = 355666 + (365 * gy) + Math.floor((gy2 + 3) / 4) - Math.floor((gy2 + 99) / 100) + Math.floor((gy2 + 399) / 400) + gd + g_d_m[gm - 1]; var jy = -1595 + (33 * Math.floor(days / 12053)); days %= 12053; jy += 4 * Math.floor(days / 1461); days %= 1461; if (days &gt; 365) { jy += Math.floor((days - 1) / 365); days = (days - 1) % 365; } var jm, jd; if (days &lt; 186) { jm = 1 + Math.floor(days / 31); jd = 1 + (days % 31); } else { jm = 7 + Math.floor((days - 186) / 30); jd = 1 + ((days - 186) % 30); } return [jy, jm, jd]; }
 function hdJ2G(jy, jm, jd) { jy += 1595; var days = -355668 + (365 * jy) + (Math.floor(jy / 33) * 8) + Math.floor(((jy % 33) + 3) / 4) + jd + ((jm &lt; 7) ? (jm - 1) * 31 : ((jm - 7) * 30) + 186); var gy = 400 * Math.floor(days / 146097); days %= 146097; if (days &gt; 36524) { days--; gy += 100 * Math.floor(days / 36524); days %= 36524; if (days &gt;= 365) { days++; } } gy += 4 * Math.floor(days / 1461); days %= 1461; if (days &gt; 365) { gy += Math.floor((days - 1) / 365); days = (days - 1) % 365; } var gd = days + 1; var ml = [0, 31, ((gy % 4 === 0 &amp;&amp; gy % 100 !== 0) || (gy % 400 === 0)) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]; var gm; for (gm = 0; gm &lt; 13 &amp;&amp; gd &gt; ml[gm]; gm++) { gd -= ml[gm]; } return [gy, gm, gd]; }
 function hdPad(n) { return (n &lt; 10 ? "0" : "") + n; }
-function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.type("java.time.ZoneId"); var z = Z.now(I.of("Asia/Tehran")); var j = hdG2J(z.getYear(), z.getMonthValue(), z.getDayOfMonth()); return j[0] + "/" + hdPad(j[1]) + "/" + hdPad(j[2]) + " " + hdPad(z.getHour()) + ":" + hdPad(z.getMinute()); } catch (e) { var d = new Date(); var j2 = hdG2J(d.getFullYear(), d.getMonth() + 1, d.getDate()); return j2[0] + "/" + hdPad(j2[1]) + "/" + hdPad(j2[2]) + " " + hdPad(d.getHours()) + ":" + hdPad(d.getMinutes()); } }
-  var name = ((d.ApplicantFirstName || "") + " " + (d.ApplicantLastName || "")).trim();
+function hdNow { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.type("java.time.ZoneId"); var z = Z.now(I.of("Asia/Tehran")); var j = hdG2J(z.getYear, z.getMonthValue, z.getDayOfMonth); return j[0] + "/" + hdPad(j[1]) + "/" + hdPad(j[2]) + " " + hdPad(z.getHour) + ":" + hdPad(z.getMinute); } catch (e) { var d = new Date; var j2 = hdG2J(d.getFullYear, d.getMonth + 1, d.getDate); return j2[0] + "/" + hdPad(j2[1]) + "/" + hdPad(j2[2]) + " " + hdPad(d.getHours) + ":" + hdPad(d.getMinutes); } }
+  var name = ((d.ApplicantFirstName || "") + " " + (d.ApplicantLastName || "")).trim;
   var title = "نتیجه تأیید ضامن";
   var text = (d.GuarantorApproval === "approved" ? ("ضامن شما (" + ((d.GuarantorSelected &amp;&amp; d.GuarantorSelected.fullName) || "-") + ") ضمانت را پذیرفت و درخواست برای ادامه ارسال شد.") : ("ضامن شما (" + ((d.GuarantorSelected &amp;&amp; d.GuarantorSelected.fullName) || "-") + ") ضمانت را نپذیرفت. لطفاً ضامن دیگری انتخاب کنید.")) + note(d.GuarantorNote);
   var log = d.InitiatorNotifications || [];
-  log.push({ NoticeTitle: title, NoticeText: text, NoticeTime: hdNow() });
+  log.push({ NoticeTitle: title, NoticeText: text, NoticeTime: hdNow });
   d.InitiatorNotifications = log;
   execution.setVariable("Submission", S(JSON.stringify(obj)));
   execution.setVariable("_lastNotice", title + ": " + text);
   var pm = execution.getVariable("PM");
   if (pm) {
-    var nt = hdNow();
+    var nt = hdNow;
     try {
       var nobj = JSON.parse(JSON.stringify(obj));
       nobj.data.StateTask = "0";
@@ -670,23 +670,23 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
       nobj.data.NoticeText = text;
       nobj.data.NoticeTime = nt;
       var HashMap = Java.type("java.util.HashMap");
-      var vars = new HashMap();
+      var vars = new HashMap;
       vars.put("PM", String(pm));
       vars.put("StateTask", "0");
       vars.put("NoticeTaskName", "اطلاع: " + title);
       vars.put("NoticeTitle", title);
       vars.put("NoticeText", text);
       vars.put("NoticeTime", nt);
-      vars.put("SourceProcessInstanceId", execution.getProcessInstanceId());
+      vars.put("SourceProcessInstanceId", execution.getProcessInstanceId);
       vars.put("Submission", S(JSON.stringify(nobj)));
-      var rs = execution.getProcessEngineServices().getRuntimeService();
-      var bk = execution.getProcessBusinessKey();
+      var rs = execution.getProcessEngineServices.getRuntimeService;
+      var bk = execution.getProcessBusinessKey;
       if (bk) { rs.startProcessInstanceByKey("HousingDepositNotice", String(bk), vars); }
       else { rs.startProcessInstanceByKey("HousingDepositNotice", vars); }
     } catch (eN) {
       console.error("[Notice] HousingDepositNotice not started, falling back to plain task: " + eN);
-      var ts = execution.getProcessEngineServices().getTaskService();
-      var t = ts.newTask();
+      var ts = execution.getProcessEngineServices.getTaskService;
+      var t = ts.newTask;
       t.setName("اطلاع: " + title);
       t.setDescription(text);
       t.setAssignee(String(pm));
@@ -724,7 +724,7 @@ try {
   } else if (typeof raw === "string") {
     obj = JSON.parse(raw);
   } else if (raw &amp;&amp; typeof raw.prop === "function") {
-    obj = JSON.parse(raw.toString());
+    obj = JSON.parse(raw.toString);
   } else {
     try { obj = JSON.parse(JSON.stringify(raw)); } catch(e) { obj = { data: {} }; }
   }
@@ -763,7 +763,7 @@ try {
   } else if (typeof raw === "string") {
     obj = JSON.parse(raw);
   } else if (raw &amp;&amp; typeof raw.prop === "function") {
-    obj = JSON.parse(raw.toString());
+    obj = JSON.parse(raw.toString);
   } else {
     try { obj = JSON.parse(JSON.stringify(raw)); } catch(e) { obj = { data: {} }; }
   }
@@ -793,7 +793,7 @@ try {
   var obj = null;
   if (raw === null || raw === undefined) { obj = { data: {} }; }
   else if (typeof raw === "string") { obj = JSON.parse(raw); }
-  else if (raw &amp;&amp; typeof raw.prop === "function") { obj = JSON.parse(raw.toString()); }
+  else if (raw &amp;&amp; typeof raw.prop === "function") { obj = JSON.parse(raw.toString); }
   else { try { obj = JSON.parse(JSON.stringify(raw)); } catch (e1) { obj = { data: {} }; } }
   if (!obj.data) { obj = { data: obj }; }
   var d = obj.data;
@@ -802,18 +802,18 @@ try {
   function hdG2J(gy, gm, gd) { var g_d_m = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334]; var gy2 = (gm &gt; 2) ? (gy + 1) : gy; var days = 355666 + (365 * gy) + Math.floor((gy2 + 3) / 4) - Math.floor((gy2 + 99) / 100) + Math.floor((gy2 + 399) / 400) + gd + g_d_m[gm - 1]; var jy = -1595 + (33 * Math.floor(days / 12053)); days %= 12053; jy += 4 * Math.floor(days / 1461); days %= 1461; if (days &gt; 365) { jy += Math.floor((days - 1) / 365); days = (days - 1) % 365; } var jm, jd; if (days &lt; 186) { jm = 1 + Math.floor(days / 31); jd = 1 + (days % 31); } else { jm = 7 + Math.floor((days - 186) / 30); jd = 1 + ((days - 186) % 30); } return [jy, jm, jd]; }
 function hdJ2G(jy, jm, jd) { jy += 1595; var days = -355668 + (365 * jy) + (Math.floor(jy / 33) * 8) + Math.floor(((jy % 33) + 3) / 4) + jd + ((jm &lt; 7) ? (jm - 1) * 31 : ((jm - 7) * 30) + 186); var gy = 400 * Math.floor(days / 146097); days %= 146097; if (days &gt; 36524) { days--; gy += 100 * Math.floor(days / 36524); days %= 36524; if (days &gt;= 365) { days++; } } gy += 4 * Math.floor(days / 1461); days %= 1461; if (days &gt; 365) { gy += Math.floor((days - 1) / 365); days = (days - 1) % 365; } var gd = days + 1; var ml = [0, 31, ((gy % 4 === 0 &amp;&amp; gy % 100 !== 0) || (gy % 400 === 0)) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]; var gm; for (gm = 0; gm &lt; 13 &amp;&amp; gd &gt; ml[gm]; gm++) { gd -= ml[gm]; } return [gy, gm, gd]; }
 function hdPad(n) { return (n &lt; 10 ? "0" : "") + n; }
-function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.type("java.time.ZoneId"); var z = Z.now(I.of("Asia/Tehran")); var j = hdG2J(z.getYear(), z.getMonthValue(), z.getDayOfMonth()); return j[0] + "/" + hdPad(j[1]) + "/" + hdPad(j[2]) + " " + hdPad(z.getHour()) + ":" + hdPad(z.getMinute()); } catch (e) { var d = new Date(); var j2 = hdG2J(d.getFullYear(), d.getMonth() + 1, d.getDate()); return j2[0] + "/" + hdPad(j2[1]) + "/" + hdPad(j2[2]) + " " + hdPad(d.getHours()) + ":" + hdPad(d.getMinutes()); } }
-  var name = ((d.ApplicantFirstName || "") + " " + (d.ApplicantLastName || "")).trim();
+function hdNow { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.type("java.time.ZoneId"); var z = Z.now(I.of("Asia/Tehran")); var j = hdG2J(z.getYear, z.getMonthValue, z.getDayOfMonth); return j[0] + "/" + hdPad(j[1]) + "/" + hdPad(j[2]) + " " + hdPad(z.getHour) + ":" + hdPad(z.getMinute); } catch (e) { var d = new Date; var j2 = hdG2J(d.getFullYear, d.getMonth + 1, d.getDate); return j2[0] + "/" + hdPad(j2[1]) + "/" + hdPad(j2[2]) + " " + hdPad(d.getHours) + ":" + hdPad(d.getMinutes); } }
+  var name = ((d.ApplicantFirstName || "") + " " + (d.ApplicantLastName || "")).trim;
   var title = "مراجعه به واحد حقوقی";
-  var text = "لطفاً برای تحویل یک فقره چک صیادی به مبلغ " + fmt(Number(d.ApprovedDepositAmount || 0) * 1.3) + " ریال (۱۳۰٪ ودیعه مصوب) با ضمانت یکی از کارکنان بانک در ظهر چک و تکمیل فرم ضمانت (نمونه ۲۲۲۷) به واحد حقوقی مراجعه کنید.";
+  var text = "لطفاً برای تحویل یک فقره چک صیادی به مبلغ " + fmt(Number(d.ApprovedDepositAmount || 0) * 1.3) + " ریال (۱۳۰٪ ودیعه مصوب) با ضمانت یکی از کارکنان بانک در ظهر چک و تکمیل فرم ضمانت به واحد حقوقی مراجعه کنید.";
   var log = d.InitiatorNotifications || [];
-  log.push({ NoticeTitle: title, NoticeText: text, NoticeTime: hdNow() });
+  log.push({ NoticeTitle: title, NoticeText: text, NoticeTime: hdNow });
   d.InitiatorNotifications = log;
   execution.setVariable("Submission", S(JSON.stringify(obj)));
   execution.setVariable("_lastNotice", title + ": " + text);
   var pm = execution.getVariable("PM");
   if (pm) {
-    var nt = hdNow();
+    var nt = hdNow;
     try {
       var nobj = JSON.parse(JSON.stringify(obj));
       nobj.data.StateTask = "0";
@@ -821,23 +821,23 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
       nobj.data.NoticeText = text;
       nobj.data.NoticeTime = nt;
       var HashMap = Java.type("java.util.HashMap");
-      var vars = new HashMap();
+      var vars = new HashMap;
       vars.put("PM", String(pm));
       vars.put("StateTask", "0");
       vars.put("NoticeTaskName", "اطلاع: " + title);
       vars.put("NoticeTitle", title);
       vars.put("NoticeText", text);
       vars.put("NoticeTime", nt);
-      vars.put("SourceProcessInstanceId", execution.getProcessInstanceId());
+      vars.put("SourceProcessInstanceId", execution.getProcessInstanceId);
       vars.put("Submission", S(JSON.stringify(nobj)));
-      var rs = execution.getProcessEngineServices().getRuntimeService();
-      var bk = execution.getProcessBusinessKey();
+      var rs = execution.getProcessEngineServices.getRuntimeService;
+      var bk = execution.getProcessBusinessKey;
       if (bk) { rs.startProcessInstanceByKey("HousingDepositNotice", String(bk), vars); }
       else { rs.startProcessInstanceByKey("HousingDepositNotice", vars); }
     } catch (eN) {
       console.error("[Notice] HousingDepositNotice not started, falling back to plain task: " + eN);
-      var ts = execution.getProcessEngineServices().getTaskService();
-      var t = ts.newTask();
+      var ts = execution.getProcessEngineServices.getTaskService;
+      var t = ts.newTask;
       t.setName("اطلاع: " + title);
       t.setDescription(text);
       t.setAssignee(String(pm));
@@ -865,7 +865,7 @@ try {
   } else if (typeof raw === "string") {
     obj = JSON.parse(raw);
   } else if (raw &amp;&amp; typeof raw.prop === "function") {
-    obj = JSON.parse(raw.toString());
+    obj = JSON.parse(raw.toString);
   } else {
     try { obj = JSON.parse(JSON.stringify(raw)); } catch(e) { obj = { data: {} }; }
   }
@@ -899,7 +899,7 @@ try {
   } else if (typeof raw === "string") {
     obj = JSON.parse(raw);
   } else if (raw &amp;&amp; typeof raw.prop === "function") {
-    obj = JSON.parse(raw.toString());
+    obj = JSON.parse(raw.toString);
   } else {
     try { obj = JSON.parse(JSON.stringify(raw)); } catch(e) { obj = { data: {} }; }
   }
@@ -929,7 +929,7 @@ try {
   var obj = null;
   if (raw === null || raw === undefined) { obj = { data: {} }; }
   else if (typeof raw === "string") { obj = JSON.parse(raw); }
-  else if (raw &amp;&amp; typeof raw.prop === "function") { obj = JSON.parse(raw.toString()); }
+  else if (raw &amp;&amp; typeof raw.prop === "function") { obj = JSON.parse(raw.toString); }
   else { try { obj = JSON.parse(JSON.stringify(raw)); } catch (e1) { obj = { data: {} }; } }
   if (!obj.data) { obj = { data: obj }; }
   var d = obj.data;
@@ -938,18 +938,18 @@ try {
   function hdG2J(gy, gm, gd) { var g_d_m = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334]; var gy2 = (gm &gt; 2) ? (gy + 1) : gy; var days = 355666 + (365 * gy) + Math.floor((gy2 + 3) / 4) - Math.floor((gy2 + 99) / 100) + Math.floor((gy2 + 399) / 400) + gd + g_d_m[gm - 1]; var jy = -1595 + (33 * Math.floor(days / 12053)); days %= 12053; jy += 4 * Math.floor(days / 1461); days %= 1461; if (days &gt; 365) { jy += Math.floor((days - 1) / 365); days = (days - 1) % 365; } var jm, jd; if (days &lt; 186) { jm = 1 + Math.floor(days / 31); jd = 1 + (days % 31); } else { jm = 7 + Math.floor((days - 186) / 30); jd = 1 + ((days - 186) % 30); } return [jy, jm, jd]; }
 function hdJ2G(jy, jm, jd) { jy += 1595; var days = -355668 + (365 * jy) + (Math.floor(jy / 33) * 8) + Math.floor(((jy % 33) + 3) / 4) + jd + ((jm &lt; 7) ? (jm - 1) * 31 : ((jm - 7) * 30) + 186); var gy = 400 * Math.floor(days / 146097); days %= 146097; if (days &gt; 36524) { days--; gy += 100 * Math.floor(days / 36524); days %= 36524; if (days &gt;= 365) { days++; } } gy += 4 * Math.floor(days / 1461); days %= 1461; if (days &gt; 365) { gy += Math.floor((days - 1) / 365); days = (days - 1) % 365; } var gd = days + 1; var ml = [0, 31, ((gy % 4 === 0 &amp;&amp; gy % 100 !== 0) || (gy % 400 === 0)) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]; var gm; for (gm = 0; gm &lt; 13 &amp;&amp; gd &gt; ml[gm]; gm++) { gd -= ml[gm]; } return [gy, gm, gd]; }
 function hdPad(n) { return (n &lt; 10 ? "0" : "") + n; }
-function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.type("java.time.ZoneId"); var z = Z.now(I.of("Asia/Tehran")); var j = hdG2J(z.getYear(), z.getMonthValue(), z.getDayOfMonth()); return j[0] + "/" + hdPad(j[1]) + "/" + hdPad(j[2]) + " " + hdPad(z.getHour()) + ":" + hdPad(z.getMinute()); } catch (e) { var d = new Date(); var j2 = hdG2J(d.getFullYear(), d.getMonth() + 1, d.getDate()); return j2[0] + "/" + hdPad(j2[1]) + "/" + hdPad(j2[2]) + " " + hdPad(d.getHours()) + ":" + hdPad(d.getMinutes()); } }
-  var name = ((d.ApplicantFirstName || "") + " " + (d.ApplicantLastName || "")).trim();
+function hdNow { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.type("java.time.ZoneId"); var z = Z.now(I.of("Asia/Tehran")); var j = hdG2J(z.getYear, z.getMonthValue, z.getDayOfMonth); return j[0] + "/" + hdPad(j[1]) + "/" + hdPad(j[2]) + " " + hdPad(z.getHour) + ":" + hdPad(z.getMinute); } catch (e) { var d = new Date; var j2 = hdG2J(d.getFullYear, d.getMonth + 1, d.getDate); return j2[0] + "/" + hdPad(j2[1]) + "/" + hdPad(j2[2]) + " " + hdPad(d.getHours) + ":" + hdPad(d.getMinutes); } }
+  var name = ((d.ApplicantFirstName || "") + " " + (d.ApplicantLastName || "")).trim;
   var title = "مراجعه به دفترخانه";
-  var text = "پرونده ودیعه شما با شماره " + (d.FileNumber || "-") + " تشکیل شد. لطفاً برای تنظیم اقرارنامه (نمونه ۲۲۲۶) به دفتر اسناد رسمی مراجعه کنید و اصل اقرارنامه، اصل اجاره‌نامه و فیش واریز به حساب موجر را به واحد مجری پرداخت تحویل دهید.";
+  var text = "پرونده ودیعه شما با شماره " + (d.FileNumber || "-") + " تشکیل شد. لطفاً برای تنظیم اقرارنامه به دفتر اسناد رسمی مراجعه کنید و اصل اقرارنامه، اصل اجاره‌نامه و فیش واریز به حساب موجر را به واحد مجری پرداخت تحویل دهید.";
   var log = d.InitiatorNotifications || [];
-  log.push({ NoticeTitle: title, NoticeText: text, NoticeTime: hdNow() });
+  log.push({ NoticeTitle: title, NoticeText: text, NoticeTime: hdNow });
   d.InitiatorNotifications = log;
   execution.setVariable("Submission", S(JSON.stringify(obj)));
   execution.setVariable("_lastNotice", title + ": " + text);
   var pm = execution.getVariable("PM");
   if (pm) {
-    var nt = hdNow();
+    var nt = hdNow;
     try {
       var nobj = JSON.parse(JSON.stringify(obj));
       nobj.data.StateTask = "0";
@@ -957,23 +957,23 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
       nobj.data.NoticeText = text;
       nobj.data.NoticeTime = nt;
       var HashMap = Java.type("java.util.HashMap");
-      var vars = new HashMap();
+      var vars = new HashMap;
       vars.put("PM", String(pm));
       vars.put("StateTask", "0");
       vars.put("NoticeTaskName", "اطلاع: " + title);
       vars.put("NoticeTitle", title);
       vars.put("NoticeText", text);
       vars.put("NoticeTime", nt);
-      vars.put("SourceProcessInstanceId", execution.getProcessInstanceId());
+      vars.put("SourceProcessInstanceId", execution.getProcessInstanceId);
       vars.put("Submission", S(JSON.stringify(nobj)));
-      var rs = execution.getProcessEngineServices().getRuntimeService();
-      var bk = execution.getProcessBusinessKey();
+      var rs = execution.getProcessEngineServices.getRuntimeService;
+      var bk = execution.getProcessBusinessKey;
       if (bk) { rs.startProcessInstanceByKey("HousingDepositNotice", String(bk), vars); }
       else { rs.startProcessInstanceByKey("HousingDepositNotice", vars); }
     } catch (eN) {
       console.error("[Notice] HousingDepositNotice not started, falling back to plain task: " + eN);
-      var ts = execution.getProcessEngineServices().getTaskService();
-      var t = ts.newTask();
+      var ts = execution.getProcessEngineServices.getTaskService;
+      var t = ts.newTask;
       t.setName("اطلاع: " + title);
       t.setDescription(text);
       t.setAssignee(String(pm));
@@ -1001,7 +1001,7 @@ try {
   } else if (typeof raw === "string") {
     obj = JSON.parse(raw);
   } else if (raw &amp;&amp; typeof raw.prop === "function") {
-    obj = JSON.parse(raw.toString());
+    obj = JSON.parse(raw.toString);
   } else {
     try { obj = JSON.parse(JSON.stringify(raw)); } catch(e) { obj = { data: {} }; }
   }
@@ -1031,7 +1031,7 @@ try {
   var obj = null;
   if (raw === null || raw === undefined) { obj = { data: {} }; }
   else if (typeof raw === "string") { obj = JSON.parse(raw); }
-  else if (raw &amp;&amp; typeof raw.prop === "function") { obj = JSON.parse(raw.toString()); }
+  else if (raw &amp;&amp; typeof raw.prop === "function") { obj = JSON.parse(raw.toString); }
   else { try { obj = JSON.parse(JSON.stringify(raw)); } catch (e1) { obj = { data: {} }; } }
   if (!obj.data) { obj = { data: obj }; }
   var d = obj.data;
@@ -1040,18 +1040,18 @@ try {
   function hdG2J(gy, gm, gd) { var g_d_m = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334]; var gy2 = (gm &gt; 2) ? (gy + 1) : gy; var days = 355666 + (365 * gy) + Math.floor((gy2 + 3) / 4) - Math.floor((gy2 + 99) / 100) + Math.floor((gy2 + 399) / 400) + gd + g_d_m[gm - 1]; var jy = -1595 + (33 * Math.floor(days / 12053)); days %= 12053; jy += 4 * Math.floor(days / 1461); days %= 1461; if (days &gt; 365) { jy += Math.floor((days - 1) / 365); days = (days - 1) % 365; } var jm, jd; if (days &lt; 186) { jm = 1 + Math.floor(days / 31); jd = 1 + (days % 31); } else { jm = 7 + Math.floor((days - 186) / 30); jd = 1 + ((days - 186) % 30); } return [jy, jm, jd]; }
 function hdJ2G(jy, jm, jd) { jy += 1595; var days = -355668 + (365 * jy) + (Math.floor(jy / 33) * 8) + Math.floor(((jy % 33) + 3) / 4) + jd + ((jm &lt; 7) ? (jm - 1) * 31 : ((jm - 7) * 30) + 186); var gy = 400 * Math.floor(days / 146097); days %= 146097; if (days &gt; 36524) { days--; gy += 100 * Math.floor(days / 36524); days %= 36524; if (days &gt;= 365) { days++; } } gy += 4 * Math.floor(days / 1461); days %= 1461; if (days &gt; 365) { gy += Math.floor((days - 1) / 365); days = (days - 1) % 365; } var gd = days + 1; var ml = [0, 31, ((gy % 4 === 0 &amp;&amp; gy % 100 !== 0) || (gy % 400 === 0)) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]; var gm; for (gm = 0; gm &lt; 13 &amp;&amp; gd &gt; ml[gm]; gm++) { gd -= ml[gm]; } return [gy, gm, gd]; }
 function hdPad(n) { return (n &lt; 10 ? "0" : "") + n; }
-function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.type("java.time.ZoneId"); var z = Z.now(I.of("Asia/Tehran")); var j = hdG2J(z.getYear(), z.getMonthValue(), z.getDayOfMonth()); return j[0] + "/" + hdPad(j[1]) + "/" + hdPad(j[2]) + " " + hdPad(z.getHour()) + ":" + hdPad(z.getMinute()); } catch (e) { var d = new Date(); var j2 = hdG2J(d.getFullYear(), d.getMonth() + 1, d.getDate()); return j2[0] + "/" + hdPad(j2[1]) + "/" + hdPad(j2[2]) + " " + hdPad(d.getHours()) + ":" + hdPad(d.getMinutes()); } }
-  var name = ((d.ApplicantFirstName || "") + " " + (d.ApplicantLastName || "")).trim();
+function hdNow { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.type("java.time.ZoneId"); var z = Z.now(I.of("Asia/Tehran")); var j = hdG2J(z.getYear, z.getMonthValue, z.getDayOfMonth); return j[0] + "/" + hdPad(j[1]) + "/" + hdPad(j[2]) + " " + hdPad(z.getHour) + ":" + hdPad(z.getMinute); } catch (e) { var d = new Date; var j2 = hdG2J(d.getFullYear, d.getMonth + 1, d.getDate); return j2[0] + "/" + hdPad(j2[1]) + "/" + hdPad(j2[2]) + " " + hdPad(d.getHours) + ":" + hdPad(d.getMinutes); } }
+  var name = ((d.ApplicantFirstName || "") + " " + (d.ApplicantLastName || "")).trim;
   var title = "واریز ودیعه";
   var text = "مبلغ " + fmt(d.PaidAmount) + " ریال در تاریخ " + (d.PaymentDate || "-") + (d.PaymentMethod === "landlord" ? " مستقیماً به حساب موجر" : " به حساب حقوقی شما") + " واریز شد. شماره پیگیری: " + (d.PaymentReference || "-") + ".";
   var log = d.InitiatorNotifications || [];
-  log.push({ NoticeTitle: title, NoticeText: text, NoticeTime: hdNow() });
+  log.push({ NoticeTitle: title, NoticeText: text, NoticeTime: hdNow });
   d.InitiatorNotifications = log;
   execution.setVariable("Submission", S(JSON.stringify(obj)));
   execution.setVariable("_lastNotice", title + ": " + text);
   var pm = execution.getVariable("PM");
   if (pm) {
-    var nt = hdNow();
+    var nt = hdNow;
     try {
       var nobj = JSON.parse(JSON.stringify(obj));
       nobj.data.StateTask = "0";
@@ -1059,23 +1059,23 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
       nobj.data.NoticeText = text;
       nobj.data.NoticeTime = nt;
       var HashMap = Java.type("java.util.HashMap");
-      var vars = new HashMap();
+      var vars = new HashMap;
       vars.put("PM", String(pm));
       vars.put("StateTask", "0");
       vars.put("NoticeTaskName", "اطلاع: " + title);
       vars.put("NoticeTitle", title);
       vars.put("NoticeText", text);
       vars.put("NoticeTime", nt);
-      vars.put("SourceProcessInstanceId", execution.getProcessInstanceId());
+      vars.put("SourceProcessInstanceId", execution.getProcessInstanceId);
       vars.put("Submission", S(JSON.stringify(nobj)));
-      var rs = execution.getProcessEngineServices().getRuntimeService();
-      var bk = execution.getProcessBusinessKey();
+      var rs = execution.getProcessEngineServices.getRuntimeService;
+      var bk = execution.getProcessBusinessKey;
       if (bk) { rs.startProcessInstanceByKey("HousingDepositNotice", String(bk), vars); }
       else { rs.startProcessInstanceByKey("HousingDepositNotice", vars); }
     } catch (eN) {
       console.error("[Notice] HousingDepositNotice not started, falling back to plain task: " + eN);
-      var ts = execution.getProcessEngineServices().getTaskService();
-      var t = ts.newTask();
+      var ts = execution.getProcessEngineServices.getTaskService;
+      var t = ts.newTask;
       t.setName("اطلاع: " + title);
       t.setDescription(text);
       t.setAssignee(String(pm));
@@ -1103,7 +1103,7 @@ try {
   } else if (typeof raw === "string") {
     obj = JSON.parse(raw);
   } else if (raw &amp;&amp; typeof raw.prop === "function") {
-    obj = JSON.parse(raw.toString());
+    obj = JSON.parse(raw.toString);
   } else {
     try { obj = JSON.parse(JSON.stringify(raw)); } catch(e) { obj = { data: {} }; }
   }
@@ -1125,17 +1125,17 @@ try {
           <camunda:script scriptFormat="javascript">try {
   var raw = execution.getVariable("Submission");
   var d = {};
-  if (raw &amp;&amp; typeof raw.prop === "function") { var o = JSON.parse(raw.toString()); d = o.data || o; }
+  if (raw &amp;&amp; typeof raw.prop === "function") { var o = JSON.parse(raw.toString); d = o.data || o; }
   else if (typeof raw === "string") { var o2 = JSON.parse(raw); d = o2.data || o2; }
   function hdG2J(gy, gm, gd) { var g_d_m = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334]; var gy2 = (gm &gt; 2) ? (gy + 1) : gy; var days = 355666 + (365 * gy) + Math.floor((gy2 + 3) / 4) - Math.floor((gy2 + 99) / 100) + Math.floor((gy2 + 399) / 400) + gd + g_d_m[gm - 1]; var jy = -1595 + (33 * Math.floor(days / 12053)); days %= 12053; jy += 4 * Math.floor(days / 1461); days %= 1461; if (days &gt; 365) { jy += Math.floor((days - 1) / 365); days = (days - 1) % 365; } var jm, jd; if (days &lt; 186) { jm = 1 + Math.floor(days / 31); jd = 1 + (days % 31); } else { jm = 7 + Math.floor((days - 186) / 30); jd = 1 + ((days - 186) % 30); } return [jy, jm, jd]; }
 function hdJ2G(jy, jm, jd) { jy += 1595; var days = -355668 + (365 * jy) + (Math.floor(jy / 33) * 8) + Math.floor(((jy % 33) + 3) / 4) + jd + ((jm &lt; 7) ? (jm - 1) * 31 : ((jm - 7) * 30) + 186); var gy = 400 * Math.floor(days / 146097); days %= 146097; if (days &gt; 36524) { days--; gy += 100 * Math.floor(days / 36524); days %= 36524; if (days &gt;= 365) { days++; } } gy += 4 * Math.floor(days / 1461); days %= 1461; if (days &gt; 365) { gy += Math.floor((days - 1) / 365); days = (days - 1) % 365; } var gd = days + 1; var ml = [0, 31, ((gy % 4 === 0 &amp;&amp; gy % 100 !== 0) || (gy % 400 === 0)) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]; var gm; for (gm = 0; gm &lt; 13 &amp;&amp; gd &gt; ml[gm]; gm++) { gd -= ml[gm]; } return [gy, gm, gd]; }
 function hdPad(n) { return (n &lt; 10 ? "0" : "") + n; }
-function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.type("java.time.ZoneId"); var z = Z.now(I.of("Asia/Tehran")); var j = hdG2J(z.getYear(), z.getMonthValue(), z.getDayOfMonth()); return j[0] + "/" + hdPad(j[1]) + "/" + hdPad(j[2]) + " " + hdPad(z.getHour()) + ":" + hdPad(z.getMinute()); } catch (e) { var d = new Date(); var j2 = hdG2J(d.getFullYear(), d.getMonth() + 1, d.getDate()); return j2[0] + "/" + hdPad(j2[1]) + "/" + hdPad(j2[2]) + " " + hdPad(d.getHours()) + ":" + hdPad(d.getMinutes()); } }
+function hdNow { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.type("java.time.ZoneId"); var z = Z.now(I.of("Asia/Tehran")); var j = hdG2J(z.getYear, z.getMonthValue, z.getDayOfMonth); return j[0] + "/" + hdPad(j[1]) + "/" + hdPad(j[2]) + " " + hdPad(z.getHour) + ":" + hdPad(z.getMinute); } catch (e) { var d = new Date; var j2 = hdG2J(d.getFullYear, d.getMonth + 1, d.getDate); return j2[0] + "/" + hdPad(j2[1]) + "/" + hdPad(j2[2]) + " " + hdPad(d.getHours) + ":" + hdPad(d.getMinutes); } }
   function hdParse(v) { var p = String(v || "").replace(/[\u06F0-\u06F9]/g, function (c) { return String(c.charCodeAt(0) - 0x06F0); }).match(/\d+/g); return (p &amp;&amp; p.length &gt;= 3) ? [parseInt(p[0], 10), parseInt(p[1], 10), parseInt(p[2], 10)] : null; }
   var j = hdParse(d.SettlementDueDate) || hdParse(d.LeaseEndDate);
   var iso;
   if (j &amp;&amp; j[0] &gt; 1300 &amp;&amp; j[0] &lt; 1500) { var g = hdJ2G(j[0], j[1], j[2]); iso = g[0] + "-" + hdPad(g[1]) + "-" + hdPad(g[2]) + "T08:00:00"; }
-  else { var n = new Date(); iso = (n.getFullYear() + 1) + "-" + hdPad(n.getMonth() + 1) + "-" + hdPad(n.getDate()) + "T08:00:00"; }
+  else { var n = new Date; iso = (n.getFullYear + 1) + "-" + hdPad(n.getMonth + 1) + "-" + hdPad(n.getDate) + "T08:00:00"; }
   execution.setVariable("_exitDueDate", iso);
   console.log("[Task_Database] _exitDueDate=" + iso);
 } catch (e) { console.error("[Task_Database] " + e); execution.setVariable("_exitDueDate", "2099-01-01T08:00:00"); }
@@ -1153,7 +1153,7 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
   var obj = null;
   if (raw === null || raw === undefined) { obj = { data: {} }; }
   else if (typeof raw === "string") { obj = JSON.parse(raw); }
-  else if (raw &amp;&amp; typeof raw.prop === "function") { obj = JSON.parse(raw.toString()); }
+  else if (raw &amp;&amp; typeof raw.prop === "function") { obj = JSON.parse(raw.toString); }
   else { try { obj = JSON.parse(JSON.stringify(raw)); } catch (e1) { obj = { data: {} }; } }
   if (!obj.data) { obj = { data: obj }; }
   var d = obj.data;
@@ -1162,18 +1162,18 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
   function hdG2J(gy, gm, gd) { var g_d_m = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334]; var gy2 = (gm &gt; 2) ? (gy + 1) : gy; var days = 355666 + (365 * gy) + Math.floor((gy2 + 3) / 4) - Math.floor((gy2 + 99) / 100) + Math.floor((gy2 + 399) / 400) + gd + g_d_m[gm - 1]; var jy = -1595 + (33 * Math.floor(days / 12053)); days %= 12053; jy += 4 * Math.floor(days / 1461); days %= 1461; if (days &gt; 365) { jy += Math.floor((days - 1) / 365); days = (days - 1) % 365; } var jm, jd; if (days &lt; 186) { jm = 1 + Math.floor(days / 31); jd = 1 + (days % 31); } else { jm = 7 + Math.floor((days - 186) / 30); jd = 1 + ((days - 186) % 30); } return [jy, jm, jd]; }
 function hdJ2G(jy, jm, jd) { jy += 1595; var days = -355668 + (365 * jy) + (Math.floor(jy / 33) * 8) + Math.floor(((jy % 33) + 3) / 4) + jd + ((jm &lt; 7) ? (jm - 1) * 31 : ((jm - 7) * 30) + 186); var gy = 400 * Math.floor(days / 146097); days %= 146097; if (days &gt; 36524) { days--; gy += 100 * Math.floor(days / 36524); days %= 36524; if (days &gt;= 365) { days++; } } gy += 4 * Math.floor(days / 1461); days %= 1461; if (days &gt; 365) { gy += Math.floor((days - 1) / 365); days = (days - 1) % 365; } var gd = days + 1; var ml = [0, 31, ((gy % 4 === 0 &amp;&amp; gy % 100 !== 0) || (gy % 400 === 0)) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]; var gm; for (gm = 0; gm &lt; 13 &amp;&amp; gd &gt; ml[gm]; gm++) { gd -= ml[gm]; } return [gy, gm, gd]; }
 function hdPad(n) { return (n &lt; 10 ? "0" : "") + n; }
-function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.type("java.time.ZoneId"); var z = Z.now(I.of("Asia/Tehran")); var j = hdG2J(z.getYear(), z.getMonthValue(), z.getDayOfMonth()); return j[0] + "/" + hdPad(j[1]) + "/" + hdPad(j[2]) + " " + hdPad(z.getHour()) + ":" + hdPad(z.getMinute()); } catch (e) { var d = new Date(); var j2 = hdG2J(d.getFullYear(), d.getMonth() + 1, d.getDate()); return j2[0] + "/" + hdPad(j2[1]) + "/" + hdPad(j2[2]) + " " + hdPad(d.getHours()) + ":" + hdPad(d.getMinutes()); } }
-  var name = ((d.ApplicantFirstName || "") + " " + (d.ApplicantLastName || "")).trim();
+function hdNow { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.type("java.time.ZoneId"); var z = Z.now(I.of("Asia/Tehran")); var j = hdG2J(z.getYear, z.getMonthValue, z.getDayOfMonth); return j[0] + "/" + hdPad(j[1]) + "/" + hdPad(j[2]) + " " + hdPad(z.getHour) + ":" + hdPad(z.getMinute); } catch (e) { var d = new Date; var j2 = hdG2J(d.getFullYear, d.getMonth + 1, d.getDate); return j2[0] + "/" + hdPad(j2[1]) + "/" + hdPad(j2[2]) + " " + hdPad(d.getHours) + ":" + hdPad(d.getMinutes); } }
+  var name = ((d.ApplicantFirstName || "") + " " + (d.ApplicantLastName || "")).trim;
   var title = "تکمیل پرونده ودیعه";
   var text = "پرونده ودیعه مسکن شما تکمیل و در بانک اطلاعات دریافت‌کنندگان ثبت شد. تاریخ الزام به تسویه: " + (d.SettlementDueDate || "-") + ". لطفاً یک ماه پیش از پایان قرارداد اجاره، وضعیت تمدید یا تخلیه را اعلام کنید.";
   var log = d.InitiatorNotifications || [];
-  log.push({ NoticeTitle: title, NoticeText: text, NoticeTime: hdNow() });
+  log.push({ NoticeTitle: title, NoticeText: text, NoticeTime: hdNow });
   d.InitiatorNotifications = log;
   execution.setVariable("Submission", S(JSON.stringify(obj)));
   execution.setVariable("_lastNotice", title + ": " + text);
   var pm = execution.getVariable("PM");
   if (pm) {
-    var nt = hdNow();
+    var nt = hdNow;
     try {
       var nobj = JSON.parse(JSON.stringify(obj));
       nobj.data.StateTask = "0";
@@ -1181,23 +1181,23 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
       nobj.data.NoticeText = text;
       nobj.data.NoticeTime = nt;
       var HashMap = Java.type("java.util.HashMap");
-      var vars = new HashMap();
+      var vars = new HashMap;
       vars.put("PM", String(pm));
       vars.put("StateTask", "0");
       vars.put("NoticeTaskName", "اطلاع: " + title);
       vars.put("NoticeTitle", title);
       vars.put("NoticeText", text);
       vars.put("NoticeTime", nt);
-      vars.put("SourceProcessInstanceId", execution.getProcessInstanceId());
+      vars.put("SourceProcessInstanceId", execution.getProcessInstanceId);
       vars.put("Submission", S(JSON.stringify(nobj)));
-      var rs = execution.getProcessEngineServices().getRuntimeService();
-      var bk = execution.getProcessBusinessKey();
+      var rs = execution.getProcessEngineServices.getRuntimeService;
+      var bk = execution.getProcessBusinessKey;
       if (bk) { rs.startProcessInstanceByKey("HousingDepositNotice", String(bk), vars); }
       else { rs.startProcessInstanceByKey("HousingDepositNotice", vars); }
     } catch (eN) {
       console.error("[Notice] HousingDepositNotice not started, falling back to plain task: " + eN);
-      var ts = execution.getProcessEngineServices().getTaskService();
-      var t = ts.newTask();
+      var ts = execution.getProcessEngineServices.getTaskService;
+      var t = ts.newTask;
       t.setName("اطلاع: " + title);
       t.setDescription(text);
       t.setAssignee(String(pm));
@@ -1271,7 +1271,7 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
         <camunda:executionListener event="end">
           <camunda:script scriptFormat="javascript">try {
   var raw = execution.getVariable("Submission");
-  var obj = (raw &amp;&amp; typeof raw.prop === "function") ? JSON.parse(raw.toString()) : (typeof raw === "string" ? JSON.parse(raw) : { data: {} });
+  var obj = (raw &amp;&amp; typeof raw.prop === "function") ? JSON.parse(raw.toString) : (typeof raw === "string" ? JSON.parse(raw) : { data: {} });
   if (!obj.data) { obj = { data: obj }; }
   var reason = execution.getVariable("ExitReason");
   if (reason !== null &amp;&amp; reason !== undefined &amp;&amp; String(reason) !== "") { obj.data.ExitReason = String(reason); }
@@ -1291,7 +1291,7 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
         <camunda:executionListener event="end">
           <camunda:script scriptFormat="javascript">try {
   var raw = execution.getVariable("Submission");
-  var obj = (raw &amp;&amp; typeof raw.prop === "function") ? JSON.parse(raw.toString()) : (typeof raw === "string" ? JSON.parse(raw) : { data: {} });
+  var obj = (raw &amp;&amp; typeof raw.prop === "function") ? JSON.parse(raw.toString) : (typeof raw === "string" ? JSON.parse(raw) : { data: {} });
   if (!obj.data) { obj = { data: obj }; }
   var reason = execution.getVariable("ExitReason");
   if (reason !== null &amp;&amp; reason !== undefined &amp;&amp; String(reason) !== "") { obj.data.ExitReason = String(reason); }
@@ -1319,7 +1319,7 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
   var obj = null;
   if (raw === null || raw === undefined) { obj = { data: {} }; }
   else if (typeof raw === "string") { obj = JSON.parse(raw); }
-  else if (raw &amp;&amp; typeof raw.prop === "function") { obj = JSON.parse(raw.toString()); }
+  else if (raw &amp;&amp; typeof raw.prop === "function") { obj = JSON.parse(raw.toString); }
   else { try { obj = JSON.parse(JSON.stringify(raw)); } catch (e1) { obj = { data: {} }; } }
   if (!obj.data) { obj = { data: obj }; }
   var d = obj.data;
@@ -1328,18 +1328,18 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
   function hdG2J(gy, gm, gd) { var g_d_m = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334]; var gy2 = (gm &gt; 2) ? (gy + 1) : gy; var days = 355666 + (365 * gy) + Math.floor((gy2 + 3) / 4) - Math.floor((gy2 + 99) / 100) + Math.floor((gy2 + 399) / 400) + gd + g_d_m[gm - 1]; var jy = -1595 + (33 * Math.floor(days / 12053)); days %= 12053; jy += 4 * Math.floor(days / 1461); days %= 1461; if (days &gt; 365) { jy += Math.floor((days - 1) / 365); days = (days - 1) % 365; } var jm, jd; if (days &lt; 186) { jm = 1 + Math.floor(days / 31); jd = 1 + (days % 31); } else { jm = 7 + Math.floor((days - 186) / 30); jd = 1 + ((days - 186) % 30); } return [jy, jm, jd]; }
 function hdJ2G(jy, jm, jd) { jy += 1595; var days = -355668 + (365 * jy) + (Math.floor(jy / 33) * 8) + Math.floor(((jy % 33) + 3) / 4) + jd + ((jm &lt; 7) ? (jm - 1) * 31 : ((jm - 7) * 30) + 186); var gy = 400 * Math.floor(days / 146097); days %= 146097; if (days &gt; 36524) { days--; gy += 100 * Math.floor(days / 36524); days %= 36524; if (days &gt;= 365) { days++; } } gy += 4 * Math.floor(days / 1461); days %= 1461; if (days &gt; 365) { gy += Math.floor((days - 1) / 365); days = (days - 1) % 365; } var gd = days + 1; var ml = [0, 31, ((gy % 4 === 0 &amp;&amp; gy % 100 !== 0) || (gy % 400 === 0)) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]; var gm; for (gm = 0; gm &lt; 13 &amp;&amp; gd &gt; ml[gm]; gm++) { gd -= ml[gm]; } return [gy, gm, gd]; }
 function hdPad(n) { return (n &lt; 10 ? "0" : "") + n; }
-function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.type("java.time.ZoneId"); var z = Z.now(I.of("Asia/Tehran")); var j = hdG2J(z.getYear(), z.getMonthValue(), z.getDayOfMonth()); return j[0] + "/" + hdPad(j[1]) + "/" + hdPad(j[2]) + " " + hdPad(z.getHour()) + ":" + hdPad(z.getMinute()); } catch (e) { var d = new Date(); var j2 = hdG2J(d.getFullYear(), d.getMonth() + 1, d.getDate()); return j2[0] + "/" + hdPad(j2[1]) + "/" + hdPad(j2[2]) + " " + hdPad(d.getHours()) + ":" + hdPad(d.getMinutes()); } }
-  var name = ((d.ApplicantFirstName || "") + " " + (d.ApplicantLastName || "")).trim();
+function hdNow { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.type("java.time.ZoneId"); var z = Z.now(I.of("Asia/Tehran")); var j = hdG2J(z.getYear, z.getMonthValue, z.getDayOfMonth); return j[0] + "/" + hdPad(j[1]) + "/" + hdPad(j[2]) + " " + hdPad(z.getHour) + ":" + hdPad(z.getMinute); } catch (e) { var d = new Date; var j2 = hdG2J(d.getFullYear, d.getMonth + 1, d.getDate); return j2[0] + "/" + hdPad(j2[1]) + "/" + hdPad(j2[2]) + " " + hdPad(d.getHours) + ":" + hdPad(d.getMinutes); } }
+  var name = ((d.ApplicantFirstName || "") + " " + (d.ApplicantLastName || "")).trim;
   var title = "الزام به تسویه ودیعه";
   var text = "به علت خروج از شمول دستورالعمل، ودیعه مسکن به مبلغ " + fmt(d.ApprovedDepositAmount) + " ریال باید حداکثر تا تاریخ " + (d.SettlementDueDate || "-") + " تسویه شود." + note(d.ExitNote);
   var log = d.InitiatorNotifications || [];
-  log.push({ NoticeTitle: title, NoticeText: text, NoticeTime: hdNow() });
+  log.push({ NoticeTitle: title, NoticeText: text, NoticeTime: hdNow });
   d.InitiatorNotifications = log;
   execution.setVariable("Submission", S(JSON.stringify(obj)));
   execution.setVariable("_lastNotice", title + ": " + text);
   var pm = execution.getVariable("PM");
   if (pm) {
-    var nt = hdNow();
+    var nt = hdNow;
     try {
       var nobj = JSON.parse(JSON.stringify(obj));
       nobj.data.StateTask = "0";
@@ -1347,23 +1347,23 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
       nobj.data.NoticeText = text;
       nobj.data.NoticeTime = nt;
       var HashMap = Java.type("java.util.HashMap");
-      var vars = new HashMap();
+      var vars = new HashMap;
       vars.put("PM", String(pm));
       vars.put("StateTask", "0");
       vars.put("NoticeTaskName", "اطلاع: " + title);
       vars.put("NoticeTitle", title);
       vars.put("NoticeText", text);
       vars.put("NoticeTime", nt);
-      vars.put("SourceProcessInstanceId", execution.getProcessInstanceId());
+      vars.put("SourceProcessInstanceId", execution.getProcessInstanceId);
       vars.put("Submission", S(JSON.stringify(nobj)));
-      var rs = execution.getProcessEngineServices().getRuntimeService();
-      var bk = execution.getProcessBusinessKey();
+      var rs = execution.getProcessEngineServices.getRuntimeService;
+      var bk = execution.getProcessBusinessKey;
       if (bk) { rs.startProcessInstanceByKey("HousingDepositNotice", String(bk), vars); }
       else { rs.startProcessInstanceByKey("HousingDepositNotice", vars); }
     } catch (eN) {
       console.error("[Notice] HousingDepositNotice not started, falling back to plain task: " + eN);
-      var ts = execution.getProcessEngineServices().getTaskService();
-      var t = ts.newTask();
+      var ts = execution.getProcessEngineServices.getTaskService;
+      var t = ts.newTask;
       t.setName("اطلاع: " + title);
       t.setDescription(text);
       t.setAssignee(String(pm));
@@ -1389,21 +1389,21 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
   var obj = null;
   if (raw === null || raw === undefined) { obj = { data: {} }; }
   else if (typeof raw === "string") { obj = JSON.parse(raw); }
-  else if (raw &amp;&amp; typeof raw.prop === "function") { obj = JSON.parse(raw.toString()); }
+  else if (raw &amp;&amp; typeof raw.prop === "function") { obj = JSON.parse(raw.toString); }
   else { try { obj = JSON.parse(JSON.stringify(raw)); } catch (e1) { obj = { data: {} }; } }
   if (!obj.data) { obj = { data: obj }; }
   obj.data.SettlementTrigger = "exit";
   obj.data.StateTask = "1";
   var HashMap = Java.type("java.util.HashMap");
-  var vars = new HashMap();
+  var vars = new HashMap;
   var pm = execution.getVariable("PM");
   if (pm) { vars.put("PM", String(pm)); }
   vars.put("StateTask", "1");
   vars.put("_requestCategory", String(obj.data.RequestCategory || ""));
-  vars.put("SourceProcessInstanceId", execution.getProcessInstanceId());
+  vars.put("SourceProcessInstanceId", execution.getProcessInstanceId);
   vars.put("Submission", S(JSON.stringify(obj)));
-  var rs = execution.getProcessEngineServices().getRuntimeService();
-  var bk = execution.getProcessBusinessKey();
+  var rs = execution.getProcessEngineServices.getRuntimeService;
+  var bk = execution.getProcessBusinessKey;
   if (bk) { rs.startProcessInstanceByKey("HousingDepositSettlement", String(bk), vars); }
   else { rs.startProcessInstanceByKey("HousingDepositSettlement", vars); }
   console.log("[Notify_Settlement] HousingDepositSettlement started");
