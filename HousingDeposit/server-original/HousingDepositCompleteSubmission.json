@@ -1172,6 +1172,111 @@
       ]
     },
     {
+      "title": "فرم درخواست امضاشده",
+      "theme": "primary",
+      "collapsible": false,
+      "key": "RequestFormPanel",
+      "type": "panel",
+      "label": "Panel",
+      "input": false,
+      "tableView": false,
+      "components": [
+        {
+          "type": "htmlelement",
+          "label": "noteForm2225",
+          "key": "noteForm2225",
+          "tag": "div",
+          "input": false,
+          "tableView": false,
+          "content": "<div class=\"alert alert-info\" style=\"margin-bottom:0\">مدیران ستادی: فرم نمونه ۲۲۲۵ خطاب به مدیرعامل محترم بانک (در دو نسخه) تکمیل، امضا و بارگذاری شود.</div>",
+          "customConditional": "show = data.RequestCategory === 'HQ';",
+          "disabled": true
+        },
+        {
+          "type": "htmlelement",
+          "label": "noteForm2224",
+          "key": "noteForm2224",
+          "tag": "div",
+          "input": false,
+          "tableView": false,
+          "content": "<div class=\"alert alert-info\" style=\"margin-bottom:0\">مدیریت‌های شعب استان / منطقه: فرم نمونه ۲۲۲۴ تکمیل، امضا و بارگذاری شود.</div>",
+          "customConditional": "show = data.RequestCategory === 'Province';",
+          "disabled": true
+        },
+        {
+          "label": "فرم درخواست امضاشده (نمونه ۲۲۲۵)",
+          "tableView": false,
+          "storage": "base64",
+          "image": true,
+          "webcam": true,
+          "capture": "user",
+          "fileTypes": [],
+          "validateWhenHidden": false,
+          "key": "Form2225File",
+          "type": "file",
+          "input": true,
+          "disabled": true,
+          "multiple": true,
+          "validate": {
+            "required": true
+          },
+          "conditional": {
+            "show": true,
+            "when": "RequestCategory",
+            "eq": "HQ"
+          },
+          "clearOnHide": false,
+          "errors": {
+            "required": "بارگذاری «{{ field }}» الزامی است."
+          }
+        },
+        {
+          "label": "فرم درخواست امضاشده (نمونه ۲۲۲۴)",
+          "tableView": false,
+          "storage": "base64",
+          "image": true,
+          "webcam": true,
+          "capture": "user",
+          "fileTypes": [],
+          "validateWhenHidden": false,
+          "key": "Form2224File",
+          "type": "file",
+          "input": true,
+          "disabled": true,
+          "multiple": true,
+          "validate": {
+            "required": true
+          },
+          "conditional": {
+            "show": true,
+            "when": "RequestCategory",
+            "eq": "Province"
+          },
+          "clearOnHide": false,
+          "errors": {
+            "required": "بارگذاری «{{ field }}» الزامی است."
+          }
+        },
+        {
+          "label": "صحت اطلاعات فرم درخواست را تأیید می‌کنم.",
+          "tableView": false,
+          "defaultValue": false,
+          "key": "RequestFormConfirmed",
+          "type": "checkbox",
+          "input": true,
+          "validate": {
+            "required": true
+          },
+          "errors": {
+            "required": "تأیید «{{ field }}» الزامی است."
+          },
+          "clearOnHide": false,
+          "disabled": true
+        }
+      ],
+      "disabled": true
+    },
+    {
       "label": "ثبت درخواست و شروع فرآیند",
       "showValidations": false,
       "theme": "success",
