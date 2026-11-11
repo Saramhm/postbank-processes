@@ -332,7 +332,7 @@
                       "type": "currency",
                       "delimiter": true,
                       "input": true,
-                      "calculateValue": "var t = {g1:[30000,30000], g2:[23000,23000], g3:[25500,23000], g4:[23000,23000], g5:[21000,21000], g6:[16000,16000], g7:[16000,16000], g8:[30000,30000], g9:[27000,27000], g10:[21000,21000], g11:[25000,25000], g12:[22500,22500], g13:[17500,17500], bP:[16000,14000], b1:[14000,12000], b2:[12000,10000], b3:[10000,8000], b4:[8000,6000]}; var g = data.EligibilityGroup || ''; var dep = g.indexOf('_dep') > 0; var key = g.replace('_head', '').replace('_dep', ''); var row = t[key]; if (!row) { value = 0; } else { var m = row[data.CityType === 'metropolis' ? 0 : 1]; if (dep) { m = m * 0.7; } value = Math.round(m) * 1000000; }",
+                      "calculateValue": "var t = {g1:[30000,30000], g2:[23000,23000], g3:[25500,23000], g4:[23000,23000], g5:[21000,21000], g6:[16000,16000], g7:[16000,16000], g8:[30000,30000], g9:[27000,27000], g10:[21000,21000], g11:[25000,25000], g12:[22500,22500], g13:[17500,17500], bP:[16000,14000], b1:[14000,12000], b2:[12000,10000], b3:[10000,8000], b4:[8000,6000]}; var g = data.EligibilityGroup || ''; var dep = g.indexOf('_dep') > 0; var key = g.replace('_head', '').replace('_dep', ''); var row = t[key]; if (!row) { value = parseFloat(data.DepositCap) || 0; } else { var m = row[data.CityType === 'metropolis' ? 0 : 1]; if (dep) { m = m * 0.7; } value = Math.round(m) * 1000000; }",
                       "disabled": true,
                       "description": "بر اساس جدول مبالغ پیشنهادی ۱۴۰۵ دستورالعمل؛ هر سال به‌روزرسانی شود.",
                       "clearOnHide": false
@@ -751,7 +751,7 @@
                       "type": "currency",
                       "delimiter": true,
                       "input": true,
-                      "calculateValue": "var t = {g1:[30000,30000], g2:[23000,23000], g3:[25500,23000], g4:[23000,23000], g5:[21000,21000], g6:[16000,16000], g7:[16000,16000], g8:[30000,30000], g9:[27000,27000], g10:[21000,21000], g11:[25000,25000], g12:[22500,22500], g13:[17500,17500], bP:[16000,14000], b1:[14000,12000], b2:[12000,10000], b3:[10000,8000], b4:[8000,6000]}; var g = data.EligibilityGroup || ''; var dep = g.indexOf('_dep') > 0; var key = g.replace('_head', '').replace('_dep', ''); var row = t[key]; if (!row) { value = 0; } else { var m = row[data.CityType === 'metropolis' ? 0 : 1]; if (dep) { m = m * 0.7; } value = Math.round(m) * 1000000; }",
+                      "calculateValue": "var t = {g1:[30000,30000], g2:[23000,23000], g3:[25500,23000], g4:[23000,23000], g5:[21000,21000], g6:[16000,16000], g7:[16000,16000], g8:[30000,30000], g9:[27000,27000], g10:[21000,21000], g11:[25000,25000], g12:[22500,22500], g13:[17500,17500], bP:[16000,14000], b1:[14000,12000], b2:[12000,10000], b3:[10000,8000], b4:[8000,6000]}; var g = data.EligibilityGroup || ''; var dep = g.indexOf('_dep') > 0; var key = g.replace('_head', '').replace('_dep', ''); var row = t[key]; if (!row) { value = parseFloat(data.DepositCap) || 0; } else { var m = row[data.CityType === 'metropolis' ? 0 : 1]; if (dep) { m = m * 0.7; } value = Math.round(m) * 1000000; }",
                       "disabled": true,
                       "description": "بر اساس جدول مبالغ پیشنهادی ۱۴۰۵ دستورالعمل؛ هر سال به‌روزرسانی شود.",
                       "clearOnHide": false
@@ -874,7 +874,7 @@
           "type": "hidden",
           "input": true,
           "tableView": false,
-          "calculateValue": "value = data.DepositCap;",
+          "calculateValue": "value = parseFloat(data.ApprovedDepositAmount) || parseFloat(data.DepositCap) || 0;",
           "clearOnHide": false
         },
         {
@@ -1195,7 +1195,7 @@
                       "type": "currency",
                       "delimiter": true,
                       "input": true,
-                      "calculateValue": "var t = {g1:[30000,30000], g2:[23000,23000], g3:[25500,23000], g4:[23000,23000], g5:[21000,21000], g6:[16000,16000], g7:[16000,16000], g8:[30000,30000], g9:[27000,27000], g10:[21000,21000], g11:[25000,25000], g12:[22500,22500], g13:[17500,17500], bP:[16000,14000], b1:[14000,12000], b2:[12000,10000], b3:[10000,8000], b4:[8000,6000]}; var g = data.EligibilityGroup || ''; var dep = g.indexOf('_dep') > 0; var key = g.replace('_head', '').replace('_dep', ''); var row = t[key]; if (!row) { value = 0; } else { var m = row[data.CityType === 'metropolis' ? 0 : 1]; if (dep) { m = m * 0.7; } value = Math.round(m) * 1000000; }",
+                      "calculateValue": "var t = {g1:[30000,30000], g2:[23000,23000], g3:[25500,23000], g4:[23000,23000], g5:[21000,21000], g6:[16000,16000], g7:[16000,16000], g8:[30000,30000], g9:[27000,27000], g10:[21000,21000], g11:[25000,25000], g12:[22500,22500], g13:[17500,17500], bP:[16000,14000], b1:[14000,12000], b2:[12000,10000], b3:[10000,8000], b4:[8000,6000]}; var g = data.EligibilityGroup || ''; var dep = g.indexOf('_dep') > 0; var key = g.replace('_head', '').replace('_dep', ''); var row = t[key]; if (!row) { value = parseFloat(data.DepositCap) || 0; } else { var m = row[data.CityType === 'metropolis' ? 0 : 1]; if (dep) { m = m * 0.7; } value = Math.round(m) * 1000000; }",
                       "disabled": true,
                       "description": "بر اساس جدول مبالغ پیشنهادی ۱۴۰۵ دستورالعمل؛ هر سال به‌روزرسانی شود.",
                       "clearOnHide": false
@@ -1333,7 +1333,7 @@
           "type": "hidden",
           "input": true,
           "tableView": false,
-          "calculateValue": "var LEASES = {\"1405000000000001\": {\"LeaseDepositAmount\": 18000000000, \"LeaseStartDate\": \"1405/07/01\", \"LeaseEndDate\": \"1406/07/01\", \"ResidencePostalCode\": \"5166612345\", \"ResidenceAddress\": \"تبریز، خیابان ولیعصر، کوچه گلستان، پلاک ۱۲\", \"LandlordName\": \"احمد رضایی\", \"LandlordNationalCode\": \"0013000012\", \"LandlordIban\": \"IR380170000000100000000001\"}, \"1405000000000002\": {\"LeaseDepositAmount\": 16000000000, \"LeaseStartDate\": \"1405/08/15\", \"LeaseEndDate\": \"1406/08/15\", \"ResidencePostalCode\": \"5157713456\", \"ResidenceAddress\": \"تبریز، ولی‌عصر، خیابان شریعتی، پلاک ۴۰\", \"LandlordName\": \"سیما کاظمی\", \"LandlordNationalCode\": \"0013000020\", \"LandlordIban\": \"IR110170000000100000000002\"}, \"1405000000000003\": {\"LeaseDepositAmount\": 12000000000, \"LeaseStartDate\": \"1405/06/20\", \"LeaseEndDate\": \"1406/06/20\", \"ResidencePostalCode\": \"3185614567\", \"ResidenceAddress\": \"کرج، گوهردشت، خیابان ۱۲۰، پلاک ۷\", \"LandlordName\": \"محسن اکبری\", \"LandlordNationalCode\": \"0013000039\", \"LandlordIban\": \"IR810170000000100000000003\"}};\nvar POSTAL = {\"5166612345\": \"تبریز، خیابان ولیعصر، کوچه گلستان، پلاک ۱۲\", \"5157713456\": \"تبریز، ولی‌عصر، خیابان شریعتی، پلاک ۴۰\", \"3185614567\": \"کرج، گوهردشت، خیابان ۱۲۰، پلاک ۷\"};\nvar LANDLORD = {\"0013000012\": \"احمد رضایی\", \"0013000020\": \"سیما کاظمی\", \"0013000039\": \"محسن اکبری\"};\nfunction nz(v){return String(v||'').replace(/[\\u06F0-\\u06F9]/g,function(c){return String(c.charCodeAt(0)-0x06F0);}).replace(/\\D/g,'');}\nvar tc = nz(data.LeaseTrackingCode), pc = nz(data.ResidencePostalCode), lc = nz(data.LandlordNationalCode);\nvalue = tc + '|' + pc + '|' + lc;\nfunction put(k, v) { var c = instance.root.getComponent(k); if (c && v !== undefined) { c.setValue(v); } }\nif (tc.length === 16 && instance._tc !== tc) {\n  instance._tc = tc;\n  var rec = LEASES[tc];\n  if (rec) { setTimeout(function () { Object.keys(rec).forEach(function (k) { put(k, rec[k]); }); }, 300); }\n}\nif (pc.length === 10 && instance._pc !== pc) {\n  instance._pc = pc;\n  if (POSTAL[pc] && !data.ResidenceAddress) { setTimeout(function () { put('ResidenceAddress', POSTAL[pc]); }, 300); }\n}\nif (lc.length === 10 && instance._lc !== lc) {\n  instance._lc = lc;\n  if (LANDLORD[lc] && !data.LandlordName) { setTimeout(function () { put('LandlordName', LANDLORD[lc]); }, 300); }\n}",
+          "calculateValue": "var LEASES = {\"1405000000000001\": {\"LeaseStartDate\": \"1405/07/01\", \"LeaseEndDate\": \"1406/07/01\", \"ResidencePostalCode\": \"5166612345\", \"ResidenceAddress\": \"تبریز، خیابان ولیعصر، کوچه گلستان، پلاک ۱۲\", \"LandlordName\": \"احمد رضایی\", \"LandlordNationalCode\": \"0013000012\", \"LandlordIban\": \"IR380170000000100000000001\"}, \"1405000000000002\": {\"LeaseStartDate\": \"1405/08/15\", \"LeaseEndDate\": \"1406/08/15\", \"ResidencePostalCode\": \"5157713456\", \"ResidenceAddress\": \"تبریز، ولی‌عصر، خیابان شریعتی، پلاک ۴۰\", \"LandlordName\": \"سیما کاظمی\", \"LandlordNationalCode\": \"0013000020\", \"LandlordIban\": \"IR110170000000100000000002\"}, \"1405000000000003\": {\"LeaseStartDate\": \"1405/06/20\", \"LeaseEndDate\": \"1406/06/20\", \"ResidencePostalCode\": \"3185614567\", \"ResidenceAddress\": \"کرج، گوهردشت، خیابان ۱۲۰، پلاک ۷\", \"LandlordName\": \"محسن اکبری\", \"LandlordNationalCode\": \"0013000039\", \"LandlordIban\": \"IR810170000000100000000003\"}};\nvar POSTAL = {\"5166612345\": \"تبریز، خیابان ولیعصر، کوچه گلستان، پلاک ۱۲\", \"5157713456\": \"تبریز، ولی‌عصر، خیابان شریعتی، پلاک ۴۰\", \"3185614567\": \"کرج، گوهردشت، خیابان ۱۲۰، پلاک ۷\"};\nvar LANDLORD = {\"0013000012\": \"احمد رضایی\", \"0013000020\": \"سیما کاظمی\", \"0013000039\": \"محسن اکبری\"};\nfunction nz(v){return String(v||'').replace(/[\\u06F0-\\u06F9]/g,function(c){return String(c.charCodeAt(0)-0x06F0);}).replace(/\\D/g,'');}\nvar tc = nz(data.LeaseTrackingCode), pc = nz(data.ResidencePostalCode), lc = nz(data.LandlordNationalCode);\nvalue = tc + '|' + pc + '|' + lc;\nfunction put(k, v) { var c = instance.root.getComponent(k); if (c && v !== undefined) { c.setValue(v); } }\nif (tc.length === 16 && instance._tc !== tc) {\n  instance._tc = tc;\n  var rec = LEASES[tc];\n  if (rec) { setTimeout(function () { Object.keys(rec).forEach(function (k) { put(k, rec[k]); }); }, 300); }\n}\nif (pc.length === 10 && instance._pc !== pc) {\n  instance._pc = pc;\n  if (POSTAL[pc] && !data.ResidenceAddress) { setTimeout(function () { put('ResidenceAddress', POSTAL[pc]); }, 300); }\n}\nif (lc.length === 10 && instance._lc !== lc) {\n  instance._lc = lc;\n  if (LANDLORD[lc] && !data.LandlordName) { setTimeout(function () { put('LandlordName', LANDLORD[lc]); }, 300); }\n}",
           "clearOnHide": false
         },
         {
@@ -1367,7 +1367,8 @@
                   "input": true,
                   "disabled": true,
                   "validate": {},
-                  "clearOnHide": false
+                  "clearOnHide": false,
+                  "calculateValue": "value = parseFloat(data.ApprovedDepositAmount) || parseFloat(data.DepositCap) || 0;"
                 }
               ],
               "width": 4,
@@ -1391,8 +1392,11 @@
                   "delimiter": true,
                   "input": true,
                   "disabled": true,
-                  "validate": {},
-                  "clearOnHide": false
+                  "validate": {
+                    "required": false
+                  },
+                  "clearOnHide": false,
+                  "calculateValue": "value = parseFloat(data.ApprovedDepositAmount) || parseFloat(data.DepositCap) || 0;"
                 }
               ],
               "width": 4,
@@ -1450,12 +1454,11 @@
                   "input": true,
                   "validate": {
                     "min": 0,
-                    "required": true
+                    "required": false
                   },
                   "clearOnHide": false,
-                  "errors": {
-                    "required": "تکمیل «{{ field }}» الزامی است."
-                  }
+                  "calculateValue": "value = parseFloat(data.ApprovedDepositAmount) || parseFloat(data.DepositCap) || 0;",
+                  "disabled": true
                 }
               ],
               "width": 4,
@@ -2094,7 +2097,7 @@
                       "type": "currency",
                       "delimiter": true,
                       "input": true,
-                      "calculateValue": "var t = {g1:[30000,30000], g2:[23000,23000], g3:[25500,23000], g4:[23000,23000], g5:[21000,21000], g6:[16000,16000], g7:[16000,16000], g8:[30000,30000], g9:[27000,27000], g10:[21000,21000], g11:[25000,25000], g12:[22500,22500], g13:[17500,17500], bP:[16000,14000], b1:[14000,12000], b2:[12000,10000], b3:[10000,8000], b4:[8000,6000]}; var g = data.EligibilityGroup || ''; var dep = g.indexOf('_dep') > 0; var key = g.replace('_head', '').replace('_dep', ''); var row = t[key]; if (!row) { value = 0; } else { var m = row[data.CityType === 'metropolis' ? 0 : 1]; if (dep) { m = m * 0.7; } value = Math.round(m) * 1000000; }",
+                      "calculateValue": "var t = {g1:[30000,30000], g2:[23000,23000], g3:[25500,23000], g4:[23000,23000], g5:[21000,21000], g6:[16000,16000], g7:[16000,16000], g8:[30000,30000], g9:[27000,27000], g10:[21000,21000], g11:[25000,25000], g12:[22500,22500], g13:[17500,17500], bP:[16000,14000], b1:[14000,12000], b2:[12000,10000], b3:[10000,8000], b4:[8000,6000]}; var g = data.EligibilityGroup || ''; var dep = g.indexOf('_dep') > 0; var key = g.replace('_head', '').replace('_dep', ''); var row = t[key]; if (!row) { value = parseFloat(data.DepositCap) || 0; } else { var m = row[data.CityType === 'metropolis' ? 0 : 1]; if (dep) { m = m * 0.7; } value = Math.round(m) * 1000000; }",
                       "disabled": true,
                       "description": "بر اساس جدول مبالغ پیشنهادی ۱۴۰۵ دستورالعمل؛ هر سال به‌روزرسانی شود.",
                       "clearOnHide": false
@@ -2133,7 +2136,8 @@
                   "input": true,
                   "disabled": true,
                   "validate": {},
-                  "clearOnHide": false
+                  "clearOnHide": false,
+                  "calculateValue": "value = parseFloat(data.ApprovedDepositAmount) || parseFloat(data.DepositCap) || 0;"
                 }
               ],
               "width": 12,
@@ -2509,7 +2513,7 @@
                       "type": "currency",
                       "delimiter": true,
                       "input": true,
-                      "calculateValue": "var t = {g1:[30000,30000], g2:[23000,23000], g3:[25500,23000], g4:[23000,23000], g5:[21000,21000], g6:[16000,16000], g7:[16000,16000], g8:[30000,30000], g9:[27000,27000], g10:[21000,21000], g11:[25000,25000], g12:[22500,22500], g13:[17500,17500], bP:[16000,14000], b1:[14000,12000], b2:[12000,10000], b3:[10000,8000], b4:[8000,6000]}; var g = data.EligibilityGroup || ''; var dep = g.indexOf('_dep') > 0; var key = g.replace('_head', '').replace('_dep', ''); var row = t[key]; if (!row) { value = 0; } else { var m = row[data.CityType === 'metropolis' ? 0 : 1]; if (dep) { m = m * 0.7; } value = Math.round(m) * 1000000; }",
+                      "calculateValue": "var t = {g1:[30000,30000], g2:[23000,23000], g3:[25500,23000], g4:[23000,23000], g5:[21000,21000], g6:[16000,16000], g7:[16000,16000], g8:[30000,30000], g9:[27000,27000], g10:[21000,21000], g11:[25000,25000], g12:[22500,22500], g13:[17500,17500], bP:[16000,14000], b1:[14000,12000], b2:[12000,10000], b3:[10000,8000], b4:[8000,6000]}; var g = data.EligibilityGroup || ''; var dep = g.indexOf('_dep') > 0; var key = g.replace('_head', '').replace('_dep', ''); var row = t[key]; if (!row) { value = parseFloat(data.DepositCap) || 0; } else { var m = row[data.CityType === 'metropolis' ? 0 : 1]; if (dep) { m = m * 0.7; } value = Math.round(m) * 1000000; }",
                       "disabled": true,
                       "description": "بر اساس جدول مبالغ پیشنهادی ۱۴۰۵ دستورالعمل؛ هر سال به‌روزرسانی شود.",
                       "clearOnHide": false
@@ -2548,7 +2552,8 @@
                   "input": true,
                   "validate": {},
                   "disabled": true,
-                  "clearOnHide": false
+                  "clearOnHide": false,
+                  "calculateValue": "value = parseFloat(data.ApprovedDepositAmount) || parseFloat(data.DepositCap) || 0;"
                 }
               ],
               "width": 12,
@@ -2652,7 +2657,8 @@
                   "input": true,
                   "validate": {},
                   "disabled": true,
-                  "clearOnHide": false
+                  "clearOnHide": false,
+                  "calculateValue": "value = parseFloat(data.ApprovedDepositAmount) || parseFloat(data.DepositCap) || 0;"
                 }
               ],
               "width": 6,
@@ -3362,7 +3368,7 @@
                       "type": "currency",
                       "delimiter": true,
                       "input": true,
-                      "calculateValue": "var t = {g1:[30000,30000], g2:[23000,23000], g3:[25500,23000], g4:[23000,23000], g5:[21000,21000], g6:[16000,16000], g7:[16000,16000], g8:[30000,30000], g9:[27000,27000], g10:[21000,21000], g11:[25000,25000], g12:[22500,22500], g13:[17500,17500], bP:[16000,14000], b1:[14000,12000], b2:[12000,10000], b3:[10000,8000], b4:[8000,6000]}; var g = data.EligibilityGroup || ''; var dep = g.indexOf('_dep') > 0; var key = g.replace('_head', '').replace('_dep', ''); var row = t[key]; if (!row) { value = 0; } else { var m = row[data.CityType === 'metropolis' ? 0 : 1]; if (dep) { m = m * 0.7; } value = Math.round(m) * 1000000; }",
+                      "calculateValue": "var t = {g1:[30000,30000], g2:[23000,23000], g3:[25500,23000], g4:[23000,23000], g5:[21000,21000], g6:[16000,16000], g7:[16000,16000], g8:[30000,30000], g9:[27000,27000], g10:[21000,21000], g11:[25000,25000], g12:[22500,22500], g13:[17500,17500], bP:[16000,14000], b1:[14000,12000], b2:[12000,10000], b3:[10000,8000], b4:[8000,6000]}; var g = data.EligibilityGroup || ''; var dep = g.indexOf('_dep') > 0; var key = g.replace('_head', '').replace('_dep', ''); var row = t[key]; if (!row) { value = parseFloat(data.DepositCap) || 0; } else { var m = row[data.CityType === 'metropolis' ? 0 : 1]; if (dep) { m = m * 0.7; } value = Math.round(m) * 1000000; }",
                       "disabled": true,
                       "description": "بر اساس جدول مبالغ پیشنهادی ۱۴۰۵ دستورالعمل؛ هر سال به‌روزرسانی شود.",
                       "clearOnHide": false
@@ -3584,7 +3590,8 @@
                       "input": true,
                       "validate": {},
                       "disabled": true,
-                      "clearOnHide": false
+                      "clearOnHide": false,
+                      "calculateValue": "value = parseFloat(data.ApprovedDepositAmount) || parseFloat(data.DepositCap) || 0;"
                     }
                   ],
                   "width": 12,
@@ -3632,13 +3639,12 @@
                       "input": true,
                       "validate": {
                         "min": 0,
-                        "required": true,
+                        "required": false,
                         "custom": "var a = parseFloat(data.ApprovedDepositAmount) || parseFloat(data.DepositCap) || 0, l = parseFloat(data.LeaseDepositAmount) || 0; var p = (a && l) ? Math.min(a, l) : (a || l), v = parseFloat(input) || 0; valid = (!input || !p || Math.abs(v - p) < 1) ? true : ('مبلغ واریزشده باید برابر مبلغ قابل پرداخت (' + String(Math.round(p)).replace(/\\B(?=(\\d{3})+(?!\\d))/g, ',') + ' ریال) باشد.');"
                       },
                       "clearOnHide": false,
-                      "errors": {
-                        "required": "تکمیل «{{ field }}» الزامی است."
-                      }
+                      "calculateValue": "value = parseFloat(data.ApprovedDepositAmount) || parseFloat(data.DepositCap) || 0;",
+                      "disabled": true
                     }
                   ],
                   "width": 4,
@@ -4255,7 +4261,7 @@
                       "type": "currency",
                       "delimiter": true,
                       "input": true,
-                      "calculateValue": "var t = {g1:[30000,30000], g2:[23000,23000], g3:[25500,23000], g4:[23000,23000], g5:[21000,21000], g6:[16000,16000], g7:[16000,16000], g8:[30000,30000], g9:[27000,27000], g10:[21000,21000], g11:[25000,25000], g12:[22500,22500], g13:[17500,17500], bP:[16000,14000], b1:[14000,12000], b2:[12000,10000], b3:[10000,8000], b4:[8000,6000]}; var g = data.EligibilityGroup || ''; var dep = g.indexOf('_dep') > 0; var key = g.replace('_head', '').replace('_dep', ''); var row = t[key]; if (!row) { value = 0; } else { var m = row[data.CityType === 'metropolis' ? 0 : 1]; if (dep) { m = m * 0.7; } value = Math.round(m) * 1000000; }",
+                      "calculateValue": "var t = {g1:[30000,30000], g2:[23000,23000], g3:[25500,23000], g4:[23000,23000], g5:[21000,21000], g6:[16000,16000], g7:[16000,16000], g8:[30000,30000], g9:[27000,27000], g10:[21000,21000], g11:[25000,25000], g12:[22500,22500], g13:[17500,17500], bP:[16000,14000], b1:[14000,12000], b2:[12000,10000], b3:[10000,8000], b4:[8000,6000]}; var g = data.EligibilityGroup || ''; var dep = g.indexOf('_dep') > 0; var key = g.replace('_head', '').replace('_dep', ''); var row = t[key]; if (!row) { value = parseFloat(data.DepositCap) || 0; } else { var m = row[data.CityType === 'metropolis' ? 0 : 1]; if (dep) { m = m * 0.7; } value = Math.round(m) * 1000000; }",
                       "disabled": true,
                       "description": "بر اساس جدول مبالغ پیشنهادی ۱۴۰۵ دستورالعمل؛ هر سال به‌روزرسانی شود.",
                       "clearOnHide": false
@@ -4281,9 +4287,12 @@
                       "type": "currency",
                       "delimiter": true,
                       "input": true,
-                      "validate": {},
+                      "validate": {
+                        "required": false
+                      },
                       "disabled": true,
-                      "clearOnHide": false
+                      "clearOnHide": false,
+                      "calculateValue": "value = parseFloat(data.ApprovedDepositAmount) || parseFloat(data.DepositCap) || 0;"
                     }
                   ],
                   "width": 4,
@@ -4306,7 +4315,7 @@
                       "type": "currency",
                       "delimiter": true,
                       "input": true,
-                      "calculateValue": "var cap = parseFloat(data.DepositCap) || 0; var lease = parseFloat(data.LeaseDepositAmount) || 0; value = (cap && lease) ? Math.min(cap, lease) : (cap || lease);",
+                      "calculateValue": "value = parseFloat(data.ApprovedDepositAmount) || parseFloat(data.DepositCap) || 0;",
                       "disabled": true,
                       "clearOnHide": false
                     }
@@ -4342,9 +4351,12 @@
                   "type": "currency",
                   "delimiter": true,
                   "input": true,
-                  "validate": {},
+                  "validate": {
+                    "required": false
+                  },
                   "disabled": true,
-                  "clearOnHide": false
+                  "clearOnHide": false,
+                  "calculateValue": "value = parseFloat(data.ApprovedDepositAmount) || parseFloat(data.DepositCap) || 0;"
                 }
               ],
               "width": 4,
@@ -5737,7 +5749,7 @@
               "type": "currency",
               "delimiter": true,
               "input": true,
-              "calculateValue": "var t = {g1:[30000,30000], g2:[23000,23000], g3:[25500,23000], g4:[23000,23000], g5:[21000,21000], g6:[16000,16000], g7:[16000,16000], g8:[30000,30000], g9:[27000,27000], g10:[21000,21000], g11:[25000,25000], g12:[22500,22500], g13:[17500,17500], bP:[16000,14000], b1:[14000,12000], b2:[12000,10000], b3:[10000,8000], b4:[8000,6000]}; var g = data.EligibilityGroup || ''; var dep = g.indexOf('_dep') > 0; var key = g.replace('_head', '').replace('_dep', ''); var row = t[key]; if (!row) { value = 0; } else { var m = row[data.CityType === 'metropolis' ? 0 : 1]; if (dep) { m = m * 0.7; } value = Math.round(m) * 1000000; }",
+              "calculateValue": "var t = {g1:[30000,30000], g2:[23000,23000], g3:[25500,23000], g4:[23000,23000], g5:[21000,21000], g6:[16000,16000], g7:[16000,16000], g8:[30000,30000], g9:[27000,27000], g10:[21000,21000], g11:[25000,25000], g12:[22500,22500], g13:[17500,17500], bP:[16000,14000], b1:[14000,12000], b2:[12000,10000], b3:[10000,8000], b4:[8000,6000]}; var g = data.EligibilityGroup || ''; var dep = g.indexOf('_dep') > 0; var key = g.replace('_head', '').replace('_dep', ''); var row = t[key]; if (!row) { value = parseFloat(data.DepositCap) || 0; } else { var m = row[data.CityType === 'metropolis' ? 0 : 1]; if (dep) { m = m * 0.7; } value = Math.round(m) * 1000000; }",
               "disabled": true,
               "description": "بر اساس جدول مبالغ پیشنهادی ۱۴۰۵ دستورالعمل؛ هر سال به‌روزرسانی شود.",
               "clearOnHide": false
