@@ -276,7 +276,7 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
     <bpmn:endEvent id="End_Rejected" name="پایان (عدم تأیید مدیرعامل)">
       <bpmn:incoming>Flow_CEO_No</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:userTask id="Task_ProvinceReview" name="بررسی درخواست – مدیریت شعب استان / منطقه" camunda:formKey="embedded:/camunda/forms/formioWizardCallApi.html?deployment=HousingDepositCompleteWizard.json&#38;var=Submission&#38;DefaultVal=Submission&#38;StateTask=2" camunda:candidateUsers="5268447815">
+    <bpmn:userTask id="Task_ProvinceReview" name="بررسی درخواست – مدیریت شعب استان / منطقه" camunda:formKey="embedded:/camunda/forms/formioWizardCallApi.html?deployment=HousingDepositCompleteWizard.json&#38;var=Submission&#38;DefaultVal=Submission&#38;StateTask=2" camunda:candidateUsers="${ServiceProvince == &#34;فارس&#34; ? &#34;5268447815&#34; : PM}">
       <bpmn:extensionElements>
         <camunda:executionListener event="start">
           <camunda:script scriptFormat="javascript">
@@ -538,7 +538,7 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
       <bpmn:outgoing>Flow_Fork_Insp</bpmn:outgoing>
       <bpmn:outgoing>Flow_Fork_Route</bpmn:outgoing>
     </bpmn:parallelGateway>
-    <bpmn:userTask id="Task_LeaseInfo" name="تکمیل اطلاعات ملک و قرارداد اجاره" camunda:formKey="embedded:/camunda/forms/formioWizardCallApi.html?deployment=HousingDepositCompleteWizard.json&#38;var=Submission&#38;DefaultVal=Submission&#38;StateTask=4" camunda:candidateUsers="${_requestCategory == &#34;HQ&#34; ? &#34;2709390205&#34; : &#34;1756147881&#34;}">
+    <bpmn:userTask id="Task_LeaseInfo" name="تکمیل اطلاعات ملک و قرارداد اجاره" camunda:formKey="embedded:/camunda/forms/formioWizardCallApi.html?deployment=HousingDepositCompleteWizard.json&#38;var=Submission&#38;DefaultVal=Submission&#38;StateTask=4" camunda:candidateUsers="${_requestCategory == &#34;HQ&#34; ? &#34;2709390205&#34; : (ServiceProvince == &#34;فارس&#34; ? &#34;1756147881&#34; : PM)}">
       <bpmn:extensionElements>
         <camunda:executionListener event="start">
           <camunda:script scriptFormat="javascript">
@@ -630,7 +630,7 @@ try {
       <bpmn:outgoing>Flow_Route_HQ</bpmn:outgoing>
       <bpmn:outgoing>Flow_Route_Prov</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:userTask id="Task_Referral" name="ارجاع برای پرداخت – مدیر استان" camunda:formKey="embedded:/camunda/forms/formioWizardCallApi.html?deployment=HousingDepositCompleteWizard.json&#38;var=Submission&#38;DefaultVal=Submission&#38;StateTask=6" camunda:candidateUsers="5268447815">
+    <bpmn:userTask id="Task_Referral" name="ارجاع برای پرداخت – مدیر استان" camunda:formKey="embedded:/camunda/forms/formioWizardCallApi.html?deployment=HousingDepositCompleteWizard.json&#38;var=Submission&#38;DefaultVal=Submission&#38;StateTask=6" camunda:candidateUsers="${ServiceProvince == &#34;فارس&#34; ? &#34;5268447815&#34; : PM}">
       <bpmn:extensionElements>
         <camunda:executionListener event="start">
           <camunda:script scriptFormat="javascript">
@@ -767,7 +767,7 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
       <bpmn:outgoing>Flow_N_Legal</bpmn:outgoing>
       <bpmn:messageEventDefinition id="MessageEventDefinition_Notify_Legal" />
     </bpmn:intermediateThrowEvent>
-    <bpmn:userTask id="Task_Legal" name="اخذ چک صیادی (۱۳۰٪)، اقرارنامه و ضمانت" camunda:formKey="embedded:/camunda/forms/formioWizardCallApi.html?deployment=HousingDepositCompleteWizard.json&#38;var=Submission&#38;DefaultVal=Submission&#38;StateTask=8" camunda:candidateUsers="${_requestCategory == &#34;HQ&#34; ? &#34;0579912930&#34; : &#34;2400009260&#34;}">
+    <bpmn:userTask id="Task_Legal" name="اخذ چک صیادی (۱۳۰٪)، اقرارنامه و ضمانت" camunda:formKey="embedded:/camunda/forms/formioWizardCallApi.html?deployment=HousingDepositCompleteWizard.json&#38;var=Submission&#38;DefaultVal=Submission&#38;StateTask=8" camunda:candidateUsers="${_requestCategory == &#34;HQ&#34; ? &#34;0579912930&#34; : (ServiceProvince == &#34;فارس&#34; ? &#34;2400009260&#34; : PM)}">
       <bpmn:extensionElements>
         <camunda:executionListener event="start">
           <camunda:script scriptFormat="javascript">
@@ -801,7 +801,7 @@ try {
       <bpmn:incoming>Flow_N_Legal</bpmn:incoming>
       <bpmn:outgoing>Flow_Legal_File</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:userTask id="Task_File" name="تشکیل پرونده" camunda:formKey="embedded:/camunda/forms/formioWizardCallApi.html?deployment=HousingDepositCompleteWizard.json&#38;var=Submission&#38;DefaultVal=Submission&#38;StateTask=9" camunda:candidateUsers="${_requestCategory == &#34;HQ&#34; ? &#34;0579912930&#34; : &#34;2400009260&#34;}">
+    <bpmn:userTask id="Task_File" name="تشکیل پرونده" camunda:formKey="embedded:/camunda/forms/formioWizardCallApi.html?deployment=HousingDepositCompleteWizard.json&#38;var=Submission&#38;DefaultVal=Submission&#38;StateTask=9" camunda:candidateUsers="${_requestCategory == &#34;HQ&#34; ? &#34;0579912930&#34; : (ServiceProvince == &#34;فارس&#34; ? &#34;2400009260&#34; : PM)}">
       <bpmn:extensionElements>
         <camunda:executionListener event="start">
           <camunda:script scriptFormat="javascript">
@@ -835,7 +835,7 @@ try {
       <bpmn:incoming>Flow_Legal_File</bpmn:incoming>
       <bpmn:outgoing>Flow_File_Pay</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:userTask id="Task_Payment" name="واریز ودیعه و صدور سند حسابداری" camunda:formKey="embedded:/camunda/forms/formioWizardCallApi.html?deployment=HousingDepositCompleteWizard.json&#38;var=Submission&#38;DefaultVal=Submission&#38;StateTask=10" camunda:candidateUsers="${_requestCategory == &#34;HQ&#34; ? &#34;2709390205&#34; : &#34;1756147881&#34;}">
+    <bpmn:userTask id="Task_Payment" name="واریز ودیعه و صدور سند حسابداری" camunda:formKey="embedded:/camunda/forms/formioWizardCallApi.html?deployment=HousingDepositCompleteWizard.json&#38;var=Submission&#38;DefaultVal=Submission&#38;StateTask=10" camunda:candidateUsers="${_requestCategory == &#34;HQ&#34; ? &#34;2709390205&#34; : (ServiceProvince == &#34;فارس&#34; ? &#34;1756147881&#34; : PM)}">
       <bpmn:extensionElements>
         <camunda:executionListener event="start">
           <camunda:script scriptFormat="javascript">
