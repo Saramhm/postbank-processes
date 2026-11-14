@@ -12,7 +12,7 @@
 3- اصل اجاره‌نامه با کد رهگیری
 4- فیش واریز به حساب موجر
 5- درخواست تأییدشده
-6- فرم ضمانت (نمونه ۲۲۲۷)</bpmn:text>
+6- فرم ضمانت</bpmn:text>
     </bpmn:textAnnotation>
     <bpmn:association id="Association_1" associationDirection="None" sourceRef="Task_File" targetRef="TextAnnotation_1" />
   </bpmn:collaboration>
@@ -71,7 +71,7 @@
         <bpmn:flowNodeRef>Notify_Paid</bpmn:flowNodeRef>
       </bpmn:lane>
     </bpmn:laneSet>
-    <bpmn:startEvent id="Start_Request" name="درخواست ودیعه مسکن (تکمیل فرم ۲۲۲۵ / ۲۲۲۴)" camunda:formKey="65" camunda:initiator="PM">
+    <bpmn:startEvent id="Start_Request" name="درخواست ودیعه مسکن" camunda:formKey="65" camunda:initiator="PM">
       <bpmn:extensionElements>
         <camunda:executionListener event="end">
           <camunda:script scriptFormat="javascript">
@@ -805,7 +805,7 @@ function hdPad(n) { return (n &lt; 10 ? "0" : "") + n; }
 function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.type("java.time.ZoneId"); var z = Z.now(I.of("Asia/Tehran")); var j = hdG2J(z.getYear(), z.getMonthValue(), z.getDayOfMonth()); return j[0] + "/" + hdPad(j[1]) + "/" + hdPad(j[2]) + " " + hdPad(z.getHour()) + ":" + hdPad(z.getMinute()); } catch (e) { var d = new Date(); var j2 = hdG2J(d.getFullYear(), d.getMonth() + 1, d.getDate()); return j2[0] + "/" + hdPad(j2[1]) + "/" + hdPad(j2[2]) + " " + hdPad(d.getHours()) + ":" + hdPad(d.getMinutes()); } }
   var name = ((d.ApplicantFirstName || "") + " " + (d.ApplicantLastName || "")).trim();
   var title = "مراجعه به واحد حقوقی";
-  var text = "لطفاً برای تحویل یک فقره چک صیادی به مبلغ " + fmt(Number(d.ApprovedDepositAmount || 0) * 1.3) + " ریال (۱۳۰٪ ودیعه مصوب) با ضمانت یکی از کارکنان بانک در ظهر چک و تکمیل فرم ضمانت (نمونه ۲۲۲۷) به واحد حقوقی مراجعه کنید.";
+  var text = "لطفاً برای تحویل یک فقره چک صیادی به مبلغ " + fmt(Number(d.ApprovedDepositAmount || 0) * 1.3) + " ریال (۱۳۰٪ ودیعه مصوب) با ضمانت یکی از کارکنان بانک در ظهر چک و تکمیل فرم ضمانت به واحد حقوقی مراجعه کنید.";
   var log = d.InitiatorNotifications || [];
   log.push({ NoticeTitle: title, NoticeText: text, NoticeTime: hdNow() });
   d.InitiatorNotifications = log;
@@ -941,7 +941,7 @@ function hdPad(n) { return (n &lt; 10 ? "0" : "") + n; }
 function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.type("java.time.ZoneId"); var z = Z.now(I.of("Asia/Tehran")); var j = hdG2J(z.getYear(), z.getMonthValue(), z.getDayOfMonth()); return j[0] + "/" + hdPad(j[1]) + "/" + hdPad(j[2]) + " " + hdPad(z.getHour()) + ":" + hdPad(z.getMinute()); } catch (e) { var d = new Date(); var j2 = hdG2J(d.getFullYear(), d.getMonth() + 1, d.getDate()); return j2[0] + "/" + hdPad(j2[1]) + "/" + hdPad(j2[2]) + " " + hdPad(d.getHours()) + ":" + hdPad(d.getMinutes()); } }
   var name = ((d.ApplicantFirstName || "") + " " + (d.ApplicantLastName || "")).trim();
   var title = "مراجعه به دفترخانه";
-  var text = "پرونده ودیعه شما با شماره " + (d.FileNumber || "-") + " تشکیل شد. لطفاً برای تنظیم اقرارنامه (نمونه ۲۲۲۶) به دفتر اسناد رسمی مراجعه کنید و اصل اقرارنامه، اصل اجاره‌نامه و فیش واریز به حساب موجر را به واحد مجری پرداخت تحویل دهید.";
+  var text = "پرونده ودیعه شما با شماره " + (d.FileNumber || "-") + " تشکیل شد. لطفاً برای تنظیم اقرارنامه به دفتر اسناد رسمی مراجعه کنید و اصل اقرارنامه، اصل اجاره‌نامه و فیش واریز به حساب موجر را به واحد مجری پرداخت تحویل دهید.";
   var log = d.InitiatorNotifications || [];
   log.push({ NoticeTitle: title, NoticeText: text, NoticeTime: hdNow() });
   d.InitiatorNotifications = log;
