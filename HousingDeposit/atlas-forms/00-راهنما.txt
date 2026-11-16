@@ -37,3 +37,7 @@
 - واریز: همه‌ی تاریخ‌ها اجباری و بدون تاریخ آینده
 - اطلاعات ملک: تاریخ خاتمه = یک سال بعد از شروع؛ شبا با IR و کادر پهن
 - فرم اول به صورت یک تسک (Task_Request، Form key = شماره فرم شروع، assignee ${starter}) است
+
+فرم‌های جدید (دو فرم):
+12-HRHead.json            HousingDepositHRHead         رئیس اداره کل سرمایه انسانی – ارجاع (دو تسک: ارجاع به کارشناس، و ارجاع به شعبه / مدیریت استان) — Form key هر دو تسک Task_HRHeadAssign و Task_HRHeadReferral یکی است (FORM_HRHEAD)
+13-FinalApproval.json     HousingDepositFinalApproval  تأیید نهایی درخواست – مقام مافوق (Task_FinalApproval، FORM_FINAL)
