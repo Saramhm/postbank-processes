@@ -27,6 +27,7 @@
       </bpmn:lane>
       <bpmn:lane id="Lane_HR" name="اداره کل سرمایه انسانی و رفاه">
         <bpmn:flowNodeRef>Gateway_ToHR</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_HRExpert</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Task_HRReview</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Notify_HR</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Gateway_HR</bpmn:flowNodeRef>
@@ -407,6 +408,10 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
       <bpmn:incoming>Flow_Prov_Yes</bpmn:incoming>
       <bpmn:outgoing>Flow_ToHR</bpmn:outgoing>
     </bpmn:exclusiveGateway>
+    <bpmn:userTask id="Task_HRExpert" name="بررسی درخواست – کارشناس اداره کل سرمایه انسانی و رفاه" camunda:formKey="embedded:/camunda/forms/formioWizardCallApi.html?deployment=HousingDepositCompleteWizard.json&#38;var=Submission&#38;DefaultVal=Submission&#38;StateTask=5" camunda:candidateUsers="4939900983">
+      <bpmn:incoming>Flow_ToHR</bpmn:incoming>
+      <bpmn:outgoing>Flow_HRExpert_HR</bpmn:outgoing>
+    </bpmn:userTask>
     <bpmn:userTask id="Task_HRReview" name="بررسی درخواست – اداره کل سرمایه انسانی و رفاه" camunda:formKey="embedded:/camunda/forms/formioWizardCallApi.html?deployment=HousingDepositCompleteWizard.json&#38;var=Submission&#38;DefaultVal=Submission&#38;StateTask=3" camunda:candidateUsers="4939900983">
       <bpmn:extensionElements>
         <camunda:executionListener event="start">
@@ -453,7 +458,7 @@ try {
 </camunda:script>
         </camunda:executionListener>
       </bpmn:extensionElements>
-      <bpmn:incoming>Flow_ToHR</bpmn:incoming>
+      <bpmn:incoming>Flow_HRExpert_HR</bpmn:incoming>
       <bpmn:outgoing>Flow_HR_N</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:intermediateThrowEvent id="Notify_HR" name="اطلاع نتیجه به متقاضی">
@@ -1233,7 +1238,8 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${_provinceApproval == "approved"}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_Prov_No" name="خیر" sourceRef="Gateway_Province" targetRef="End_RejectedProv" />
-    <bpmn:sequenceFlow id="Flow_ToHR" sourceRef="Gateway_ToHR" targetRef="Task_HRReview" />
+    <bpmn:sequenceFlow id="Flow_ToHR" sourceRef="Gateway_ToHR" targetRef="Task_HRExpert" />
+    <bpmn:sequenceFlow id="Flow_HRExpert_HR" sourceRef="Task_HRExpert" targetRef="Task_HRReview" />
     <bpmn:sequenceFlow id="Flow_HR_N" sourceRef="Task_HRReview" targetRef="Notify_HR" />
     <bpmn:sequenceFlow id="Flow_N_HR_G" sourceRef="Notify_HR" targetRef="Gateway_HR" />
     <bpmn:sequenceFlow id="Flow_HR_Yes" name="بله" sourceRef="Gateway_HR" targetRef="Gateway_Fork">
@@ -1270,28 +1276,28 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
   <bpmndi:BPMNDiagram id="BPMNDiagram_HousingDepositComplete">
     <bpmndi:BPMNPlane id="BPMNPlane_HousingDepositComplete" bpmnElement="Collaboration_HousingDepositComplete">
       <bpmndi:BPMNShape id="Participant_HousingDepositComplete_di" bpmnElement="Participant_HousingDepositComplete" isHorizontal="true">
-        <dc:Bounds x="129" y="80" width="3200" height="1120" />
+        <dc:Bounds x="129" y="80" width="3350" height="1120" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_Employee_di" bpmnElement="Lane_Employee" isHorizontal="true">
-        <dc:Bounds x="159" y="80" width="3170" height="160" />
+        <dc:Bounds x="159" y="80" width="3320" height="160" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_CEO_di" bpmnElement="Lane_CEO" isHorizontal="true">
-        <dc:Bounds x="159" y="240" width="3170" height="160" />
+        <dc:Bounds x="159" y="240" width="3320" height="160" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_ProvinceManagement_di" bpmnElement="Lane_ProvinceManagement" isHorizontal="true">
-        <dc:Bounds x="159" y="400" width="3170" height="160" />
+        <dc:Bounds x="159" y="400" width="3320" height="160" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_HR_di" bpmnElement="Lane_HR" isHorizontal="true">
-        <dc:Bounds x="159" y="560" width="3170" height="160" />
+        <dc:Bounds x="159" y="560" width="3320" height="160" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_Inspection_di" bpmnElement="Lane_Inspection" isHorizontal="true">
-        <dc:Bounds x="159" y="720" width="3170" height="160" />
+        <dc:Bounds x="159" y="720" width="3320" height="160" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_Legal_di" bpmnElement="Lane_Legal" isHorizontal="true">
-        <dc:Bounds x="159" y="880" width="3170" height="160" />
+        <dc:Bounds x="159" y="880" width="3320" height="160" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_Executor_di" bpmnElement="Lane_Executor" isHorizontal="true">
-        <dc:Bounds x="159" y="1040" width="3170" height="160" />
+        <dc:Bounds x="159" y="1040" width="3320" height="160" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Start_Request_di" bpmnElement="Start_Request">
         <dc:Bounds x="212" y="142" width="36" height="36" />
@@ -1338,100 +1344,100 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
         <bpmndi:BPMNLabel><dc:Bounds x="765" y="585" width="80" height="27" /></bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Task_HRReview_di" bpmnElement="Task_HRReview">
-        <dc:Bounds x="860" y="600" width="120" height="80" />
+        <dc:Bounds x="1010" y="600" width="120" height="80" />
         
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Notify_HR_di" bpmnElement="Notify_HR">
-        <dc:Bounds x="1010" y="622" width="36" height="36" />
-        <bpmndi:BPMNLabel><dc:Bounds x="980" y="662" width="96" height="27" /></bpmndi:BPMNLabel>
+        <dc:Bounds x="1160" y="622" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="1130" y="662" width="96" height="27" /></bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Gateway_HR_di" bpmnElement="Gateway_HR" isMarkerVisible="true">
-        <dc:Bounds x="1090" y="615" width="50" height="50" />
-        <bpmndi:BPMNLabel><dc:Bounds x="1075" y="585" width="80" height="27" /></bpmndi:BPMNLabel>
+        <dc:Bounds x="1240" y="615" width="50" height="50" />
+        <bpmndi:BPMNLabel><dc:Bounds x="1225" y="585" width="80" height="27" /></bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="End_RejectedHQ_di" bpmnElement="End_RejectedHQ">
-        <dc:Bounds x="1200" y="622" width="36" height="36" />
-        <bpmndi:BPMNLabel><dc:Bounds x="1170" y="662" width="96" height="27" /></bpmndi:BPMNLabel>
+        <dc:Bounds x="1350" y="622" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="1320" y="662" width="96" height="27" /></bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Gateway_Fork_di" bpmnElement="Gateway_Fork">
-        <dc:Bounds x="1160" y="135" width="50" height="50" />
-        <bpmndi:BPMNLabel><dc:Bounds x="1145" y="105" width="80" height="27" /></bpmndi:BPMNLabel>
+        <dc:Bounds x="1310" y="135" width="50" height="50" />
+        <bpmndi:BPMNLabel><dc:Bounds x="1295" y="105" width="80" height="27" /></bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Task_LeaseInfo_di" bpmnElement="Task_LeaseInfo">
-        <dc:Bounds x="2440" y="1080" width="120" height="80" />
+        <dc:Bounds x="2590" y="1080" width="120" height="80" />
         
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Task_Inspection_di" bpmnElement="Task_Inspection">
-        <dc:Bounds x="1400" y="760" width="120" height="80" />
+        <dc:Bounds x="1550" y="760" width="120" height="80" />
         
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="End_Inspection_di" bpmnElement="End_Inspection">
-        <dc:Bounds x="1580" y="782" width="36" height="36" />
-        <bpmndi:BPMNLabel><dc:Bounds x="1550" y="822" width="96" height="27" /></bpmndi:BPMNLabel>
+        <dc:Bounds x="1730" y="782" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="1700" y="822" width="96" height="27" /></bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Gateway_Route_di" bpmnElement="Gateway_Route" isMarkerVisible="true">
-        <dc:Bounds x="1300" y="135" width="50" height="50" />
-        <bpmndi:BPMNLabel><dc:Bounds x="1285" y="105" width="80" height="27" /></bpmndi:BPMNLabel>
+        <dc:Bounds x="1450" y="135" width="50" height="50" />
+        <bpmndi:BPMNLabel><dc:Bounds x="1435" y="105" width="80" height="27" /></bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Task_Referral_di" bpmnElement="Task_Referral">
-        <dc:Bounds x="1600" y="440" width="120" height="80" />
+        <dc:Bounds x="1750" y="440" width="120" height="80" />
         
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Task_ReferralBranch_di" bpmnElement="Task_ReferralBranch">
-        <dc:Bounds x="1600" y="1080" width="120" height="80" />
+        <dc:Bounds x="1750" y="1080" width="120" height="80" />
         
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Notify_Legal_di" bpmnElement="Notify_Legal">
-        <dc:Bounds x="1760" y="942" width="36" height="36" />
-        <bpmndi:BPMNLabel><dc:Bounds x="1730" y="982" width="96" height="27" /></bpmndi:BPMNLabel>
+        <dc:Bounds x="1910" y="942" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="1880" y="982" width="96" height="27" /></bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Task_Legal_di" bpmnElement="Task_Legal">
-        <dc:Bounds x="1840" y="920" width="120" height="80" />
+        <dc:Bounds x="1990" y="920" width="120" height="80" />
         
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Task_File_di" bpmnElement="Task_File">
-        <dc:Bounds x="2020" y="1080" width="120" height="80" />
+        <dc:Bounds x="2170" y="1080" width="120" height="80" />
         
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Task_Payment_di" bpmnElement="Task_Payment">
-        <dc:Bounds x="2180" y="1080" width="120" height="80" />
+        <dc:Bounds x="2330" y="1080" width="120" height="80" />
         
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Notify_Paid_di" bpmnElement="Notify_Paid">
-        <dc:Bounds x="2340" y="1102" width="36" height="36" />
-        <bpmndi:BPMNLabel><dc:Bounds x="2310" y="1142" width="96" height="27" /></bpmndi:BPMNLabel>
+        <dc:Bounds x="2490" y="1102" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="2460" y="1142" width="96" height="27" /></bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Task_Database_di" bpmnElement="Task_Database">
-        <dc:Bounds x="2600" y="600" width="120" height="80" />
+        <dc:Bounds x="2750" y="600" width="120" height="80" />
         
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Notify_Done_di" bpmnElement="Notify_Done">
-        <dc:Bounds x="2760" y="622" width="36" height="36" />
-        <bpmndi:BPMNLabel><dc:Bounds x="2730" y="662" width="96" height="27" /></bpmndi:BPMNLabel>
+        <dc:Bounds x="2910" y="622" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="2880" y="662" width="96" height="27" /></bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Gateway_ExitWait_di" bpmnElement="Gateway_ExitWait">
-        <dc:Bounds x="2840" y="615" width="50" height="50" />
-        <bpmndi:BPMNLabel><dc:Bounds x="2825" y="585" width="80" height="27" /></bpmndi:BPMNLabel>
+        <dc:Bounds x="2990" y="615" width="50" height="50" />
+        <bpmndi:BPMNLabel><dc:Bounds x="2975" y="585" width="80" height="27" /></bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Catch_ExitMessage_di" bpmnElement="Catch_ExitMessage">
-        <dc:Bounds x="2940" y="582" width="36" height="36" />
-        <bpmndi:BPMNLabel><dc:Bounds x="2910" y="622" width="96" height="27" /></bpmndi:BPMNLabel>
+        <dc:Bounds x="3090" y="582" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="3060" y="622" width="96" height="27" /></bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Catch_SettlementDue_di" bpmnElement="Catch_SettlementDue">
-        <dc:Bounds x="2940" y="652" width="36" height="36" />
-        <bpmndi:BPMNLabel><dc:Bounds x="2910" y="692" width="96" height="27" /></bpmndi:BPMNLabel>
+        <dc:Bounds x="3090" y="652" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="3060" y="692" width="96" height="27" /></bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Notify_Exit_di" bpmnElement="Notify_Exit">
-        <dc:Bounds x="3060" y="622" width="36" height="36" />
-        <bpmndi:BPMNLabel><dc:Bounds x="3030" y="662" width="96" height="27" /></bpmndi:BPMNLabel>
+        <dc:Bounds x="3210" y="622" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="3180" y="662" width="96" height="27" /></bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Notify_Settlement_di" bpmnElement="Notify_Settlement">
-        <dc:Bounds x="3160" y="622" width="36" height="36" />
-        <bpmndi:BPMNLabel><dc:Bounds x="3130" y="662" width="96" height="27" /></bpmndi:BPMNLabel>
+        <dc:Bounds x="3310" y="622" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="3280" y="662" width="96" height="27" /></bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="End_Handover_di" bpmnElement="End_Handover">
-        <dc:Bounds x="3260" y="622" width="36" height="36" />
-        <bpmndi:BPMNLabel><dc:Bounds x="3230" y="662" width="96" height="27" /></bpmndi:BPMNLabel>
+        <dc:Bounds x="3410" y="622" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="3380" y="662" width="96" height="27" /></bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_Start_Cat_di" bpmnElement="Flow_Start_Cat">
         <di:waypoint x="248" y="160" />
@@ -1489,128 +1495,135 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
         <di:waypoint x="860" y="640" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_HR_N_di" bpmnElement="Flow_HR_N">
-        <di:waypoint x="980" y="640" />
-        <di:waypoint x="1010" y="640" />
+        <di:waypoint x="1130" y="640" />
+        <di:waypoint x="1160" y="640" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_N_HR_G_di" bpmnElement="Flow_N_HR_G">
-        <di:waypoint x="1046" y="640" />
-        <di:waypoint x="1090" y="640" />
+        <di:waypoint x="1196" y="640" />
+        <di:waypoint x="1240" y="640" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_HR_Yes_di" bpmnElement="Flow_HR_Yes">
-        <di:waypoint x="1115" y="615" />
-        <di:waypoint x="1115" y="160" />
-        <di:waypoint x="1160" y="160" />
+        <di:waypoint x="1265" y="615" />
+        <di:waypoint x="1265" y="160" />
+        <di:waypoint x="1310" y="160" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_HR_NoHQ_di" bpmnElement="Flow_HR_NoHQ">
-        <di:waypoint x="1140" y="640" />
-        <di:waypoint x="1200" y="640" />
+        <di:waypoint x="1290" y="640" />
+        <di:waypoint x="1350" y="640" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_HR_NoProv_di" bpmnElement="Flow_HR_NoProv">
-        <di:waypoint x="1115" y="665" />
-        <di:waypoint x="1115" y="700" />
+        <di:waypoint x="1265" y="665" />
+        <di:waypoint x="1265" y="700" />
         <di:waypoint x="460" y="700" />
         <di:waypoint x="460" y="520" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_Fork_Insp_di" bpmnElement="Flow_Fork_Insp">
-        <di:waypoint x="1185" y="185" />
-        <di:waypoint x="1185" y="800" />
-        <di:waypoint x="1400" y="800" />
+        <di:waypoint x="1335" y="185" />
+        <di:waypoint x="1335" y="800" />
+        <di:waypoint x="1550" y="800" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_Insp_End_di" bpmnElement="Flow_Insp_End">
-        <di:waypoint x="1520" y="800" />
-        <di:waypoint x="1580" y="800" />
+        <di:waypoint x="1670" y="800" />
+        <di:waypoint x="1730" y="800" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_Route_HQ_di" bpmnElement="Flow_Route_HQ">
-        <di:waypoint x="1325" y="185" />
-        <di:waypoint x="1325" y="1120" />
-        <di:waypoint x="1600" y="1120" />
+        <di:waypoint x="1475" y="185" />
+        <di:waypoint x="1475" y="1120" />
+        <di:waypoint x="1750" y="1120" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_Route_Prov_di" bpmnElement="Flow_Route_Prov">
-        <di:waypoint x="1350" y="160" />
-        <di:waypoint x="1550" y="160" />
-        <di:waypoint x="1550" y="480" />
-        <di:waypoint x="1600" y="480" />
+        <di:waypoint x="1500" y="160" />
+        <di:waypoint x="1700" y="160" />
+        <di:waypoint x="1700" y="480" />
+        <di:waypoint x="1750" y="480" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_Ref_N_di" bpmnElement="Flow_Ref_N">
-        <di:waypoint x="1720" y="480" />
-        <di:waypoint x="1740" y="480" />
-        <di:waypoint x="1740" y="960" />
-        <di:waypoint x="1760" y="960" />
+        <di:waypoint x="1870" y="480" />
+        <di:waypoint x="1890" y="480" />
+        <di:waypoint x="1890" y="960" />
+        <di:waypoint x="1910" y="960" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_RefB_N_di" bpmnElement="Flow_RefB_N">
-        <di:waypoint x="1720" y="1120" />
-        <di:waypoint x="1778" y="1120" />
-        <di:waypoint x="1778" y="978" />
+        <di:waypoint x="1870" y="1120" />
+        <di:waypoint x="1928" y="1120" />
+        <di:waypoint x="1928" y="978" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_N_Legal_di" bpmnElement="Flow_N_Legal">
-        <di:waypoint x="1796" y="960" />
-        <di:waypoint x="1840" y="960" />
+        <di:waypoint x="1946" y="960" />
+        <di:waypoint x="1990" y="960" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_Legal_File_di" bpmnElement="Flow_Legal_File">
-        <di:waypoint x="1960" y="960" />
-        <di:waypoint x="1990" y="960" />
-        <di:waypoint x="1990" y="1120" />
-        <di:waypoint x="2020" y="1120" />
+        <di:waypoint x="2110" y="960" />
+        <di:waypoint x="2140" y="960" />
+        <di:waypoint x="2140" y="1120" />
+        <di:waypoint x="2170" y="1120" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_File_Pay_di" bpmnElement="Flow_File_Pay">
-        <di:waypoint x="2140" y="1120" />
-        <di:waypoint x="2180" y="1120" />
+        <di:waypoint x="2290" y="1120" />
+        <di:waypoint x="2330" y="1120" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_Pay_N_di" bpmnElement="Flow_Pay_N">
-        <di:waypoint x="2300" y="1120" />
-        <di:waypoint x="2340" y="1120" />
+        <di:waypoint x="2450" y="1120" />
+        <di:waypoint x="2490" y="1120" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_N_Paid_DB_di" bpmnElement="Flow_N_Paid_DB">
-        <di:waypoint x="2376" y="1120" />
-        <di:waypoint x="2440" y="1120" />
+        <di:waypoint x="2526" y="1120" />
+        <di:waypoint x="2590" y="1120" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_DB_N_di" bpmnElement="Flow_DB_N">
-        <di:waypoint x="2720" y="640" />
-        <di:waypoint x="2760" y="640" />
+        <di:waypoint x="2870" y="640" />
+        <di:waypoint x="2910" y="640" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_N_Done_Wait_di" bpmnElement="Flow_N_Done_Wait">
-        <di:waypoint x="2796" y="640" />
-        <di:waypoint x="2840" y="640" />
+        <di:waypoint x="2946" y="640" />
+        <di:waypoint x="2990" y="640" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_Wait_Msg_di" bpmnElement="Flow_Wait_Msg">
-        <di:waypoint x="2865" y="615" />
-        <di:waypoint x="2865" y="600" />
-        <di:waypoint x="2940" y="600" />
+        <di:waypoint x="3015" y="615" />
+        <di:waypoint x="3015" y="600" />
+        <di:waypoint x="3090" y="600" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_Wait_Due_di" bpmnElement="Flow_Wait_Due">
-        <di:waypoint x="2865" y="665" />
-        <di:waypoint x="2865" y="670" />
-        <di:waypoint x="2940" y="670" />
+        <di:waypoint x="3015" y="665" />
+        <di:waypoint x="3015" y="670" />
+        <di:waypoint x="3090" y="670" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_Msg_NExit_di" bpmnElement="Flow_Msg_NExit">
-        <di:waypoint x="2976" y="600" />
-        <di:waypoint x="3020" y="600" />
-        <di:waypoint x="3020" y="640" />
-        <di:waypoint x="3060" y="640" />
+        <di:waypoint x="3126" y="600" />
+        <di:waypoint x="3170" y="600" />
+        <di:waypoint x="3170" y="640" />
+        <di:waypoint x="3210" y="640" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_Due_NExit_di" bpmnElement="Flow_Due_NExit">
-        <di:waypoint x="2976" y="670" />
-        <di:waypoint x="3020" y="670" />
-        <di:waypoint x="3020" y="640" />
-        <di:waypoint x="3060" y="640" />
+        <di:waypoint x="3126" y="670" />
+        <di:waypoint x="3170" y="670" />
+        <di:waypoint x="3170" y="640" />
+        <di:waypoint x="3210" y="640" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_NExit_NSet_di" bpmnElement="Flow_NExit_NSet">
-        <di:waypoint x="3096" y="640" />
-        <di:waypoint x="3160" y="640" />
+        <di:waypoint x="3246" y="640" />
+        <di:waypoint x="3310" y="640" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_NSet_End_di" bpmnElement="Flow_NSet_End">
-        <di:waypoint x="3196" y="640" />
-        <di:waypoint x="3260" y="640" />
+        <di:waypoint x="3346" y="640" />
+        <di:waypoint x="3410" y="640" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_Fork_Route_di" bpmnElement="Flow_Fork_Route">
-        <di:waypoint x="1210" y="160" />
-        <di:waypoint x="1300" y="160" />
+        <di:waypoint x="1360" y="160" />
+        <di:waypoint x="1450" y="160" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_Lease_DB_di" bpmnElement="Flow_Lease_DB">
-        <di:waypoint x="2560" y="1120" />
-        <di:waypoint x="2580" y="1120" />
-        <di:waypoint x="2580" y="640" />
-        <di:waypoint x="2600" y="640" />
+        <di:waypoint x="2710" y="1120" />
+        <di:waypoint x="2730" y="1120" />
+        <di:waypoint x="2730" y="640" />
+        <di:waypoint x="2750" y="640" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Task_HRExpert_di" bpmnElement="Task_HRExpert">
+        <dc:Bounds x="860" y="600" width="120" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_HRExpert_HR_di" bpmnElement="Flow_HRExpert_HR">
+        <di:waypoint x="980" y="640" />
+        <di:waypoint x="1010" y="640" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
