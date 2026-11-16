@@ -13,7 +13,7 @@
         <bpmn:flowNodeRef>StartEvent_1</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>End_Rejected</bpmn:flowNodeRef>
       </bpmn:lane>
-      <bpmn:lane id="Lane_CEO" name="مدیرعامل">
+      <bpmn:lane id="Lane_CEO" name="مدیر بالادستی">
         <bpmn:flowNodeRef>Task_CEOReview</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Gateway_CEO</bpmn:flowNodeRef>
       </bpmn:lane>
@@ -64,7 +64,7 @@
       <bpmn:incoming>F01</bpmn:incoming>
       <bpmn:outgoing>F02</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:userTask id="Task_CEOReview" name="بررسی درخواست – مدیرعامل" camunda:asyncBefore="true" camunda:formKey="FORM_CEO" camunda:assignee="${starter}">
+    <bpmn:userTask id="Task_CEOReview" name="بررسی درخواست – مدیر بالادستی" camunda:asyncBefore="true" camunda:formKey="FORM_CEO" camunda:assignee="${starter}">
       <bpmn:incoming>F03</bpmn:incoming>
       <bpmn:outgoing>F05</bpmn:outgoing>
     </bpmn:userTask>

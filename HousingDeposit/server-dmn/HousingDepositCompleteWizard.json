@@ -5,7 +5,7 @@
   "title": "ویزارد فرآیند کامل ودیعه مسکن مدیران غیر بومی",
   "components": [
     {
-      "title": "بررسی درخواست – مدیرعامل",
+      "title": "بررسی و تأیید – مدیر بالادستی",
       "theme": "info",
       "collapsible": false,
       "key": "stepCEOReview",
@@ -350,7 +350,7 @@
           ]
         },
         {
-          "label": "نظر مدیرعامل",
+          "label": "نظر مدیر بالادستی",
           "optionsLabelPosition": "right",
           "inline": false,
           "tableView": false,
@@ -388,7 +388,7 @@
           "clearOnHide": false
         },
         {
-          "label": "توضیحات مدیرعامل",
+          "label": "توضیحات مدیر بالادستی",
           "autoExpand": true,
           "tableView": true,
           "key": "CEONote",
