@@ -9,7 +9,7 @@
       </input>
       <output id="Output_group" label="تأییدکننده" name="approverGroup" typeRef="string" />
       <rule id="Rule_1">
-        <description>ستاد → تأیید مدیر بالادستی متقاضی</description>
+        <description>ستاد → تأیید مدیر مستقیم متقاضی</description>
         <inputEntry id="InputEntry_1">
           <text>"HQ"</text>
         </inputEntry>

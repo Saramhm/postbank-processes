@@ -13,7 +13,7 @@
         <bpmn:flowNodeRef>Gateway_Route</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>End_Rejected</bpmn:flowNodeRef>
       </bpmn:lane>
-      <bpmn:lane id="Lane_CEO" name="مدیر بالادستی">
+      <bpmn:lane id="Lane_CEO" name="مدیر مستقیم">
         <bpmn:flowNodeRef>Task_CEOReview</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Notify_CEO</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Gateway_CEO</bpmn:flowNodeRef>
@@ -116,7 +116,7 @@ function hdJ2G(jy, jm, jd) { jy += 1595; var days = -355668 + (365 * jy) + (Math
 function hdPad(n) { return (n &lt; 10 ? "0" : "") + n; }
 function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.type("java.time.ZoneId"); var z = Z.now(I.of("Asia/Tehran")); var j = hdG2J(z.getYear(), z.getMonthValue(), z.getDayOfMonth()); return j[0] + "/" + hdPad(j[1]) + "/" + hdPad(j[2]) + " " + hdPad(z.getHour()) + ":" + hdPad(z.getMinute()); } catch (e) { var d = new Date(); var j2 = hdG2J(d.getFullYear(), d.getMonth() + 1, d.getDate()); return j2[0] + "/" + hdPad(j2[1]) + "/" + hdPad(j2[2]) + " " + hdPad(d.getHours()) + ":" + hdPad(d.getMinutes()); } }
   var log = d.InitiatorNotifications || [];
-  log.push({ NoticeTitle: "ثبت درخواست", NoticeText: "درخواست ودیعه مسکن شما ثبت شد و برای بررسی " + (d.RequestCategory === "HQ" ? "به مدیر بالادستی" : "به مدیریت شعب استان / منطقه") + " ارسال گردید.", NoticeTime: hdNow() });
+  log.push({ NoticeTitle: "ثبت درخواست", NoticeText: "درخواست ودیعه مسکن شما ثبت شد و برای بررسی " + (d.RequestCategory === "HQ" ? "به مدیر مستقیم" : "به مدیریت شعب استان / منطقه") + " ارسال گردید.", NoticeTime: hdNow() });
   d.InitiatorNotifications = log;
   execution.setVariable("Submission", S(JSON.stringify(obj)));
   console.log("[Start_Request] first notice added");
@@ -150,7 +150,7 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
       <bpmn:outgoing>Flow_Cat_CEO</bpmn:outgoing>
       <bpmn:outgoing>Flow_Cat_Prov</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:userTask id="Task_CEOReview" name="بررسی درخواست – مدیر بالادستی" camunda:formKey="embedded:/camunda/forms/formioWizardCallApi.html?deployment=HousingDepositCompleteWizard.json&#38;var=Submission&#38;DefaultVal=Submission&#38;StateTask=1" camunda:candidateUsers="${empty _upperManager ? &#34;0073249361&#34; : _upperManager}">
+    <bpmn:userTask id="Task_CEOReview" name="بررسی درخواست – مدیر مستقیم" camunda:formKey="embedded:/camunda/forms/formioWizardCallApi.html?deployment=HousingDepositCompleteWizard.json&#38;var=Submission&#38;DefaultVal=Submission&#38;StateTask=1" camunda:candidateUsers="${empty _upperManager ? &#34;0073249361&#34; : _upperManager}">
       <bpmn:extensionElements>
         <camunda:executionListener event="start">
           <camunda:script scriptFormat="javascript">
@@ -218,8 +218,8 @@ function hdJ2G(jy, jm, jd) { jy += 1595; var days = -355668 + (365 * jy) + (Math
 function hdPad(n) { return (n &lt; 10 ? "0" : "") + n; }
 function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.type("java.time.ZoneId"); var z = Z.now(I.of("Asia/Tehran")); var j = hdG2J(z.getYear(), z.getMonthValue(), z.getDayOfMonth()); return j[0] + "/" + hdPad(j[1]) + "/" + hdPad(j[2]) + " " + hdPad(z.getHour()) + ":" + hdPad(z.getMinute()); } catch (e) { var d = new Date(); var j2 = hdG2J(d.getFullYear(), d.getMonth() + 1, d.getDate()); return j2[0] + "/" + hdPad(j2[1]) + "/" + hdPad(j2[2]) + " " + hdPad(d.getHours()) + ":" + hdPad(d.getMinutes()); } }
   var name = ((d.ApplicantFirstName || "") + " " + (d.ApplicantLastName || "")).trim();
-  var title = "نتیجه بررسی مدیر بالادستی";
-  var text = (d.CEOApproval === "approved" ? "درخواست ودیعه مسکن شما توسط مدیر بالادستی تأیید شد و برای بررسی به اداره کل سرمایه انسانی و رفاه ارسال گردید." : "درخواست ودیعه مسکن شما توسط مدیر بالادستی تأیید نشد و فرآیند خاتمه یافت.") + note(d.CEONote);
+  var title = "نتیجه بررسی مدیر مستقیم";
+  var text = (d.CEOApproval === "approved" ? "درخواست ودیعه مسکن شما توسط مدیر مستقیم تأیید شد و برای بررسی به اداره کل سرمایه انسانی و رفاه ارسال گردید." : "درخواست ودیعه مسکن شما توسط مدیر مستقیم تأیید نشد و فرآیند خاتمه یافت.") + note(d.CEONote);
   var log = d.InitiatorNotifications || [];
   log.push({ NoticeTitle: title, NoticeText: text, NoticeTime: hdNow() });
   d.InitiatorNotifications = log;
@@ -272,7 +272,7 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
       <bpmn:outgoing>Flow_CEO_Yes</bpmn:outgoing>
       <bpmn:outgoing>Flow_CEO_No</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:endEvent id="End_Rejected" name="پایان (عدم تأیید مدیر بالادستی)">
+    <bpmn:endEvent id="End_Rejected" name="پایان (عدم تأیید مدیر مستقیم)">
       <bpmn:incoming>Flow_CEO_No</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:userTask id="Task_ProvinceReview" name="بررسی درخواست – مدیریت شعب استان / منطقه" camunda:formKey="embedded:/camunda/forms/formioWizardCallApi.html?deployment=HousingDepositCompleteWizard.json&#38;var=Submission&#38;DefaultVal=Submission&#38;StateTask=2" camunda:candidateUsers="${_serviceProvince == &#34;فارس&#34; ? &#34;5268447815&#34; : PM}">
