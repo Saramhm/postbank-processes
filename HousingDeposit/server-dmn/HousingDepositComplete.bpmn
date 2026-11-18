@@ -11,16 +11,17 @@
         <bpmn:flowNodeRef>Task_ApproverRouting</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Gateway_Category</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Gateway_Fork</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_NeedFinal</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Gateway_Route</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>End_Rejected</bpmn:flowNodeRef>
+        
       </bpmn:lane>
       <bpmn:lane id="Lane_CEO" name="مدیر مستقیم">
-        <bpmn:flowNodeRef>Task_CEOReview</bpmn:flowNodeRef>
+        
         <bpmn:flowNodeRef>Task_FinalApproval</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Gateway_Final</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>End_RejectedFinal</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Notify_CEO</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Gateway_CEO</bpmn:flowNodeRef>
+        
+        
       </bpmn:lane>
       <bpmn:lane id="Lane_ProvinceManagement" name="مدیریت شعب استان / منطقه">
         <bpmn:flowNodeRef>Task_ProvinceReview</bpmn:flowNodeRef>
@@ -129,7 +130,7 @@ function hdJ2G(jy, jm, jd) { jy += 1595; var days = -355668 + (365 * jy) + (Math
 function hdPad(n) { return (n &lt; 10 ? "0" : "") + n; }
 function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.type("java.time.ZoneId"); var z = Z.now(I.of("Asia/Tehran")); var j = hdG2J(z.getYear(), z.getMonthValue(), z.getDayOfMonth()); return j[0] + "/" + hdPad(j[1]) + "/" + hdPad(j[2]) + " " + hdPad(z.getHour()) + ":" + hdPad(z.getMinute()); } catch (e) { var d = new Date(); var j2 = hdG2J(d.getFullYear(), d.getMonth() + 1, d.getDate()); return j2[0] + "/" + hdPad(j2[1]) + "/" + hdPad(j2[2]) + " " + hdPad(d.getHours()) + ":" + hdPad(d.getMinutes()); } }
   var log = d.InitiatorNotifications || [];
-  log.push({ NoticeTitle: "ثبت درخواست", NoticeText: "درخواست ودیعه مسکن شما ثبت شد و برای بررسی " + (d.RequestCategory === "HQ" ? "به مدیر مستقیم" : "به مدیریت شعب استان / منطقه") + " ارسال گردید.", NoticeTime: hdNow() });
+  log.push({ NoticeTitle: "ثبت درخواست", NoticeText: "درخواست ودیعه مسکن شما ثبت شد و برای بررسی " + (d.RequestCategory === "HQ" ? "به اداره کل سرمایه انسانی و رفاه" : "به مدیریت شعب استان / منطقه") + " ارسال گردید.", NoticeTime: hdNow() });
   d.InitiatorNotifications = log;
   execution.setVariable("Submission", S(JSON.stringify(obj)));
   console.log("[Start_Request] first notice added");
@@ -163,132 +164,7 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
       <bpmn:incoming>Flow_Rule_Cat</bpmn:incoming>
       <bpmn:outgoing>Flow_Cat_CEO</bpmn:outgoing>
       <bpmn:outgoing>Flow_Cat_Prov</bpmn:outgoing>
-    </bpmn:exclusiveGateway>
-    <bpmn:userTask id="Task_CEOReview" name="بررسی درخواست – مدیر مستقیم" camunda:formKey="embedded:/camunda/forms/formioWizardCallApi.html?deployment=HousingDepositCompleteWizard.json&#38;var=Submission&#38;DefaultVal=Submission&#38;StateTask=1" camunda:assignee="${PM}">
-      <bpmn:extensionElements>
-        <camunda:executionListener event="start">
-          <camunda:script scriptFormat="javascript">
-try {
-  var raw = execution.getVariable("Submission");
-  var obj = null;
-  if (raw === null || raw === undefined) {
-    obj = { data: {}, metadata: {} };
-  } else if (typeof raw === "string") {
-    obj = JSON.parse(raw);
-  } else if (raw &amp;&amp; typeof raw.prop === "function") {
-    obj = JSON.parse(raw.toString());
-  } else {
-    try { obj = JSON.parse(JSON.stringify(raw)); } catch(e) { obj = { data: {} }; }
-  }
-  if (!obj.data) {
-    obj = { data: obj, metadata: {} };
-  }
-  // Inject StateTask into form data so panel customConditional works
-  obj.data.StateTask = "1";
-  execution.setVariable("StateTask", "1");
-  execution.setVariable("Submission", S(JSON.stringify(obj)));
-  console.log("[Prepare] StateTask=1 injected into Submission.data");
-} catch (e) {
-  console.error("[Prepare] " + e);
-  execution.setVariable("StateTask", "1");
-}
-</camunda:script>
-        </camunda:executionListener>
-        <camunda:executionListener event="end">
-          <camunda:script scriptFormat="javascript">try {
-  var raw = execution.getVariable("Submission");
-  var data = {};
-  if (raw &amp;&amp; typeof raw.prop === "function") {
-    if (raw.hasProp("data") &amp;&amp; !raw.prop("data").isNull()) { data = JSON.parse(raw.prop("data").toString()); }
-    else { data = JSON.parse(raw.toString()); }
-  } else if (typeof raw === "string") {
-    var parsed = JSON.parse(raw); data = (parsed &amp;&amp; parsed.data) ? parsed.data : (parsed || {});
-  } else if (raw) { data = raw.data || raw; }
-  execution.setVariable("_ceoApproval", (data.CEOApproval !== undefined &amp;&amp; data.CEOApproval !== null) ? String(data.CEOApproval) : "");
-  console.log("[Task_CEOReview]" + " _ceoApproval=" + execution.getVariable("_ceoApproval"));
-} catch(e) { console.error("[Task_CEOReview] " + e); }
-</camunda:script>
-        </camunda:executionListener>
-      </bpmn:extensionElements>
-      <bpmn:incoming>Flow_Cat_CEO</bpmn:incoming>
-      <bpmn:outgoing>Flow_CEO_N</bpmn:outgoing>
-    </bpmn:userTask>
-    <bpmn:intermediateThrowEvent id="Notify_CEO" name="اطلاع نتیجه به متقاضی">
-      <bpmn:extensionElements>
-        <camunda:executionListener event="start">
-          <camunda:script scriptFormat="javascript">try {
-  var raw = execution.getVariable("Submission");
-  var obj = null;
-  if (raw === null || raw === undefined) { obj = { data: {} }; }
-  else if (typeof raw === "string") { obj = JSON.parse(raw); }
-  else if (raw &amp;&amp; typeof raw.prop === "function") { obj = JSON.parse(raw.toString()); }
-  else { try { obj = JSON.parse(JSON.stringify(raw)); } catch (e1) { obj = { data: {} }; } }
-  if (!obj.data) { obj = { data: obj }; }
-  var d = obj.data;
-  function fmt(n) { n = Math.round(Number(n || 0)); return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ","); }
-  function note(s) { return s ? " توضیحات: " + s : ""; }
-  function hdG2J(gy, gm, gd) { var g_d_m = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334]; var gy2 = (gm &gt; 2) ? (gy + 1) : gy; var days = 355666 + (365 * gy) + Math.floor((gy2 + 3) / 4) - Math.floor((gy2 + 99) / 100) + Math.floor((gy2 + 399) / 400) + gd + g_d_m[gm - 1]; var jy = -1595 + (33 * Math.floor(days / 12053)); days %= 12053; jy += 4 * Math.floor(days / 1461); days %= 1461; if (days &gt; 365) { jy += Math.floor((days - 1) / 365); days = (days - 1) % 365; } var jm, jd; if (days &lt; 186) { jm = 1 + Math.floor(days / 31); jd = 1 + (days % 31); } else { jm = 7 + Math.floor((days - 186) / 30); jd = 1 + ((days - 186) % 30); } return [jy, jm, jd]; }
-function hdJ2G(jy, jm, jd) { jy += 1595; var days = -355668 + (365 * jy) + (Math.floor(jy / 33) * 8) + Math.floor(((jy % 33) + 3) / 4) + jd + ((jm &lt; 7) ? (jm - 1) * 31 : ((jm - 7) * 30) + 186); var gy = 400 * Math.floor(days / 146097); days %= 146097; if (days &gt; 36524) { days--; gy += 100 * Math.floor(days / 36524); days %= 36524; if (days &gt;= 365) { days++; } } gy += 4 * Math.floor(days / 1461); days %= 1461; if (days &gt; 365) { gy += Math.floor((days - 1) / 365); days = (days - 1) % 365; } var gd = days + 1; var ml = [0, 31, ((gy % 4 === 0 &amp;&amp; gy % 100 !== 0) || (gy % 400 === 0)) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]; var gm; for (gm = 0; gm &lt; 13 &amp;&amp; gd &gt; ml[gm]; gm++) { gd -= ml[gm]; } return [gy, gm, gd]; }
-function hdPad(n) { return (n &lt; 10 ? "0" : "") + n; }
-function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.type("java.time.ZoneId"); var z = Z.now(I.of("Asia/Tehran")); var j = hdG2J(z.getYear(), z.getMonthValue(), z.getDayOfMonth()); return j[0] + "/" + hdPad(j[1]) + "/" + hdPad(j[2]) + " " + hdPad(z.getHour()) + ":" + hdPad(z.getMinute()); } catch (e) { var d = new Date(); var j2 = hdG2J(d.getFullYear(), d.getMonth() + 1, d.getDate()); return j2[0] + "/" + hdPad(j2[1]) + "/" + hdPad(j2[2]) + " " + hdPad(d.getHours()) + ":" + hdPad(d.getMinutes()); } }
-  var name = ((d.ApplicantFirstName || "") + " " + (d.ApplicantLastName || "")).trim();
-  var title = "نتیجه بررسی مدیر مستقیم";
-  var text = (d.CEOApproval === "approved" ? "درخواست ودیعه مسکن شما توسط مدیر مستقیم تأیید شد و برای بررسی به اداره کل سرمایه انسانی و رفاه ارسال گردید." : "درخواست ودیعه مسکن شما توسط مدیر مستقیم تأیید نشد و فرآیند خاتمه یافت.") + note(d.CEONote);
-  var log = d.InitiatorNotifications || [];
-  log.push({ NoticeTitle: title, NoticeText: text, NoticeTime: hdNow() });
-  d.InitiatorNotifications = log;
-  execution.setVariable("Submission", S(JSON.stringify(obj)));
-  execution.setVariable("_lastNotice", title + ": " + text);
-  var pm = execution.getVariable("PM");
-  if (pm) {
-    var nt = hdNow();
-    try {
-      var nobj = JSON.parse(JSON.stringify(obj));
-      nobj.data.StateTask = "0";
-      nobj.data.NoticeTitle = title;
-      nobj.data.NoticeText = text;
-      nobj.data.NoticeTime = nt;
-      var HashMap = Java.type("java.util.HashMap");
-      var vars = new HashMap();
-      vars.put("PM", String(pm));
-      vars.put("StateTask", "0");
-      vars.put("NoticeTaskName", "اطلاع: " + title);
-      vars.put("NoticeTitle", title);
-      vars.put("NoticeText", text);
-      vars.put("NoticeTime", nt);
-      vars.put("SourceProcessInstanceId", execution.getProcessInstanceId());
-      vars.put("Submission", S(JSON.stringify(nobj)));
-      var rs = execution.getProcessEngineServices().getRuntimeService();
-      var bk = execution.getProcessBusinessKey();
-      if (bk) { rs.startProcessInstanceByKey("HousingDepositNotice", String(bk), vars); }
-      else { rs.startProcessInstanceByKey("HousingDepositNotice", vars); }
-    } catch (eN) {
-      console.error("[Notice] HousingDepositNotice not started, falling back to plain task: " + eN);
-      var ts = execution.getProcessEngineServices().getTaskService();
-      var t = ts.newTask();
-      t.setName("اطلاع: " + title);
-      t.setDescription(text);
-      t.setAssignee(String(pm));
-      ts.saveTask(t);
-    }
-  }
-  console.log("[Notify_CEO] " + title);
-} catch (e) { console.error("[Notify_CEO] " + e); }
-</camunda:script>
-        </camunda:executionListener>
-      </bpmn:extensionElements>
-      <bpmn:incoming>Flow_CEO_N</bpmn:incoming>
-      <bpmn:outgoing>Flow_N_CEO_G</bpmn:outgoing>
-      <bpmn:messageEventDefinition id="MessageEventDefinition_Notify_CEO" />
-    </bpmn:intermediateThrowEvent>
-    <bpmn:exclusiveGateway id="Gateway_CEO" name="آیا مورد تأیید می‌باشد؟" default="Flow_CEO_No">
-      <bpmn:incoming>Flow_N_CEO_G</bpmn:incoming>
-      <bpmn:outgoing>Flow_CEO_Yes</bpmn:outgoing>
-      <bpmn:outgoing>Flow_CEO_No</bpmn:outgoing>
-    </bpmn:exclusiveGateway>
-    <bpmn:endEvent id="End_Rejected" name="پایان (عدم تأیید مدیر مستقیم)">
-      <bpmn:incoming>Flow_CEO_No</bpmn:incoming>
-    </bpmn:endEvent>
+    </bpmn:exclusiveGateway> 
     <bpmn:userTask id="Task_ProvinceReview" name="بررسی درخواست – مدیریت شعب استان / منطقه" camunda:formKey="embedded:/camunda/forms/formioWizardCallApi.html?deployment=HousingDepositCompleteWizard.json&#38;var=Submission&#38;DefaultVal=Submission&#38;StateTask=2" camunda:assignee="${PM}">
       <bpmn:extensionElements>
         <camunda:executionListener event="start">
@@ -450,7 +326,7 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
       <bpmn:incoming>Flow_Sec_No</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:exclusiveGateway id="Gateway_ToHR" name="">
-      <bpmn:incoming>Flow_CEO_Yes</bpmn:incoming>
+      <bpmn:incoming>Flow_Cat_CEO</bpmn:incoming>
       <bpmn:incoming>Flow_IsSec_No</bpmn:incoming>
       <bpmn:incoming>Flow_Sec_Yes</bpmn:incoming>
       <bpmn:outgoing>Flow_ToHR</bpmn:outgoing>
@@ -681,7 +557,12 @@ try {
     <bpmn:endEvent id="End_Inspection" name="پایان (رونوشت بازرسی)">
       <bpmn:incoming>Flow_Insp_End</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:userTask id="Task_FinalApproval" name="تأیید نهایی درخواست – مقام مافوق" camunda:formKey="embedded:/camunda/forms/formioWizardCallApi.html?deployment=HousingDepositCompleteWizard.json&#38;var=Submission&#38;DefaultVal=Submission&#38;StateTask=18" camunda:assignee="${PM}">
+    <bpmn:exclusiveGateway id="Gateway_NeedFinal" name="نوع درخواست؟" default="Flow_NF_No">
+      <bpmn:incoming>Flow_Fork_Route</bpmn:incoming>
+      <bpmn:outgoing>Flow_NF_Yes</bpmn:outgoing>
+      <bpmn:outgoing>Flow_NF_No</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="Task_FinalApproval" name="تأیید نهایی درخواست – مقام مافوق (مدیرعامل / معاون / مدیر امور)" camunda:formKey="embedded:/camunda/forms/formioWizardCallApi.html?deployment=HousingDepositCompleteWizard.json&#38;var=Submission&#38;DefaultVal=Submission&#38;StateTask=18" camunda:assignee="${PM}">
       <bpmn:extensionElements>
         <camunda:executionListener event="end">
           <camunda:script scriptFormat="javascript">try {
@@ -699,7 +580,7 @@ try {
 </camunda:script>
         </camunda:executionListener>
       </bpmn:extensionElements>
-      <bpmn:incoming>Flow_Fork_Route</bpmn:incoming>
+      <bpmn:incoming>Flow_NF_Yes</bpmn:incoming>
       <bpmn:outgoing>Flow_FA_G</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:exclusiveGateway id="Gateway_Final" name="آیا مورد تأیید می‌باشد؟">
@@ -712,6 +593,7 @@ try {
     </bpmn:endEvent>
     <bpmn:userTask id="Task_HRHeadReferral" name="رئیس اداره کل سرمایه انسانی – ارجاع به شعبه / مدیریت استان" camunda:formKey="embedded:/camunda/forms/formioWizardCallApi.html?deployment=HousingDepositCompleteWizard.json&#38;var=Submission&#38;DefaultVal=Submission&#38;StateTask=19" camunda:assignee="${PM}">
       <bpmn:incoming>Flow_FA_Yes</bpmn:incoming>
+      <bpmn:incoming>Flow_NF_No</bpmn:incoming>
       <bpmn:outgoing>Flow_HRRef_Route</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:exclusiveGateway id="Gateway_Route" name="نوع درخواست؟" default="Flow_Route_Prov">
@@ -1307,16 +1189,10 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="Flow_Start_Cat" sourceRef="Start_Request" targetRef="Task_ApproverRouting" />
     <bpmn:sequenceFlow id="Flow_Rule_Cat" sourceRef="Task_ApproverRouting" targetRef="Gateway_Category" />
-    <bpmn:sequenceFlow id="Flow_Cat_CEO" name="ستاد" sourceRef="Gateway_Category" targetRef="Task_CEOReview">
+    <bpmn:sequenceFlow id="Flow_Cat_CEO" name="ستاد" sourceRef="Gateway_Category" targetRef="Gateway_ToHR">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${_requestCategory == "HQ"}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_Cat_Prov" sourceRef="Gateway_Category" targetRef="Task_ProvinceReview" />
-    <bpmn:sequenceFlow id="Flow_CEO_N" sourceRef="Task_CEOReview" targetRef="Notify_CEO" />
-    <bpmn:sequenceFlow id="Flow_N_CEO_G" sourceRef="Notify_CEO" targetRef="Gateway_CEO" />
-    <bpmn:sequenceFlow id="Flow_CEO_Yes" name="بله" sourceRef="Gateway_CEO" targetRef="Gateway_ToHR">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${_ceoApproval == "approved"}</bpmn:conditionExpression>
-    </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="Flow_CEO_No" name="خیر" sourceRef="Gateway_CEO" targetRef="End_Rejected" />
     <bpmn:sequenceFlow id="Flow_Prov_N" sourceRef="Task_ProvinceReview" targetRef="Notify_Province" />
     <bpmn:sequenceFlow id="Flow_N_Prov_G" sourceRef="Notify_Province" targetRef="Gateway_Province" />
     <bpmn:sequenceFlow id="Flow_Prov_Yes" name="بله" sourceRef="Gateway_Province" targetRef="Gateway_IsSec">
@@ -1367,7 +1243,11 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
     <bpmn:sequenceFlow id="Flow_Due_NExit" name="سررسید" sourceRef="Catch_SettlementDue" targetRef="Notify_Exit" />
     <bpmn:sequenceFlow id="Flow_NExit_NSet" sourceRef="Notify_Exit" targetRef="Notify_Settlement" />
     <bpmn:sequenceFlow id="Flow_NSet_End" sourceRef="Notify_Settlement" targetRef="End_Handover" />
-    <bpmn:sequenceFlow id="Flow_Fork_Route" sourceRef="Gateway_Fork" targetRef="Task_FinalApproval" />
+    <bpmn:sequenceFlow id="Flow_Fork_Route" sourceRef="Gateway_Fork" targetRef="Gateway_NeedFinal" />
+    <bpmn:sequenceFlow id="Flow_NF_Yes" name="ستاد" sourceRef="Gateway_NeedFinal" targetRef="Task_FinalApproval">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${_requestCategory == "HQ"}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_NF_No" name="استان" sourceRef="Gateway_NeedFinal" targetRef="Task_HRHeadReferral" />
     <bpmn:sequenceFlow id="Flow_FA_G" sourceRef="Task_FinalApproval" targetRef="Gateway_Final" />
     <bpmn:sequenceFlow id="Flow_FA_Yes" name="بله" sourceRef="Gateway_Final" targetRef="Task_HRHeadReferral">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${_finalApproval == "approved"}</bpmn:conditionExpression>
@@ -1381,28 +1261,28 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
   <bpmndi:BPMNDiagram id="BPMNDiagram_HousingDepositComplete">
     <bpmndi:BPMNPlane id="BPMNPlane_HousingDepositComplete" bpmnElement="Collaboration_HousingDepositComplete">
       <bpmndi:BPMNShape id="Participant_HousingDepositComplete_di" bpmnElement="Participant_HousingDepositComplete" isHorizontal="true">
-        <dc:Bounds x="129" y="80" width="4410" height="1320" />
+        <dc:Bounds x="129" y="80" width="4510" height="1320" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_Employee_di" bpmnElement="Lane_Employee" isHorizontal="true">
-        <dc:Bounds x="159" y="80" width="4380" height="160" />
+        <dc:Bounds x="159" y="80" width="4480" height="160" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_CEO_di" bpmnElement="Lane_CEO" isHorizontal="true">
-        <dc:Bounds x="159" y="240" width="4380" height="160" />
+        <dc:Bounds x="159" y="240" width="4480" height="160" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_ProvinceManagement_di" bpmnElement="Lane_ProvinceManagement" isHorizontal="true">
-        <dc:Bounds x="159" y="400" width="4380" height="160" />
+        <dc:Bounds x="159" y="400" width="4480" height="160" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_HR_di" bpmnElement="Lane_HR" isHorizontal="true">
-        <dc:Bounds x="159" y="560" width="4380" height="160" />
+        <dc:Bounds x="159" y="560" width="4480" height="160" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_Inspection_di" bpmnElement="Lane_Inspection" isHorizontal="true">
-        <dc:Bounds x="159" y="720" width="4380" height="160" />
+        <dc:Bounds x="159" y="720" width="4480" height="160" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_Legal_di" bpmnElement="Lane_Legal" isHorizontal="true">
-        <dc:Bounds x="159" y="880" width="4380" height="160" />
+        <dc:Bounds x="159" y="880" width="4480" height="160" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_Executor_di" bpmnElement="Lane_Executor" isHorizontal="true">
-        <dc:Bounds x="159" y="1040" width="4380" height="160" />
+        <dc:Bounds x="159" y="1040" width="4480" height="160" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Start_Request_di" bpmnElement="Start_Request">
         <dc:Bounds x="212" y="142" width="36" height="36" />
@@ -1411,22 +1291,6 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
       <bpmndi:BPMNShape id="Gateway_Category_di" bpmnElement="Gateway_Category" isMarkerVisible="true">
         <dc:Bounds x="460" y="135" width="50" height="50" />
         <bpmndi:BPMNLabel><dc:Bounds x="285" y="105" width="80" height="27" /></bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Task_CEOReview_di" bpmnElement="Task_CEOReview">
-        <dc:Bounds x="560" y="280" width="120" height="80" />
-        
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Notify_CEO_di" bpmnElement="Notify_CEO">
-        <dc:Bounds x="730" y="302" width="36" height="36" />
-        <bpmndi:BPMNLabel><dc:Bounds x="700" y="342" width="96" height="27" /></bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Gateway_CEO_di" bpmnElement="Gateway_CEO" isMarkerVisible="true">
-        <dc:Bounds x="1120" y="295" width="50" height="50" />
-        <bpmndi:BPMNLabel><dc:Bounds x="1105" y="265" width="80" height="27" /></bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="End_Rejected_di" bpmnElement="End_Rejected">
-        <dc:Bounds x="1410" y="142" width="36" height="36" />
-        <bpmndi:BPMNLabel><dc:Bounds x="1380" y="182" width="96" height="27" /></bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Task_ProvinceReview_di" bpmnElement="Task_ProvinceReview">
         <dc:Bounds x="560" y="440" width="120" height="80" />
@@ -1457,125 +1321,107 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
         <bpmndi:BPMNLabel><dc:Bounds x="1740" y="662" width="96" height="27" /></bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Gateway_HR_di" bpmnElement="Gateway_HR" isMarkerVisible="true">
-        <dc:Bounds x="1850" y="615" width="50" height="50" />
+        <dc:Bounds x="1950" y="615" width="50" height="50" />
         <bpmndi:BPMNLabel><dc:Bounds x="1835" y="585" width="80" height="27" /></bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="End_RejectedHQ_di" bpmnElement="End_RejectedHQ">
-        <dc:Bounds x="2410" y="622" width="36" height="36" />
-        <bpmndi:BPMNLabel><dc:Bounds x="2380" y="662" width="96" height="27" /></bpmndi:BPMNLabel>
+        <dc:Bounds x="2510" y="622" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="2480" y="662" width="96" height="27" /></bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Gateway_Fork_di" bpmnElement="Gateway_Fork">
-        <dc:Bounds x="2370" y="135" width="50" height="50" />
-        <bpmndi:BPMNLabel><dc:Bounds x="2355" y="105" width="80" height="27" /></bpmndi:BPMNLabel>
+        <dc:Bounds x="2470" y="135" width="50" height="50" />
+        <bpmndi:BPMNLabel><dc:Bounds x="2455" y="105" width="80" height="27" /></bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Task_LeaseInfo_di" bpmnElement="Task_LeaseInfo">
-        <dc:Bounds x="3650" y="1080" width="120" height="80" />
+        <dc:Bounds x="3750" y="1080" width="120" height="80" />
         
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Task_Inspection_di" bpmnElement="Task_Inspection">
-        <dc:Bounds x="2610" y="760" width="120" height="80" />
+        <dc:Bounds x="2710" y="760" width="120" height="80" />
         
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="End_Inspection_di" bpmnElement="End_Inspection">
-        <dc:Bounds x="2790" y="782" width="36" height="36" />
-        <bpmndi:BPMNLabel><dc:Bounds x="2760" y="822" width="96" height="27" /></bpmndi:BPMNLabel>
+        <dc:Bounds x="2890" y="782" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="2860" y="822" width="96" height="27" /></bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Gateway_Route_di" bpmnElement="Gateway_Route" isMarkerVisible="true">
-        <dc:Bounds x="2510" y="135" width="50" height="50" />
-        <bpmndi:BPMNLabel><dc:Bounds x="2495" y="105" width="80" height="27" /></bpmndi:BPMNLabel>
+        <dc:Bounds x="2610" y="135" width="50" height="50" />
+        <bpmndi:BPMNLabel><dc:Bounds x="2595" y="105" width="80" height="27" /></bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Task_Referral_di" bpmnElement="Task_Referral">
-        <dc:Bounds x="2810" y="440" width="120" height="80" />
+        <dc:Bounds x="2910" y="440" width="120" height="80" />
         
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Task_ReferralBranch_di" bpmnElement="Task_ReferralBranch">
-        <dc:Bounds x="2810" y="1080" width="120" height="80" />
+        <dc:Bounds x="2910" y="1080" width="120" height="80" />
         
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Notify_Legal_di" bpmnElement="Notify_Legal">
-        <dc:Bounds x="2970" y="942" width="36" height="36" />
-        <bpmndi:BPMNLabel><dc:Bounds x="2940" y="982" width="96" height="27" /></bpmndi:BPMNLabel>
+        <dc:Bounds x="3070" y="942" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="3040" y="982" width="96" height="27" /></bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Task_Legal_di" bpmnElement="Task_Legal">
-        <dc:Bounds x="3050" y="920" width="120" height="80" />
+        <dc:Bounds x="3150" y="920" width="120" height="80" />
         
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Task_File_di" bpmnElement="Task_File">
-        <dc:Bounds x="3230" y="1080" width="120" height="80" />
+        <dc:Bounds x="3330" y="1080" width="120" height="80" />
         
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Task_Payment_di" bpmnElement="Task_Payment">
-        <dc:Bounds x="3390" y="1080" width="120" height="80" />
+        <dc:Bounds x="3490" y="1080" width="120" height="80" />
         
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Notify_Paid_di" bpmnElement="Notify_Paid">
-        <dc:Bounds x="3550" y="1102" width="36" height="36" />
-        <bpmndi:BPMNLabel><dc:Bounds x="3520" y="1142" width="96" height="27" /></bpmndi:BPMNLabel>
+        <dc:Bounds x="3650" y="1102" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="3620" y="1142" width="96" height="27" /></bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Task_Database_di" bpmnElement="Task_Database">
-        <dc:Bounds x="3810" y="600" width="120" height="80" />
+        <dc:Bounds x="3910" y="600" width="120" height="80" />
         
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Notify_Done_di" bpmnElement="Notify_Done">
-        <dc:Bounds x="3970" y="622" width="36" height="36" />
-        <bpmndi:BPMNLabel><dc:Bounds x="3940" y="662" width="96" height="27" /></bpmndi:BPMNLabel>
+        <dc:Bounds x="4070" y="622" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="4040" y="662" width="96" height="27" /></bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Gateway_ExitWait_di" bpmnElement="Gateway_ExitWait">
-        <dc:Bounds x="4050" y="615" width="50" height="50" />
-        <bpmndi:BPMNLabel><dc:Bounds x="4035" y="585" width="80" height="27" /></bpmndi:BPMNLabel>
+        <dc:Bounds x="4150" y="615" width="50" height="50" />
+        <bpmndi:BPMNLabel><dc:Bounds x="4135" y="585" width="80" height="27" /></bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Catch_ExitMessage_di" bpmnElement="Catch_ExitMessage">
-        <dc:Bounds x="4150" y="582" width="36" height="36" />
-        <bpmndi:BPMNLabel><dc:Bounds x="4120" y="622" width="96" height="27" /></bpmndi:BPMNLabel>
+        <dc:Bounds x="4250" y="582" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="4220" y="622" width="96" height="27" /></bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Catch_SettlementDue_di" bpmnElement="Catch_SettlementDue">
-        <dc:Bounds x="4150" y="652" width="36" height="36" />
-        <bpmndi:BPMNLabel><dc:Bounds x="4120" y="692" width="96" height="27" /></bpmndi:BPMNLabel>
+        <dc:Bounds x="4250" y="652" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="4220" y="692" width="96" height="27" /></bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Notify_Exit_di" bpmnElement="Notify_Exit">
-        <dc:Bounds x="4270" y="622" width="36" height="36" />
-        <bpmndi:BPMNLabel><dc:Bounds x="4240" y="662" width="96" height="27" /></bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Notify_Settlement_di" bpmnElement="Notify_Settlement">
         <dc:Bounds x="4370" y="622" width="36" height="36" />
         <bpmndi:BPMNLabel><dc:Bounds x="4340" y="662" width="96" height="27" /></bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="End_Handover_di" bpmnElement="End_Handover">
+      <bpmndi:BPMNShape id="Notify_Settlement_di" bpmnElement="Notify_Settlement">
         <dc:Bounds x="4470" y="622" width="36" height="36" />
         <bpmndi:BPMNLabel><dc:Bounds x="4440" y="662" width="96" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_Handover_di" bpmnElement="End_Handover">
+        <dc:Bounds x="4570" y="622" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="4540" y="662" width="96" height="27" /></bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_Start_Cat_di" bpmnElement="Flow_Start_Cat">
         <di:waypoint x="248" y="160" />
         <di:waypoint x="270" y="160" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_Cat_CEO_di" bpmnElement="Flow_Cat_CEO">
+            <bpmndi:BPMNEdge id="Flow_Cat_CEO_di" bpmnElement="Flow_Cat_CEO">
         <di:waypoint x="485" y="185" />
-        <di:waypoint x="485" y="320" />
-        <di:waypoint x="560" y="320" />
+        <di:waypoint x="485" y="640" />
+        <di:waypoint x="1390" y="640" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_Cat_Prov_di" bpmnElement="Flow_Cat_Prov">
         <di:waypoint x="510" y="160" />
         <di:waypoint x="530" y="160" />
         <di:waypoint x="530" y="480" />
         <di:waypoint x="560" y="480" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_CEO_N_di" bpmnElement="Flow_CEO_N">
-        <di:waypoint x="680" y="320" />
-        <di:waypoint x="730" y="320" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_N_CEO_G_di" bpmnElement="Flow_N_CEO_G">
-        <di:waypoint x="766" y="320" />
-        <di:waypoint x="1120" y="320" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_CEO_Yes_di" bpmnElement="Flow_CEO_Yes">
-        <di:waypoint x="1320" y="320" />
-        <di:waypoint x="1415" y="320" />
-        <di:waypoint x="1415" y="615" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_CEO_No_di" bpmnElement="Flow_CEO_No">
-        <di:waypoint x="1145" y="295" />
-        <di:waypoint x="1145" y="160" />
-        <di:waypoint x="1410" y="160" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_Prov_N_di" bpmnElement="Flow_Prov_N">
         <di:waypoint x="680" y="480" />
@@ -1603,125 +1449,123 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_N_HR_G_di" bpmnElement="Flow_N_HR_G">
         <di:waypoint x="1806" y="640" />
-        <di:waypoint x="1850" y="640" />
+        <di:waypoint x="1950" y="640" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_HR_Yes_di" bpmnElement="Flow_HR_Yes">
-        <di:waypoint x="1875" y="615" />
-        <di:waypoint x="1875" y="160" />
-        <di:waypoint x="2370" y="160" />
+        <di:waypoint x="1975" y="615" />
+        <di:waypoint x="1975" y="160" />
+        <di:waypoint x="2470" y="160" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_HR_NoHQ_di" bpmnElement="Flow_HR_NoHQ">
-        <di:waypoint x="2350" y="640" />
-        <di:waypoint x="2410" y="640" />
+        <di:waypoint x="2450" y="640" />
+        <di:waypoint x="2510" y="640" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_HR_NoProv_di" bpmnElement="Flow_HR_NoProv">
-        <di:waypoint x="1875" y="665" />
-        <di:waypoint x="1875" y="700" />
+        <di:waypoint x="1975" y="665" />
+        <di:waypoint x="1975" y="700" />
         <di:waypoint x="620" y="700" />
         <di:waypoint x="620" y="520" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_Fork_Insp_di" bpmnElement="Flow_Fork_Insp">
-        <di:waypoint x="2395" y="185" />
-        <di:waypoint x="2395" y="800" />
-        <di:waypoint x="2610" y="800" />
+        <di:waypoint x="2495" y="185" />
+        <di:waypoint x="2495" y="800" />
+        <di:waypoint x="2710" y="800" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_Insp_End_di" bpmnElement="Flow_Insp_End">
-        <di:waypoint x="2730" y="800" />
-        <di:waypoint x="2790" y="800" />
+        <di:waypoint x="2830" y="800" />
+        <di:waypoint x="2890" y="800" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_Route_HQ_di" bpmnElement="Flow_Route_HQ">
-        <di:waypoint x="2535" y="185" />
-        <di:waypoint x="2535" y="1120" />
-        <di:waypoint x="2810" y="1120" />
+        <di:waypoint x="2635" y="185" />
+        <di:waypoint x="2635" y="1120" />
+        <di:waypoint x="2910" y="1120" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_Route_Prov_di" bpmnElement="Flow_Route_Prov">
-        <di:waypoint x="2560" y="160" />
-        <di:waypoint x="2760" y="160" />
-        <di:waypoint x="2760" y="480" />
-        <di:waypoint x="2810" y="480" />
+        <di:waypoint x="2660" y="160" />
+        <di:waypoint x="2860" y="160" />
+        <di:waypoint x="2860" y="480" />
+        <di:waypoint x="2910" y="480" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_Ref_N_di" bpmnElement="Flow_Ref_N">
-        <di:waypoint x="2930" y="480" />
-        <di:waypoint x="2950" y="480" />
-        <di:waypoint x="2950" y="960" />
-        <di:waypoint x="2970" y="960" />
+        <di:waypoint x="3030" y="480" />
+        <di:waypoint x="3050" y="480" />
+        <di:waypoint x="3050" y="960" />
+        <di:waypoint x="3070" y="960" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_RefB_N_di" bpmnElement="Flow_RefB_N">
-        <di:waypoint x="2930" y="1120" />
-        <di:waypoint x="2988" y="1120" />
-        <di:waypoint x="2988" y="978" />
+        <di:waypoint x="3030" y="1120" />
+        <di:waypoint x="3088" y="1120" />
+        <di:waypoint x="3088" y="978" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_N_Legal_di" bpmnElement="Flow_N_Legal">
-        <di:waypoint x="3006" y="960" />
-        <di:waypoint x="3050" y="960" />
+        <di:waypoint x="3106" y="960" />
+        <di:waypoint x="3150" y="960" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_Legal_File_di" bpmnElement="Flow_Legal_File">
-        <di:waypoint x="3170" y="960" />
-        <di:waypoint x="3200" y="960" />
-        <di:waypoint x="3200" y="1120" />
-        <di:waypoint x="3230" y="1120" />
+        <di:waypoint x="3270" y="960" />
+        <di:waypoint x="3300" y="960" />
+        <di:waypoint x="3300" y="1120" />
+        <di:waypoint x="3330" y="1120" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_File_Pay_di" bpmnElement="Flow_File_Pay">
-        <di:waypoint x="3350" y="1120" />
-        <di:waypoint x="3390" y="1120" />
+        <di:waypoint x="3450" y="1120" />
+        <di:waypoint x="3490" y="1120" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_Pay_N_di" bpmnElement="Flow_Pay_N">
-        <di:waypoint x="3510" y="1120" />
-        <di:waypoint x="3550" y="1120" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_N_Paid_DB_di" bpmnElement="Flow_N_Paid_DB">
-        <di:waypoint x="3586" y="1120" />
+        <di:waypoint x="3610" y="1120" />
         <di:waypoint x="3650" y="1120" />
       </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_N_Paid_DB_di" bpmnElement="Flow_N_Paid_DB">
+        <di:waypoint x="3686" y="1120" />
+        <di:waypoint x="3750" y="1120" />
+      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_DB_N_di" bpmnElement="Flow_DB_N">
-        <di:waypoint x="3930" y="640" />
-        <di:waypoint x="3970" y="640" />
+        <di:waypoint x="4030" y="640" />
+        <di:waypoint x="4070" y="640" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_N_Done_Wait_di" bpmnElement="Flow_N_Done_Wait">
-        <di:waypoint x="4006" y="640" />
-        <di:waypoint x="4050" y="640" />
+        <di:waypoint x="4106" y="640" />
+        <di:waypoint x="4150" y="640" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_Wait_Msg_di" bpmnElement="Flow_Wait_Msg">
-        <di:waypoint x="4075" y="615" />
-        <di:waypoint x="4075" y="600" />
-        <di:waypoint x="4150" y="600" />
+        <di:waypoint x="4175" y="615" />
+        <di:waypoint x="4175" y="600" />
+        <di:waypoint x="4250" y="600" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_Wait_Due_di" bpmnElement="Flow_Wait_Due">
-        <di:waypoint x="4075" y="665" />
-        <di:waypoint x="4075" y="670" />
-        <di:waypoint x="4150" y="670" />
+        <di:waypoint x="4175" y="665" />
+        <di:waypoint x="4175" y="670" />
+        <di:waypoint x="4250" y="670" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_Msg_NExit_di" bpmnElement="Flow_Msg_NExit">
-        <di:waypoint x="4186" y="600" />
-        <di:waypoint x="4230" y="600" />
-        <di:waypoint x="4230" y="640" />
-        <di:waypoint x="4270" y="640" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_Due_NExit_di" bpmnElement="Flow_Due_NExit">
-        <di:waypoint x="4186" y="670" />
-        <di:waypoint x="4230" y="670" />
-        <di:waypoint x="4230" y="640" />
-        <di:waypoint x="4270" y="640" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_NExit_NSet_di" bpmnElement="Flow_NExit_NSet">
-        <di:waypoint x="4306" y="640" />
+        <di:waypoint x="4286" y="600" />
+        <di:waypoint x="4330" y="600" />
+        <di:waypoint x="4330" y="640" />
         <di:waypoint x="4370" y="640" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_NSet_End_di" bpmnElement="Flow_NSet_End">
+      <bpmndi:BPMNEdge id="Flow_Due_NExit_di" bpmnElement="Flow_Due_NExit">
+        <di:waypoint x="4286" y="670" />
+        <di:waypoint x="4330" y="670" />
+        <di:waypoint x="4330" y="640" />
+        <di:waypoint x="4370" y="640" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_NExit_NSet_di" bpmnElement="Flow_NExit_NSet">
         <di:waypoint x="4406" y="640" />
         <di:waypoint x="4470" y="640" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_Fork_Route_di" bpmnElement="Flow_Fork_Route">
-        <di:waypoint x="1810" y="160" />
-        <di:waypoint x="1830" y="160" />
-        <di:waypoint x="1830" y="320" />
-        <di:waypoint x="1850" y="320" />
+      <bpmndi:BPMNEdge id="Flow_NSet_End_di" bpmnElement="Flow_NSet_End">
+        <di:waypoint x="4506" y="640" />
+        <di:waypoint x="4570" y="640" />
+      </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="Flow_Fork_Route_di" bpmnElement="Flow_Fork_Route">
+        <di:waypoint x="2420" y="160" />
+        <di:waypoint x="2440" y="160" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_Lease_DB_di" bpmnElement="Flow_Lease_DB">
-        <di:waypoint x="3770" y="1120" />
-        <di:waypoint x="3790" y="1120" />
-        <di:waypoint x="3790" y="640" />
-        <di:waypoint x="3810" y="640" />
+        <di:waypoint x="3870" y="1120" />
+        <di:waypoint x="3890" y="1120" />
+        <di:waypoint x="3890" y="640" />
+        <di:waypoint x="3910" y="640" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Task_HRExpert_di" bpmnElement="Task_HRExpert">
         <dc:Bounds x="1470" y="600" width="120" height="80" />
@@ -1738,37 +1582,37 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
         <di:waypoint x="460" y="160" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Task_FinalApproval_di" bpmnElement="Task_FinalApproval">
-        <dc:Bounds x="1850" y="280" width="120" height="80" />
+        <dc:Bounds x="1950" y="280" width="120" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Gateway_Final_di" bpmnElement="Gateway_Final" isMarkerVisible="true">
-        <dc:Bounds x="2010" y="295" width="50" height="50" />
+        <dc:Bounds x="2110" y="295" width="50" height="50" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="End_RejectedFinal_di" bpmnElement="End_RejectedFinal">
-        <dc:Bounds x="2090" y="252" width="36" height="36" />
-        <bpmndi:BPMNLabel><dc:Bounds x="2132" y="258" width="110" height="27" /></bpmndi:BPMNLabel>
+        <dc:Bounds x="2190" y="252" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="2232" y="258" width="110" height="27" /></bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Task_HRHeadReferral_di" bpmnElement="Task_HRHeadReferral">
-        <dc:Bounds x="2100" y="600" width="120" height="80" />
+        <dc:Bounds x="2200" y="600" width="120" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_FA_G_di" bpmnElement="Flow_FA_G">
-        <di:waypoint x="1970" y="320" />
-        <di:waypoint x="2010" y="320" />
+        <di:waypoint x="2070" y="320" />
+        <di:waypoint x="2110" y="320" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_FA_Yes_di" bpmnElement="Flow_FA_Yes">
-        <di:waypoint x="2060" y="320" />
         <di:waypoint x="2160" y="320" />
-        <di:waypoint x="2160" y="600" />
+        <di:waypoint x="2260" y="320" />
+        <di:waypoint x="2260" y="600" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_FA_No_di" bpmnElement="Flow_FA_No">
-        <di:waypoint x="2035" y="295" />
-        <di:waypoint x="2035" y="270" />
-        <di:waypoint x="2090" y="270" />
+        <di:waypoint x="2135" y="295" />
+        <di:waypoint x="2135" y="270" />
+        <di:waypoint x="2190" y="270" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_HRRef_Route_di" bpmnElement="Flow_HRRef_Route">
-        <di:waypoint x="2220" y="640" />
-        <di:waypoint x="2300" y="640" />
-        <di:waypoint x="2300" y="160" />
-        <di:waypoint x="2350" y="160" />
+        <di:waypoint x="2320" y="640" />
+        <di:waypoint x="2400" y="640" />
+        <di:waypoint x="2400" y="160" />
+        <di:waypoint x="2450" y="160" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Task_HRHeadAssign_di" bpmnElement="Task_HRHeadAssign">
         <dc:Bounds x="1160" y="600" width="120" height="80" />
@@ -1778,7 +1622,7 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
         <di:waypoint x="1310" y="640" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Lane_Security_di" bpmnElement="Lane_Security" isHorizontal="true">
-        <dc:Bounds x="159" y="1200" width="4380" height="200" />
+        <dc:Bounds x="159" y="1200" width="4480" height="200" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Gateway_IsSec_di" bpmnElement="Gateway_IsSec" isMarkerVisible="true">
         <dc:Bounds x="740" y="455" width="50" height="50" />
@@ -1818,6 +1662,20 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
       <bpmndi:BPMNEdge id="Flow_Sec_No_di" bpmnElement="Flow_Sec_No">
         <di:waypoint x="1055" y="1305" />
         <di:waypoint x="1055" y="1340" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Gateway_NeedFinal_di" bpmnElement="Gateway_NeedFinal" isMarkerVisible="true">
+        <dc:Bounds x="2440" y="135" width="50" height="50" />
+        <bpmndi:BPMNLabel><dc:Bounds x="2415" y="105" width="100" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_NF_Yes_di" bpmnElement="Flow_NF_Yes">
+        <di:waypoint x="2465" y="185" />
+        <di:waypoint x="2465" y="320" />
+        <di:waypoint x="1950" y="320" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_NF_No_di" bpmnElement="Flow_NF_No">
+        <di:waypoint x="2490" y="160" />
+        <di:waypoint x="2260" y="160" />
+        <di:waypoint x="2260" y="600" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
