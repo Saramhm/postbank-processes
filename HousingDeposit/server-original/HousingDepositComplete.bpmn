@@ -7,6 +7,7 @@
   <bpmn:process id="HousingDepositComplete" name="ودیعه مسکن مدیران غیر بومی (فرآیند کامل)" isExecutable="true">
     <bpmn:laneSet id="LaneSet_HousingDepositComplete">
       <bpmn:lane id="Lane_Employee" name="کارکنان مشمول">
+        <bpmn:flowNodeRef>End_Rejected</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Start_Request</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Gateway_Category</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Gateway_Fork</bpmn:flowNodeRef>
@@ -15,6 +16,10 @@
         
       </bpmn:lane>
       <bpmn:lane id="Lane_CEO" name="مدیر مستقیم">
+        <bpmn:flowNodeRef>Gateway_Direct</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_CEO</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Notify_CEO</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_CEOReview</bpmn:flowNodeRef>
         
         <bpmn:flowNodeRef>Task_FinalApproval</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Gateway_Final</bpmn:flowNodeRef>
@@ -110,6 +115,7 @@ try {
   execution.setVariable("_serviceProvince", (data.ServiceProvince !== undefined &amp;&amp; data.ServiceProvince !== null) ? String(data.ServiceProvince) : "");
   execution.setVariable("_upperManager", (data.UpperManagerId !== undefined &amp;&amp; data.UpperManagerId !== null) ? String(data.UpperManagerId).replace(/\s/g, "") : "");
   execution.setVariable("_isSecurity", (String(data.PostTitle || "").indexOf("حراست") &gt;= 0) ? "true" : "false");
+  execution.setVariable("_directIsCEO", (String(data.UpperManagerTitle || "") === "مدیرعامل") ? "true" : "false");
   console.log("[Start_Request]" + " _requestCategory=" + execution.getVariable("_requestCategory"));
 } catch(e) { console.error("[Start_Request] " + e); }
 </camunda:script>
@@ -129,7 +135,7 @@ function hdJ2G(jy, jm, jd) { jy += 1595; var days = -355668 + (365 * jy) + (Math
 function hdPad(n) { return (n &lt; 10 ? "0" : "") + n; }
 function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.type("java.time.ZoneId"); var z = Z.now(I.of("Asia/Tehran")); var j = hdG2J(z.getYear(), z.getMonthValue(), z.getDayOfMonth()); return j[0] + "/" + hdPad(j[1]) + "/" + hdPad(j[2]) + " " + hdPad(z.getHour()) + ":" + hdPad(z.getMinute()); } catch (e) { var d = new Date(); var j2 = hdG2J(d.getFullYear(), d.getMonth() + 1, d.getDate()); return j2[0] + "/" + hdPad(j2[1]) + "/" + hdPad(j2[2]) + " " + hdPad(d.getHours()) + ":" + hdPad(d.getMinutes()); } }
   var log = d.InitiatorNotifications || [];
-  log.push({ NoticeTitle: "ثبت درخواست", NoticeText: "درخواست ودیعه مسکن شما ثبت شد و برای بررسی " + (d.RequestCategory === "HQ" ? "به اداره کل سرمایه انسانی و رفاه" : "به مدیریت شعب استان / منطقه") + " ارسال گردید.", NoticeTime: hdNow() });
+  log.push({ NoticeTitle: "ثبت درخواست", NoticeText: "درخواست ودیعه مسکن شما ثبت شد و برای بررسی " + (d.RequestCategory === "HQ" ? (String(d.UpperManagerTitle || "") === "مدیرعامل" ? "به اداره کل سرمایه انسانی و رفاه" : "به مدیر مستقیم") : "به مدیریت شعب استان / منطقه") + " ارسال گردید.", NoticeTime: hdNow() });
   d.InitiatorNotifications = log;
   execution.setVariable("Submission", S(JSON.stringify(obj)));
   console.log("[Start_Request] first notice added");
@@ -323,8 +329,139 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
     <bpmn:endEvent id="End_RejectedSec" name="پایان (عدم تأیید حراست)">
       <bpmn:incoming>Flow_Sec_No</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:exclusiveGateway id="Gateway_ToHR" name="">
+    <bpmn:userTask id="Task_CEOReview" name="بررسی درخواست – مدیر مستقیم" camunda:formKey="embedded:/camunda/forms/formioWizardCallApi.html?deployment=HousingDepositCompleteWizard.json&#38;var=Submission&#38;DefaultVal=Submission&#38;StateTask=1" camunda:assignee="${PM}">
+      <bpmn:extensionElements>
+        <camunda:executionListener event="start">
+          <camunda:script scriptFormat="javascript">
+try {
+  var raw = execution.getVariable("Submission");
+  var obj = null;
+  if (raw === null || raw === undefined) {
+    obj = { data: {}, metadata: {} };
+  } else if (typeof raw === "string") {
+    obj = JSON.parse(raw);
+  } else if (raw &amp;&amp; typeof raw.prop === "function") {
+    obj = JSON.parse(raw.toString());
+  } else {
+    try { obj = JSON.parse(JSON.stringify(raw)); } catch(e) { obj = { data: {} }; }
+  }
+  if (!obj.data) {
+    obj = { data: obj, metadata: {} };
+  }
+  // Inject StateTask into form data so panel customConditional works
+  obj.data.StateTask = "1";
+  execution.setVariable("StateTask", "1");
+  execution.setVariable("Submission", S(JSON.stringify(obj)));
+  console.log("[Prepare] StateTask=1 injected into Submission.data");
+} catch (e) {
+  console.error("[Prepare] " + e);
+  execution.setVariable("StateTask", "1");
+}
+</camunda:script>
+        </camunda:executionListener>
+        <camunda:executionListener event="end">
+          <camunda:script scriptFormat="javascript">try {
+  var raw = execution.getVariable("Submission");
+  var data = {};
+  if (raw &amp;&amp; typeof raw.prop === "function") {
+    if (raw.hasProp("data") &amp;&amp; !raw.prop("data").isNull()) { data = JSON.parse(raw.prop("data").toString()); }
+    else { data = JSON.parse(raw.toString()); }
+  } else if (typeof raw === "string") {
+    var parsed = JSON.parse(raw); data = (parsed &amp;&amp; parsed.data) ? parsed.data : (parsed || {});
+  } else if (raw) { data = raw.data || raw; }
+  execution.setVariable("_ceoApproval", (data.CEOApproval !== undefined &amp;&amp; data.CEOApproval !== null) ? String(data.CEOApproval) : "");
+  console.log("[Task_CEOReview]" + " _ceoApproval=" + execution.getVariable("_ceoApproval"));
+} catch(e) { console.error("[Task_CEOReview] " + e); }
+</camunda:script>
+        </camunda:executionListener>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_Direct_Mgr</bpmn:incoming>
+      <bpmn:outgoing>Flow_CEO_N</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:intermediateThrowEvent id="Notify_CEO" name="اطلاع نتیجه به متقاضی">
+      <bpmn:extensionElements>
+        <camunda:executionListener event="start">
+          <camunda:script scriptFormat="javascript">try {
+  var raw = execution.getVariable("Submission");
+  var obj = null;
+  if (raw === null || raw === undefined) { obj = { data: {} }; }
+  else if (typeof raw === "string") { obj = JSON.parse(raw); }
+  else if (raw &amp;&amp; typeof raw.prop === "function") { obj = JSON.parse(raw.toString()); }
+  else { try { obj = JSON.parse(JSON.stringify(raw)); } catch (e1) { obj = { data: {} }; } }
+  if (!obj.data) { obj = { data: obj }; }
+  var d = obj.data;
+  function fmt(n) { n = Math.round(Number(n || 0)); return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ","); }
+  function note(s) { return s ? " توضیحات: " + s : ""; }
+  function hdG2J(gy, gm, gd) { var g_d_m = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334]; var gy2 = (gm &gt; 2) ? (gy + 1) : gy; var days = 355666 + (365 * gy) + Math.floor((gy2 + 3) / 4) - Math.floor((gy2 + 99) / 100) + Math.floor((gy2 + 399) / 400) + gd + g_d_m[gm - 1]; var jy = -1595 + (33 * Math.floor(days / 12053)); days %= 12053; jy += 4 * Math.floor(days / 1461); days %= 1461; if (days &gt; 365) { jy += Math.floor((days - 1) / 365); days = (days - 1) % 365; } var jm, jd; if (days &lt; 186) { jm = 1 + Math.floor(days / 31); jd = 1 + (days % 31); } else { jm = 7 + Math.floor((days - 186) / 30); jd = 1 + ((days - 186) % 30); } return [jy, jm, jd]; }
+function hdJ2G(jy, jm, jd) { jy += 1595; var days = -355668 + (365 * jy) + (Math.floor(jy / 33) * 8) + Math.floor(((jy % 33) + 3) / 4) + jd + ((jm &lt; 7) ? (jm - 1) * 31 : ((jm - 7) * 30) + 186); var gy = 400 * Math.floor(days / 146097); days %= 146097; if (days &gt; 36524) { days--; gy += 100 * Math.floor(days / 36524); days %= 36524; if (days &gt;= 365) { days++; } } gy += 4 * Math.floor(days / 1461); days %= 1461; if (days &gt; 365) { gy += Math.floor((days - 1) / 365); days = (days - 1) % 365; } var gd = days + 1; var ml = [0, 31, ((gy % 4 === 0 &amp;&amp; gy % 100 !== 0) || (gy % 400 === 0)) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]; var gm; for (gm = 0; gm &lt; 13 &amp;&amp; gd &gt; ml[gm]; gm++) { gd -= ml[gm]; } return [gy, gm, gd]; }
+function hdPad(n) { return (n &lt; 10 ? "0" : "") + n; }
+function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.type("java.time.ZoneId"); var z = Z.now(I.of("Asia/Tehran")); var j = hdG2J(z.getYear(), z.getMonthValue(), z.getDayOfMonth()); return j[0] + "/" + hdPad(j[1]) + "/" + hdPad(j[2]) + " " + hdPad(z.getHour()) + ":" + hdPad(z.getMinute()); } catch (e) { var d = new Date(); var j2 = hdG2J(d.getFullYear(), d.getMonth() + 1, d.getDate()); return j2[0] + "/" + hdPad(j2[1]) + "/" + hdPad(j2[2]) + " " + hdPad(d.getHours()) + ":" + hdPad(d.getMinutes()); } }
+  var name = ((d.ApplicantFirstName || "") + " " + (d.ApplicantLastName || "")).trim();
+  var title = "نتیجه بررسی مدیر مستقیم";
+  var text = (d.CEOApproval === "approved" ? "درخواست ودیعه مسکن شما توسط مدیر مستقیم تأیید شد و برای بررسی به اداره کل سرمایه انسانی و رفاه ارسال گردید." : "درخواست ودیعه مسکن شما توسط مدیر مستقیم تأیید نشد و فرآیند خاتمه یافت.") + note(d.CEONote);
+  var log = d.InitiatorNotifications || [];
+  log.push({ NoticeTitle: title, NoticeText: text, NoticeTime: hdNow() });
+  d.InitiatorNotifications = log;
+  execution.setVariable("Submission", S(JSON.stringify(obj)));
+  execution.setVariable("_lastNotice", title + ": " + text);
+  var pm = execution.getVariable("PM");
+  if (pm) {
+    var nt = hdNow();
+    try {
+      var nobj = JSON.parse(JSON.stringify(obj));
+      nobj.data.StateTask = "0";
+      nobj.data.NoticeTitle = title;
+      nobj.data.NoticeText = text;
+      nobj.data.NoticeTime = nt;
+      var HashMap = Java.type("java.util.HashMap");
+      var vars = new HashMap();
+      vars.put("PM", String(pm));
+      vars.put("StateTask", "0");
+      vars.put("NoticeTaskName", "اطلاع: " + title);
+      vars.put("NoticeTitle", title);
+      vars.put("NoticeText", text);
+      vars.put("NoticeTime", nt);
+      vars.put("SourceProcessInstanceId", execution.getProcessInstanceId());
+      vars.put("Submission", S(JSON.stringify(nobj)));
+      var rs = execution.getProcessEngineServices().getRuntimeService();
+      var bk = execution.getProcessBusinessKey();
+      if (bk) { rs.startProcessInstanceByKey("HousingDepositNotice", String(bk), vars); }
+      else { rs.startProcessInstanceByKey("HousingDepositNotice", vars); }
+    } catch (eN) {
+      console.error("[Notice] HousingDepositNotice not started, falling back to plain task: " + eN);
+      var ts = execution.getProcessEngineServices().getTaskService();
+      var t = ts.newTask();
+      t.setName("اطلاع: " + title);
+      t.setDescription(text);
+      t.setAssignee(String(pm));
+      ts.saveTask(t);
+    }
+  }
+  console.log("[Notify_CEO] " + title);
+} catch (e) { console.error("[Notify_CEO] " + e); }
+</camunda:script>
+        </camunda:executionListener>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_CEO_N</bpmn:incoming>
+      <bpmn:outgoing>Flow_N_CEO_G</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_Notify_CEO" />
+    </bpmn:intermediateThrowEvent>
+    <bpmn:exclusiveGateway id="Gateway_CEO" name="آیا مورد تأیید می‌باشد؟" default="Flow_CEO_No">
+      <bpmn:incoming>Flow_N_CEO_G</bpmn:incoming>
+      <bpmn:outgoing>Flow_CEO_Yes</bpmn:outgoing>
+      <bpmn:outgoing>Flow_CEO_No</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:endEvent id="End_Rejected" name="پایان (عدم تأیید مدیر مستقیم)">
+      <bpmn:incoming>Flow_CEO_No</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:exclusiveGateway id="Gateway_Direct" name="مدیر مستقیم مدیرعامل است؟" default="Flow_Direct_Mgr">
       <bpmn:incoming>Flow_Cat_CEO</bpmn:incoming>
+      <bpmn:outgoing>Flow_Direct_CEO</bpmn:outgoing>
+      <bpmn:outgoing>Flow_Direct_Mgr</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:exclusiveGateway id="Gateway_ToHR" name="">
+      <bpmn:incoming>Flow_Direct_CEO</bpmn:incoming>
+      <bpmn:incoming>Flow_CEO_Yes</bpmn:incoming>
       <bpmn:incoming>Flow_IsSec_No</bpmn:incoming>
       <bpmn:incoming>Flow_Sec_Yes</bpmn:incoming>
       <bpmn:outgoing>Flow_ToHR</bpmn:outgoing>
@@ -1186,7 +1323,17 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
       <bpmn:incoming>Flow_NSet_End</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="Flow_Start_Cat" sourceRef="Start_Request" targetRef="Gateway_Category" />
-    <bpmn:sequenceFlow id="Flow_Cat_CEO" name="ستاد" sourceRef="Gateway_Category" targetRef="Gateway_ToHR">
+    <bpmn:sequenceFlow id="Flow_CEO_N" sourceRef="Task_CEOReview" targetRef="Notify_CEO" />
+    <bpmn:sequenceFlow id="Flow_N_CEO_G" sourceRef="Notify_CEO" targetRef="Gateway_CEO" />
+    <bpmn:sequenceFlow id="Flow_CEO_Yes" name="بله" sourceRef="Gateway_CEO" targetRef="Gateway_ToHR">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${_ceoApproval == "approved"}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_CEO_No" name="خیر" sourceRef="Gateway_CEO" targetRef="End_Rejected" />
+    <bpmn:sequenceFlow id="Flow_Direct_CEO" name="مدیرعامل" sourceRef="Gateway_Direct" targetRef="Gateway_ToHR">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${_directIsCEO == "true"}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_Direct_Mgr" name="سایر" sourceRef="Gateway_Direct" targetRef="Task_CEOReview" />
+    <bpmn:sequenceFlow id="Flow_Cat_CEO" name="ستاد" sourceRef="Gateway_Category" targetRef="Gateway_Direct">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${_requestCategory == "HQ"}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_Cat_Prov" sourceRef="Gateway_Category" targetRef="Task_ProvinceReview" />
@@ -1242,7 +1389,7 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
     <bpmn:sequenceFlow id="Flow_NSet_End" sourceRef="Notify_Settlement" targetRef="End_Handover" />
     <bpmn:sequenceFlow id="Flow_Fork_Route" sourceRef="Gateway_Fork" targetRef="Gateway_NeedFinal" />
     <bpmn:sequenceFlow id="Flow_NF_Yes" name="ستاد" sourceRef="Gateway_NeedFinal" targetRef="Task_FinalApproval">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${_requestCategory == "HQ"}</bpmn:conditionExpression>
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${_requestCategory == "HQ" &amp;&amp; _directIsCEO == "true"}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_NF_No" name="استان" sourceRef="Gateway_NeedFinal" targetRef="Task_HRHeadReferral" />
     <bpmn:sequenceFlow id="Flow_FA_G" sourceRef="Task_FinalApproval" targetRef="Gateway_Final" />
@@ -1409,10 +1556,9 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
         <di:waypoint x="248" y="160" />
         <di:waypoint x="300" y="160" />
       </bpmndi:BPMNEdge>
-            <bpmndi:BPMNEdge id="Flow_Cat_CEO_di" bpmnElement="Flow_Cat_CEO">
+                  <bpmndi:BPMNEdge id="Flow_Cat_CEO_di" bpmnElement="Flow_Cat_CEO">
         <di:waypoint x="325" y="185" />
-        <di:waypoint x="325" y="640" />
-        <di:waypoint x="1080" y="640" />
+        <di:waypoint x="325" y="255" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_Cat_Prov_di" bpmnElement="Flow_Cat_Prov">
         <di:waypoint x="350" y="160" />
@@ -1666,6 +1812,55 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
         <di:waypoint x="1880" y="160" />
         <di:waypoint x="2260" y="160" />
         <di:waypoint x="2260" y="600" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Task_CEOReview_di" bpmnElement="Task_CEOReview">
+        <dc:Bounds x="400" y="280" width="120" height="80" />
+        
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Notify_CEO_di" bpmnElement="Notify_CEO">
+        <dc:Bounds x="570" y="302" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="540" y="342" width="96" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_CEO_di" bpmnElement="Gateway_CEO" isMarkerVisible="true">
+        <dc:Bounds x="660" y="295" width="50" height="50" />
+        <bpmndi:BPMNLabel><dc:Bounds x="645" y="265" width="80" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_Rejected_di" bpmnElement="End_Rejected">
+        <dc:Bounds x="1100" y="142" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="770" y="182" width="96" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_CEO_N_di" bpmnElement="Flow_CEO_N">
+        <di:waypoint x="520" y="320" />
+        <di:waypoint x="570" y="320" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_N_CEO_G_di" bpmnElement="Flow_N_CEO_G">
+        <di:waypoint x="606" y="320" />
+        <di:waypoint x="660" y="320" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_CEO_Yes_di" bpmnElement="Flow_CEO_Yes">
+        <di:waypoint x="710" y="320" />
+        <di:waypoint x="1105" y="320" />
+        <di:waypoint x="1105" y="615" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_CEO_No_di" bpmnElement="Flow_CEO_No">
+        <di:waypoint x="685" y="295" />
+        <di:waypoint x="685" y="160" />
+        <di:waypoint x="1100" y="160" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Gateway_Direct_di" bpmnElement="Gateway_Direct" isMarkerVisible="true">
+        <dc:Bounds x="300" y="255" width="50" height="50" />
+        <bpmndi:BPMNLabel><dc:Bounds x="230" y="222" width="120" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_Direct_Mgr_di" bpmnElement="Flow_Direct_Mgr">
+        <di:waypoint x="350" y="280" />
+        <di:waypoint x="375" y="280" />
+        <di:waypoint x="375" y="320" />
+        <di:waypoint x="400" y="320" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Direct_CEO_di" bpmnElement="Flow_Direct_CEO">
+        <di:waypoint x="325" y="305" />
+        <di:waypoint x="325" y="640" />
+        <di:waypoint x="1080" y="640" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
