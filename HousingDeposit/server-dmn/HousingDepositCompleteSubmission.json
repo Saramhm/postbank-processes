@@ -20,7 +20,7 @@
           "type": "hidden",
           "input": true,
           "tableView": false,
-          "calculateValue": "var DB = {\"0150303191\": {\"ApplicantFirstName\": \"سارا\", \"ApplicantLastName\": \"محمدی\", \"ApplicantFatherName\": \"محمدزمان\", \"PersonnelCode\": \"1405001\", \"PhoneNumber\": \"09141234567\", \"MaritalStatus\": \"single\", \"EmploymentDate\": \"1398/02/10\", \"RequestCategory\": \"Province\", \"ServiceUnit\": \"مدیریت شعب استان آذربایجان شرقی\", \"Department\": \"ستاد استان\", \"PostTitle\": \"معاون مدیریت شعب استان\", \"PostLevel\": \"معاون\", \"AssignmentDate\": \"1404/03/01\", \"BranchCode\": \"1010\", \"AppointmentOrderNumber\": \"12345678\", \"AppointmentOrderDate\": \"1404/02/20\", \"BranchGrade\": \"1\", \"ServiceProvince\": \"آذربایجان شرقی\", \"ServiceCity\": \"تبریز\", \"CityType\": \"metropolis\", \"InitialEmploymentPlace\": \"شعبه مرکزی ارومیه\", \"ServiceStartDate\": \"1404/03/01\", \"DistanceKm\": 300, \"YearsInServiceCity\": 1, \"EligibilityGroup\": \"g5\"}, \"0010000021\": {\"ApplicantFirstName\": \"علی\", \"ApplicantLastName\": \"احمدی\", \"ApplicantFatherName\": \"محمد\", \"PersonnelCode\": \"1000001\", \"PhoneNumber\": \"09120000001\", \"MaritalStatus\": \"married\", \"EmploymentDate\": \"1390/01/15\", \"RequestCategory\": \"HQ\", \"UpperManagerId\": \"0073249361\", \"ServiceUnit\": \"ستاد تهران\", \"Department\": \"اداره کل اعتبارات\", \"PostTitle\": \"رئیس اداره کل\", \"PostLevel\": \"رئیس اداره کل\", \"AssignmentDate\": \"1403/06/01\", \"BranchCode\": \"0001\", \"AppointmentOrderNumber\": \"55112233\", \"AppointmentOrderDate\": \"1403/05/20\", \"BranchGrade\": \"PA\", \"ServiceProvince\": \"تهران\", \"ServiceCity\": \"تهران\", \"CityType\": \"metropolis\", \"InitialEmploymentPlace\": \"شعبه شیراز\", \"ServiceStartDate\": \"1403/06/01\", \"DistanceKm\": 900, \"YearsInServiceCity\": 2, \"EligibilityGroup\": \"g1\"}, \"0010000038\": {\"ApplicantFirstName\": \"مریم\", \"ApplicantLastName\": \"رضایی\", \"ApplicantFatherName\": \"حسن\", \"PersonnelCode\": \"1000002\", \"PhoneNumber\": \"09120000002\", \"MaritalStatus\": \"single\", \"EmploymentDate\": \"1388/07/01\", \"RequestCategory\": \"HQ\", \"UpperManagerId\": \"0073249361\", \"ServiceUnit\": \"ستاد تهران\", \"Department\": \"اداره کل سرمایه انسانی و رفاه\", \"PostTitle\": \"معاون اداره کل\", \"PostLevel\": \"معاون\", \"AssignmentDate\": \"1405/02/10\", \"BranchCode\": \"0001\", \"AppointmentOrderNumber\": \"66778899\", \"AppointmentOrderDate\": \"1405/02/01\", \"BranchGrade\": \"PB\", \"ServiceProvince\": \"تهران\", \"ServiceCity\": \"تهران\", \"CityType\": \"metropolis\", \"InitialEmploymentPlace\": \"شعبه اصفهان\", \"ServiceStartDate\": \"1405/02/10\", \"DistanceKm\": 450, \"YearsInServiceCity\": 1, \"EligibilityGroup\": \"g2\"}, \"0010000046\": {\"ApplicantFirstName\": \"رضا\", \"ApplicantLastName\": \"کریمی\", \"ApplicantFatherName\": \"عباس\", \"PersonnelCode\": \"1000003\", \"PhoneNumber\": \"09120000003\", \"MaritalStatus\": \"married\", \"EmploymentDate\": \"1385/03/20\", \"RequestCategory\": \"Province\", \"ServiceUnit\": \"مدیریت شعب استان البرز\", \"Department\": \"ستاد استان\", \"PostTitle\": \"مدیر شعب استان\", \"PostLevel\": \"مدیر استان\", \"AssignmentDate\": \"1405/05/01\", \"BranchCode\": \"2020\", \"AppointmentOrderNumber\": \"11223344\", \"AppointmentOrderDate\": \"1405/04/20\", \"BranchGrade\": \"2\", \"ServiceProvince\": \"البرز\", \"ServiceCity\": \"کرج\", \"CityType\": \"metropolis\", \"InitialEmploymentPlace\": \"شعبه قزوین\", \"ServiceStartDate\": \"1405/05/01\", \"DistanceKm\": 120, \"YearsInServiceCity\": 1, \"EligibilityGroup\": \"g3\", \"HasPreviousDeposit\": \"yes\", \"PreviousDepositAmount\": 10000000000}, \"0010000054\": {\"ApplicantFirstName\": \"نرگس\", \"ApplicantLastName\": \"حسینی\", \"ApplicantFatherName\": \"جواد\", \"PersonnelCode\": \"1000004\", \"PhoneNumber\": \"09120000004\", \"MaritalStatus\": \"married\", \"EmploymentDate\": \"1392/09/05\", \"RequestCategory\": \"Province\", \"ServiceUnit\": \"مدیریت شعب استان فارس\", \"Department\": \"شعبه مرکزی شیراز\", \"PostTitle\": \"رئیس شعبه\", \"PostLevel\": \"رئیس شعبه\", \"AssignmentDate\": \"1404/09/01\", \"BranchCode\": \"3030\", \"AppointmentOrderNumber\": \"99887766\", \"AppointmentOrderDate\": \"1404/08/15\", \"BranchGrade\": \"1\", \"ServiceProvince\": \"فارس\", \"ServiceCity\": \"شیراز\", \"CityType\": \"metropolis\", \"InitialEmploymentPlace\": \"شعبه یزد\", \"ServiceStartDate\": \"1404/09/01\", \"DistanceKm\": 430, \"YearsInServiceCity\": 2, \"EligibilityGroup\": \"b1_head\"}, \"3358227863\": {\"RequestCategory\": \"HQ\", \"UpperManagerId\": \"0073249361\", \"ServiceUnit\": \"ستاد تهران\", \"Department\": \"اداره کل پشتیبانی و املاک\", \"ServiceProvince\": \"تهران\", \"ServiceCity\": \"تهران\", \"CityType\": \"metropolis\", \"MaritalStatus\": \"married\", \"HasPreviousDeposit\": \"yes\", \"ApplicantFirstName\": \"بهزاد\", \"ApplicantLastName\": \"امیریان\", \"PersonnelCode\": \"105454063\", \"EmploymentDate\": \"1371/07/14\", \"PostTitle\": \"رئیس اداره کل پشتیبانی و املاک\", \"PostLevel\": \"رئیس اداره کل\", \"AssignmentDate\": \"1399/08/12\", \"EligibilityGroup\": \"g1\", \"PreviousDepositAmount\": 22500000000}, \"2708572393\": {\"RequestCategory\": \"HQ\", \"UpperManagerId\": \"0073249361\", \"ServiceUnit\": \"ستاد تهران\", \"Department\": \"اداره کل پشتیبانی و املاک\", \"ServiceProvince\": \"تهران\", \"ServiceCity\": \"تهران\", \"CityType\": \"metropolis\", \"MaritalStatus\": \"married\", \"HasPreviousDeposit\": \"yes\", \"ApplicantFirstName\": \"مهرداد\", \"ApplicantLastName\": \"یوسف‌زاده\", \"PersonnelCode\": \"105454075\", \"EmploymentDate\": \"1378/09/19\", \"PostTitle\": \"معاون اداره کل (پشتیبانی و خدمات)\", \"PostLevel\": \"معاون اداره کل\", \"AssignmentDate\": \"1400/11/21\", \"EligibilityGroup\": \"g2\", \"PreviousDepositAmount\": 17300000000}};\nvar n = String(data.ApplicantNationalCode || '').replace(/[\\u06F0-\\u06F9]/g, function (c) { return String(c.charCodeAt(0) - 0x06F0); }).replace(/\\D/g, '');\nvalue = n;\nif (n.length === 10 && instance.root._hdLast !== n) {\n  instance.root._hdLast = n;\n  var rec = DB[n];\n  if (rec) {\n    setTimeout(function () {\n      Object.keys(rec).forEach(function (k) {\n        if (k === 'ServiceCity') { return; }\n        var c = instance.root.getComponent(k);\n        if (c) { c.setValue(rec[k]); }\n      });\n      setTimeout(function () {\n        var cc = instance.root.getComponent('ServiceCity');\n        if (cc) { cc.setValue(rec.ServiceCity); }\n      }, 700);\n    }, 300);\n  }\n}",
+          "calculateValue": "var DB = {\"0150303191\": {\"ApplicantFirstName\": \"سارا\", \"ApplicantLastName\": \"محمدی\", \"ApplicantFatherName\": \"محمدزمان\", \"PersonnelCode\": \"1405001\", \"PhoneNumber\": \"09141234567\", \"MaritalStatus\": \"single\", \"EmploymentDate\": \"1398/02/10\", \"RequestCategory\": \"Province\", \"ServiceUnit\": \"مدیریت شعب استان آذربایجان شرقی\", \"Department\": \"ستاد استان\", \"PostTitle\": \"معاون مدیریت شعب استان\", \"PostLevel\": \"معاون\", \"AssignmentDate\": \"1404/03/01\", \"BranchCode\": \"1010\", \"AppointmentOrderNumber\": \"12345678\", \"AppointmentOrderDate\": \"1404/02/20\", \"BranchGrade\": \"1\", \"ServiceProvince\": \"آذربایجان شرقی\", \"ServiceCity\": \"تبریز\", \"CityType\": \"metropolis\", \"InitialEmploymentPlace\": \"شعبه مرکزی ارومیه\", \"ServiceStartDate\": \"1404/03/01\", \"DistanceKm\": 300, \"YearsInServiceCity\": 1, \"EligibilityGroup\": \"g5\"}, \"0010000021\": {\"HQUnit\": \"اداره کل اعتبارات\", \"ApplicantFirstName\": \"علی\", \"ApplicantLastName\": \"احمدی\", \"ApplicantFatherName\": \"محمد\", \"PersonnelCode\": \"1000001\", \"PhoneNumber\": \"09120000001\", \"MaritalStatus\": \"married\", \"EmploymentDate\": \"1390/01/15\", \"RequestCategory\": \"HQ\", \"ServiceUnit\": \"ستاد تهران\", \"Department\": \"اداره کل اعتبارات\", \"PostTitle\": \"رئیس اداره کل\", \"PostLevel\": \"رئیس اداره کل\", \"AssignmentDate\": \"1403/06/01\", \"BranchCode\": \"0001\", \"AppointmentOrderNumber\": \"55112233\", \"AppointmentOrderDate\": \"1403/05/20\", \"BranchGrade\": \"PA\", \"ServiceProvince\": \"تهران\", \"ServiceCity\": \"تهران\", \"CityType\": \"metropolis\", \"InitialEmploymentPlace\": \"شعبه شیراز\", \"ServiceStartDate\": \"1403/06/01\", \"DistanceKm\": 900, \"YearsInServiceCity\": 2, \"EligibilityGroup\": \"g1\"}, \"0010000038\": {\"HQUnit\": \"اداره کل سرمایه انسانی و رفاه\", \"ApplicantFirstName\": \"مریم\", \"ApplicantLastName\": \"رضایی\", \"ApplicantFatherName\": \"حسن\", \"PersonnelCode\": \"1000002\", \"PhoneNumber\": \"09120000002\", \"MaritalStatus\": \"single\", \"EmploymentDate\": \"1388/07/01\", \"RequestCategory\": \"HQ\", \"ServiceUnit\": \"ستاد تهران\", \"Department\": \"اداره کل سرمایه انسانی و رفاه\", \"PostTitle\": \"معاون اداره کل\", \"PostLevel\": \"معاون\", \"AssignmentDate\": \"1405/02/10\", \"BranchCode\": \"0001\", \"AppointmentOrderNumber\": \"66778899\", \"AppointmentOrderDate\": \"1405/02/01\", \"BranchGrade\": \"PB\", \"ServiceProvince\": \"تهران\", \"ServiceCity\": \"تهران\", \"CityType\": \"metropolis\", \"InitialEmploymentPlace\": \"شعبه اصفهان\", \"ServiceStartDate\": \"1405/02/10\", \"DistanceKm\": 450, \"YearsInServiceCity\": 1, \"EligibilityGroup\": \"g2\"}, \"0010000046\": {\"ApplicantFirstName\": \"رضا\", \"ApplicantLastName\": \"کریمی\", \"ApplicantFatherName\": \"عباس\", \"PersonnelCode\": \"1000003\", \"PhoneNumber\": \"09120000003\", \"MaritalStatus\": \"married\", \"EmploymentDate\": \"1385/03/20\", \"RequestCategory\": \"Province\", \"ServiceUnit\": \"مدیریت شعب استان البرز\", \"Department\": \"ستاد استان\", \"PostTitle\": \"مدیر شعب استان\", \"PostLevel\": \"مدیر استان\", \"AssignmentDate\": \"1405/05/01\", \"BranchCode\": \"2020\", \"AppointmentOrderNumber\": \"11223344\", \"AppointmentOrderDate\": \"1405/04/20\", \"BranchGrade\": \"2\", \"ServiceProvince\": \"البرز\", \"ServiceCity\": \"کرج\", \"CityType\": \"metropolis\", \"InitialEmploymentPlace\": \"شعبه قزوین\", \"ServiceStartDate\": \"1405/05/01\", \"DistanceKm\": 120, \"YearsInServiceCity\": 1, \"EligibilityGroup\": \"g3\", \"HasPreviousDeposit\": \"yes\", \"PreviousDepositAmount\": 10000000000}, \"0010000054\": {\"ApplicantFirstName\": \"نرگس\", \"ApplicantLastName\": \"حسینی\", \"ApplicantFatherName\": \"جواد\", \"PersonnelCode\": \"1000004\", \"PhoneNumber\": \"09120000004\", \"MaritalStatus\": \"married\", \"EmploymentDate\": \"1392/09/05\", \"RequestCategory\": \"Province\", \"ServiceUnit\": \"مدیریت شعب استان فارس\", \"Department\": \"شعبه مرکزی شیراز\", \"PostTitle\": \"رئیس شعبه\", \"PostLevel\": \"رئیس شعبه\", \"AssignmentDate\": \"1404/09/01\", \"BranchCode\": \"3030\", \"AppointmentOrderNumber\": \"99887766\", \"AppointmentOrderDate\": \"1404/08/15\", \"BranchGrade\": \"1\", \"ServiceProvince\": \"فارس\", \"ServiceCity\": \"شیراز\", \"CityType\": \"metropolis\", \"InitialEmploymentPlace\": \"شعبه یزد\", \"ServiceStartDate\": \"1404/09/01\", \"DistanceKm\": 430, \"YearsInServiceCity\": 2, \"EligibilityGroup\": \"b1_head\"}, \"3358227863\": {\"HQUnit\": \"اداره کل پشتیبانی و املاک\", \"RequestCategory\": \"HQ\", \"ServiceUnit\": \"ستاد تهران\", \"Department\": \"اداره کل پشتیبانی و املاک\", \"ServiceProvince\": \"تهران\", \"ServiceCity\": \"تهران\", \"CityType\": \"metropolis\", \"MaritalStatus\": \"married\", \"HasPreviousDeposit\": \"yes\", \"ApplicantFirstName\": \"بهزاد\", \"ApplicantLastName\": \"امیریان\", \"PersonnelCode\": \"105454063\", \"EmploymentDate\": \"1371/07/14\", \"PostTitle\": \"رئیس اداره کل پشتیبانی و املاک\", \"PostLevel\": \"رئیس اداره کل\", \"AssignmentDate\": \"1399/08/12\", \"EligibilityGroup\": \"g1\", \"PreviousDepositAmount\": 22500000000}, \"2708572393\": {\"HQUnit\": \"اداره کل پشتیبانی و املاک\", \"RequestCategory\": \"HQ\", \"ServiceUnit\": \"ستاد تهران\", \"Department\": \"اداره کل پشتیبانی و املاک\", \"ServiceProvince\": \"تهران\", \"ServiceCity\": \"تهران\", \"CityType\": \"metropolis\", \"MaritalStatus\": \"married\", \"HasPreviousDeposit\": \"yes\", \"ApplicantFirstName\": \"مهرداد\", \"ApplicantLastName\": \"یوسف‌زاده\", \"PersonnelCode\": \"105454075\", \"EmploymentDate\": \"1378/09/19\", \"PostTitle\": \"معاون اداره کل (پشتیبانی و خدمات)\", \"PostLevel\": \"معاون اداره کل\", \"AssignmentDate\": \"1400/11/21\", \"EligibilityGroup\": \"g2\", \"PreviousDepositAmount\": 17300000000}};\nvar n = String(data.ApplicantNationalCode || '').replace(/[\\u06F0-\\u06F9]/g, function (c) { return String(c.charCodeAt(0) - 0x06F0); }).replace(/\\D/g, '');\nvalue = n;\nif (n.length === 10 && instance.root._hdLast !== n) {\n  instance.root._hdLast = n;\n  var rec = DB[n];\n  if (rec) {\n    setTimeout(function () {\n      Object.keys(rec).forEach(function (k) {\n        if (k === 'ServiceCity') { return; }\n        var c = instance.root.getComponent(k);\n        if (c) { c.setValue(rec[k]); }\n      });\n      setTimeout(function () {\n        var cc = instance.root.getComponent('ServiceCity');\n        if (cc) { cc.setValue(rec.ServiceCity); }\n      }, 700);\n    }, 300);\n  }\n}",
           "clearOnHide": false
         },
         {
@@ -49,7 +49,7 @@
                   "input": true,
                   "validate": {
                     "required": true,
-                    "custom": "/*__hdPrefill*/ try { (function () { var DB = {\"0150303191\": {\"ApplicantFirstName\": \"سارا\", \"ApplicantLastName\": \"محمدی\", \"ApplicantFatherName\": \"محمدزمان\", \"PersonnelCode\": \"1405001\", \"PhoneNumber\": \"09141234567\", \"MaritalStatus\": \"single\", \"EmploymentDate\": \"1398/02/10\", \"RequestCategory\": \"Province\", \"ServiceUnit\": \"مدیریت شعب استان آذربایجان شرقی\", \"Department\": \"ستاد استان\", \"PostTitle\": \"معاون مدیریت شعب استان\", \"PostLevel\": \"معاون\", \"AssignmentDate\": \"1404/03/01\", \"BranchCode\": \"1010\", \"AppointmentOrderNumber\": \"12345678\", \"AppointmentOrderDate\": \"1404/02/20\", \"BranchGrade\": \"1\", \"ServiceProvince\": \"آذربایجان شرقی\", \"ServiceCity\": \"تبریز\", \"CityType\": \"metropolis\", \"InitialEmploymentPlace\": \"شعبه مرکزی ارومیه\", \"ServiceStartDate\": \"1404/03/01\", \"DistanceKm\": 300, \"YearsInServiceCity\": 1, \"EligibilityGroup\": \"g5\"}, \"0010000021\": {\"ApplicantFirstName\": \"علی\", \"ApplicantLastName\": \"احمدی\", \"ApplicantFatherName\": \"محمد\", \"PersonnelCode\": \"1000001\", \"PhoneNumber\": \"09120000001\", \"MaritalStatus\": \"married\", \"EmploymentDate\": \"1390/01/15\", \"RequestCategory\": \"HQ\", \"UpperManagerId\": \"0073249361\", \"ServiceUnit\": \"ستاد تهران\", \"Department\": \"اداره کل اعتبارات\", \"PostTitle\": \"رئیس اداره کل\", \"PostLevel\": \"رئیس اداره کل\", \"AssignmentDate\": \"1403/06/01\", \"BranchCode\": \"0001\", \"AppointmentOrderNumber\": \"55112233\", \"AppointmentOrderDate\": \"1403/05/20\", \"BranchGrade\": \"PA\", \"ServiceProvince\": \"تهران\", \"ServiceCity\": \"تهران\", \"CityType\": \"metropolis\", \"InitialEmploymentPlace\": \"شعبه شیراز\", \"ServiceStartDate\": \"1403/06/01\", \"DistanceKm\": 900, \"YearsInServiceCity\": 2, \"EligibilityGroup\": \"g1\"}, \"0010000038\": {\"ApplicantFirstName\": \"مریم\", \"ApplicantLastName\": \"رضایی\", \"ApplicantFatherName\": \"حسن\", \"PersonnelCode\": \"1000002\", \"PhoneNumber\": \"09120000002\", \"MaritalStatus\": \"single\", \"EmploymentDate\": \"1388/07/01\", \"RequestCategory\": \"HQ\", \"UpperManagerId\": \"0073249361\", \"ServiceUnit\": \"ستاد تهران\", \"Department\": \"اداره کل سرمایه انسانی و رفاه\", \"PostTitle\": \"معاون اداره کل\", \"PostLevel\": \"معاون\", \"AssignmentDate\": \"1405/02/10\", \"BranchCode\": \"0001\", \"AppointmentOrderNumber\": \"66778899\", \"AppointmentOrderDate\": \"1405/02/01\", \"BranchGrade\": \"PB\", \"ServiceProvince\": \"تهران\", \"ServiceCity\": \"تهران\", \"CityType\": \"metropolis\", \"InitialEmploymentPlace\": \"شعبه اصفهان\", \"ServiceStartDate\": \"1405/02/10\", \"DistanceKm\": 450, \"YearsInServiceCity\": 1, \"EligibilityGroup\": \"g2\"}, \"0010000046\": {\"ApplicantFirstName\": \"رضا\", \"ApplicantLastName\": \"کریمی\", \"ApplicantFatherName\": \"عباس\", \"PersonnelCode\": \"1000003\", \"PhoneNumber\": \"09120000003\", \"MaritalStatus\": \"married\", \"EmploymentDate\": \"1385/03/20\", \"RequestCategory\": \"Province\", \"ServiceUnit\": \"مدیریت شعب استان البرز\", \"Department\": \"ستاد استان\", \"PostTitle\": \"مدیر شعب استان\", \"PostLevel\": \"مدیر استان\", \"AssignmentDate\": \"1405/05/01\", \"BranchCode\": \"2020\", \"AppointmentOrderNumber\": \"11223344\", \"AppointmentOrderDate\": \"1405/04/20\", \"BranchGrade\": \"2\", \"ServiceProvince\": \"البرز\", \"ServiceCity\": \"کرج\", \"CityType\": \"metropolis\", \"InitialEmploymentPlace\": \"شعبه قزوین\", \"ServiceStartDate\": \"1405/05/01\", \"DistanceKm\": 120, \"YearsInServiceCity\": 1, \"EligibilityGroup\": \"g3\", \"HasPreviousDeposit\": \"yes\", \"PreviousDepositAmount\": 10000000000}, \"0010000054\": {\"ApplicantFirstName\": \"نرگس\", \"ApplicantLastName\": \"حسینی\", \"ApplicantFatherName\": \"جواد\", \"PersonnelCode\": \"1000004\", \"PhoneNumber\": \"09120000004\", \"MaritalStatus\": \"married\", \"EmploymentDate\": \"1392/09/05\", \"RequestCategory\": \"Province\", \"ServiceUnit\": \"مدیریت شعب استان فارس\", \"Department\": \"شعبه مرکزی شیراز\", \"PostTitle\": \"رئیس شعبه\", \"PostLevel\": \"رئیس شعبه\", \"AssignmentDate\": \"1404/09/01\", \"BranchCode\": \"3030\", \"AppointmentOrderNumber\": \"99887766\", \"AppointmentOrderDate\": \"1404/08/15\", \"BranchGrade\": \"1\", \"ServiceProvince\": \"فارس\", \"ServiceCity\": \"شیراز\", \"CityType\": \"metropolis\", \"InitialEmploymentPlace\": \"شعبه یزد\", \"ServiceStartDate\": \"1404/09/01\", \"DistanceKm\": 430, \"YearsInServiceCity\": 2, \"EligibilityGroup\": \"b1_head\"}, \"3358227863\": {\"RequestCategory\": \"HQ\", \"UpperManagerId\": \"0073249361\", \"ServiceUnit\": \"ستاد تهران\", \"Department\": \"اداره کل پشتیبانی و املاک\", \"ServiceProvince\": \"تهران\", \"ServiceCity\": \"تهران\", \"CityType\": \"metropolis\", \"MaritalStatus\": \"married\", \"HasPreviousDeposit\": \"yes\", \"ApplicantFirstName\": \"بهزاد\", \"ApplicantLastName\": \"امیریان\", \"PersonnelCode\": \"105454063\", \"EmploymentDate\": \"1371/07/14\", \"PostTitle\": \"رئیس اداره کل پشتیبانی و املاک\", \"PostLevel\": \"رئیس اداره کل\", \"AssignmentDate\": \"1399/08/12\", \"EligibilityGroup\": \"g1\", \"PreviousDepositAmount\": 22500000000}, \"2708572393\": {\"RequestCategory\": \"HQ\", \"UpperManagerId\": \"0073249361\", \"ServiceUnit\": \"ستاد تهران\", \"Department\": \"اداره کل پشتیبانی و املاک\", \"ServiceProvince\": \"تهران\", \"ServiceCity\": \"تهران\", \"CityType\": \"metropolis\", \"MaritalStatus\": \"married\", \"HasPreviousDeposit\": \"yes\", \"ApplicantFirstName\": \"مهرداد\", \"ApplicantLastName\": \"یوسف‌زاده\", \"PersonnelCode\": \"105454075\", \"EmploymentDate\": \"1378/09/19\", \"PostTitle\": \"معاون اداره کل (پشتیبانی و خدمات)\", \"PostLevel\": \"معاون اداره کل\", \"AssignmentDate\": \"1400/11/21\", \"EligibilityGroup\": \"g2\", \"PreviousDepositAmount\": 17300000000}};\nvar n = String(data.ApplicantNationalCode || '').replace(/[\\u06F0-\\u06F9]/g, function (c) { return String(c.charCodeAt(0) - 0x06F0); }).replace(/\\D/g, '');\n\nif (n.length === 10 && instance.root._hdLast !== n) {\n  instance.root._hdLast = n;\n  var rec = DB[n];\n  if (rec) {\n    setTimeout(function () {\n      Object.keys(rec).forEach(function (k) {\n        if (k === 'ServiceCity') { return; }\n        var c = instance.root.getComponent(k);\n        if (c) { c.setValue(rec[k]); }\n      });\n      setTimeout(function () {\n        var cc = instance.root.getComponent('ServiceCity');\n        if (cc) { cc.setValue(rec.ServiceCity); }\n      }, 700);\n    }, 300);\n  }\n} })(); } catch (e) { console.warn('prefill', e); } var n = String(input || '').replace(/[\\u06F0-\\u06F9]/g, function (d) { return String(d.charCodeAt(0) - 0x06F0); }).replace(/[\\u0660-\\u0669]/g, function (d) { return String(d.charCodeAt(0) - 0x0660); }); n = n.replace(/[\\s-]/g, ''); if (!n) { valid = true; } else if (!/^\\d{10}$/.test(n)) { valid = 'کد ملی باید ۱۰ رقم باشد.'; } else if (/^(\\d)\\1{9}$/.test(n)) { valid = 'کد ملی معتبر نیست.'; } else { var s = 0; for (var i = 0; i < 9; i++) { s += parseInt(n.charAt(i), 10) * (10 - i); } var r = s % 11, c = parseInt(n.charAt(9), 10); valid = ((r < 2 && c === r) || (r >= 2 && c === 11 - r)) ? true : 'کد ملی معتبر نیست (رقم کنترل اشتباه است).'; }"
+                    "custom": "/*__hdPrefill*/ try { (function () { var DB = {\"0150303191\": {\"ApplicantFirstName\": \"سارا\", \"ApplicantLastName\": \"محمدی\", \"ApplicantFatherName\": \"محمدزمان\", \"PersonnelCode\": \"1405001\", \"PhoneNumber\": \"09141234567\", \"MaritalStatus\": \"single\", \"EmploymentDate\": \"1398/02/10\", \"RequestCategory\": \"Province\", \"ServiceUnit\": \"مدیریت شعب استان آذربایجان شرقی\", \"Department\": \"ستاد استان\", \"PostTitle\": \"معاون مدیریت شعب استان\", \"PostLevel\": \"معاون\", \"AssignmentDate\": \"1404/03/01\", \"BranchCode\": \"1010\", \"AppointmentOrderNumber\": \"12345678\", \"AppointmentOrderDate\": \"1404/02/20\", \"BranchGrade\": \"1\", \"ServiceProvince\": \"آذربایجان شرقی\", \"ServiceCity\": \"تبریز\", \"CityType\": \"metropolis\", \"InitialEmploymentPlace\": \"شعبه مرکزی ارومیه\", \"ServiceStartDate\": \"1404/03/01\", \"DistanceKm\": 300, \"YearsInServiceCity\": 1, \"EligibilityGroup\": \"g5\"}, \"0010000021\": {\"HQUnit\": \"اداره کل اعتبارات\", \"ApplicantFirstName\": \"علی\", \"ApplicantLastName\": \"احمدی\", \"ApplicantFatherName\": \"محمد\", \"PersonnelCode\": \"1000001\", \"PhoneNumber\": \"09120000001\", \"MaritalStatus\": \"married\", \"EmploymentDate\": \"1390/01/15\", \"RequestCategory\": \"HQ\", \"ServiceUnit\": \"ستاد تهران\", \"Department\": \"اداره کل اعتبارات\", \"PostTitle\": \"رئیس اداره کل\", \"PostLevel\": \"رئیس اداره کل\", \"AssignmentDate\": \"1403/06/01\", \"BranchCode\": \"0001\", \"AppointmentOrderNumber\": \"55112233\", \"AppointmentOrderDate\": \"1403/05/20\", \"BranchGrade\": \"PA\", \"ServiceProvince\": \"تهران\", \"ServiceCity\": \"تهران\", \"CityType\": \"metropolis\", \"InitialEmploymentPlace\": \"شعبه شیراز\", \"ServiceStartDate\": \"1403/06/01\", \"DistanceKm\": 900, \"YearsInServiceCity\": 2, \"EligibilityGroup\": \"g1\"}, \"0010000038\": {\"HQUnit\": \"اداره کل سرمایه انسانی و رفاه\", \"ApplicantFirstName\": \"مریم\", \"ApplicantLastName\": \"رضایی\", \"ApplicantFatherName\": \"حسن\", \"PersonnelCode\": \"1000002\", \"PhoneNumber\": \"09120000002\", \"MaritalStatus\": \"single\", \"EmploymentDate\": \"1388/07/01\", \"RequestCategory\": \"HQ\", \"ServiceUnit\": \"ستاد تهران\", \"Department\": \"اداره کل سرمایه انسانی و رفاه\", \"PostTitle\": \"معاون اداره کل\", \"PostLevel\": \"معاون\", \"AssignmentDate\": \"1405/02/10\", \"BranchCode\": \"0001\", \"AppointmentOrderNumber\": \"66778899\", \"AppointmentOrderDate\": \"1405/02/01\", \"BranchGrade\": \"PB\", \"ServiceProvince\": \"تهران\", \"ServiceCity\": \"تهران\", \"CityType\": \"metropolis\", \"InitialEmploymentPlace\": \"شعبه اصفهان\", \"ServiceStartDate\": \"1405/02/10\", \"DistanceKm\": 450, \"YearsInServiceCity\": 1, \"EligibilityGroup\": \"g2\"}, \"0010000046\": {\"ApplicantFirstName\": \"رضا\", \"ApplicantLastName\": \"کریمی\", \"ApplicantFatherName\": \"عباس\", \"PersonnelCode\": \"1000003\", \"PhoneNumber\": \"09120000003\", \"MaritalStatus\": \"married\", \"EmploymentDate\": \"1385/03/20\", \"RequestCategory\": \"Province\", \"ServiceUnit\": \"مدیریت شعب استان البرز\", \"Department\": \"ستاد استان\", \"PostTitle\": \"مدیر شعب استان\", \"PostLevel\": \"مدیر استان\", \"AssignmentDate\": \"1405/05/01\", \"BranchCode\": \"2020\", \"AppointmentOrderNumber\": \"11223344\", \"AppointmentOrderDate\": \"1405/04/20\", \"BranchGrade\": \"2\", \"ServiceProvince\": \"البرز\", \"ServiceCity\": \"کرج\", \"CityType\": \"metropolis\", \"InitialEmploymentPlace\": \"شعبه قزوین\", \"ServiceStartDate\": \"1405/05/01\", \"DistanceKm\": 120, \"YearsInServiceCity\": 1, \"EligibilityGroup\": \"g3\", \"HasPreviousDeposit\": \"yes\", \"PreviousDepositAmount\": 10000000000}, \"0010000054\": {\"ApplicantFirstName\": \"نرگس\", \"ApplicantLastName\": \"حسینی\", \"ApplicantFatherName\": \"جواد\", \"PersonnelCode\": \"1000004\", \"PhoneNumber\": \"09120000004\", \"MaritalStatus\": \"married\", \"EmploymentDate\": \"1392/09/05\", \"RequestCategory\": \"Province\", \"ServiceUnit\": \"مدیریت شعب استان فارس\", \"Department\": \"شعبه مرکزی شیراز\", \"PostTitle\": \"رئیس شعبه\", \"PostLevel\": \"رئیس شعبه\", \"AssignmentDate\": \"1404/09/01\", \"BranchCode\": \"3030\", \"AppointmentOrderNumber\": \"99887766\", \"AppointmentOrderDate\": \"1404/08/15\", \"BranchGrade\": \"1\", \"ServiceProvince\": \"فارس\", \"ServiceCity\": \"شیراز\", \"CityType\": \"metropolis\", \"InitialEmploymentPlace\": \"شعبه یزد\", \"ServiceStartDate\": \"1404/09/01\", \"DistanceKm\": 430, \"YearsInServiceCity\": 2, \"EligibilityGroup\": \"b1_head\"}, \"3358227863\": {\"HQUnit\": \"اداره کل پشتیبانی و املاک\", \"RequestCategory\": \"HQ\", \"ServiceUnit\": \"ستاد تهران\", \"Department\": \"اداره کل پشتیبانی و املاک\", \"ServiceProvince\": \"تهران\", \"ServiceCity\": \"تهران\", \"CityType\": \"metropolis\", \"MaritalStatus\": \"married\", \"HasPreviousDeposit\": \"yes\", \"ApplicantFirstName\": \"بهزاد\", \"ApplicantLastName\": \"امیریان\", \"PersonnelCode\": \"105454063\", \"EmploymentDate\": \"1371/07/14\", \"PostTitle\": \"رئیس اداره کل پشتیبانی و املاک\", \"PostLevel\": \"رئیس اداره کل\", \"AssignmentDate\": \"1399/08/12\", \"EligibilityGroup\": \"g1\", \"PreviousDepositAmount\": 22500000000}, \"2708572393\": {\"HQUnit\": \"اداره کل پشتیبانی و املاک\", \"RequestCategory\": \"HQ\", \"ServiceUnit\": \"ستاد تهران\", \"Department\": \"اداره کل پشتیبانی و املاک\", \"ServiceProvince\": \"تهران\", \"ServiceCity\": \"تهران\", \"CityType\": \"metropolis\", \"MaritalStatus\": \"married\", \"HasPreviousDeposit\": \"yes\", \"ApplicantFirstName\": \"مهرداد\", \"ApplicantLastName\": \"یوسف‌زاده\", \"PersonnelCode\": \"105454075\", \"EmploymentDate\": \"1378/09/19\", \"PostTitle\": \"معاون اداره کل (پشتیبانی و خدمات)\", \"PostLevel\": \"معاون اداره کل\", \"AssignmentDate\": \"1400/11/21\", \"EligibilityGroup\": \"g2\", \"PreviousDepositAmount\": 17300000000}};\nvar n = String(data.ApplicantNationalCode || '').replace(/[\\u06F0-\\u06F9]/g, function (c) { return String(c.charCodeAt(0) - 0x06F0); }).replace(/\\D/g, '');\n\nif (n.length === 10 && instance.root._hdLast !== n) {\n  instance.root._hdLast = n;\n  var rec = DB[n];\n  if (rec) {\n    setTimeout(function () {\n      Object.keys(rec).forEach(function (k) {\n        if (k === 'ServiceCity') { return; }\n        var c = instance.root.getComponent(k);\n        if (c) { c.setValue(rec[k]); }\n      });\n      setTimeout(function () {\n        var cc = instance.root.getComponent('ServiceCity');\n        if (cc) { cc.setValue(rec.ServiceCity); }\n      }, 700);\n    }, 300);\n  }\n} })(); } catch (e) { console.warn('prefill', e); } var n = String(input || '').replace(/[\\u06F0-\\u06F9]/g, function (d) { return String(d.charCodeAt(0) - 0x06F0); }).replace(/[\\u0660-\\u0669]/g, function (d) { return String(d.charCodeAt(0) - 0x0660); }); n = n.replace(/[\\s-]/g, ''); if (!n) { valid = true; } else if (!/^\\d{10}$/.test(n)) { valid = 'کد ملی باید ۱۰ رقم باشد.'; } else if (/^(\\d)\\1{9}$/.test(n)) { valid = 'کد ملی معتبر نیست.'; } else { var s = 0; for (var i = 0; i < 9; i++) { s += parseInt(n.charAt(i), 10) * (10 - i); } var r = s % 11, c = parseInt(n.charAt(9), 10); valid = ((r < 2 && c === r) || (r >= 2 && c === 11 - r)) ? true : 'کد ملی معتبر نیست (رقم کنترل اشتباه است).'; }"
                   },
                   "clearOnHide": false,
                   "inputMode": "numeric",
@@ -298,23 +298,235 @@
           "clearOnHide": false
         },
         {
-          "label": "مدیر مستقیم (شناسه / کد ملی تأییدکننده)",
-          "key": "UpperManagerId",
-          "type": "textfield",
+          "label": "اداره کل / مدیریت محل خدمت (ستاد)",
+          "widget": "choicesjs",
+          "placeholder": "انتخاب کنید",
+          "searchEnabled": true,
+          "tableView": true,
+          "data": {
+            "values": [
+              {
+                "label": "اداره کل سرمایه انسانی و رفاه — معاونت توسعه سرمایه انسانی و پشتیبانی",
+                "value": "اداره کل سرمایه انسانی و رفاه"
+              },
+              {
+                "label": "اداره کل آموزش و تحقیقات — معاونت توسعه سرمایه انسانی و پشتیبانی",
+                "value": "اداره کل آموزش و تحقیقات"
+              },
+              {
+                "label": "اداره کل پشتیبانی و املاک — معاونت توسعه سرمایه انسانی و پشتیبانی",
+                "value": "اداره کل پشتیبانی و املاک"
+              },
+              {
+                "label": "اداره کل سازمان و بهبود روش‌ها — معاونت سازمان و برنامه‌ریزی",
+                "value": "اداره کل سازمان و بهبود روش‌ها"
+              },
+              {
+                "label": "اداره کل برنامه‌ریزی، کنترل برنامه‌ها و پایش عملکرد واحدها — معاونت سازمان و برنامه‌ریزی",
+                "value": "اداره کل برنامه‌ریزی، کنترل برنامه‌ها و پایش عملکرد واحدها"
+              },
+              {
+                "label": "اداره کل حفاظت پرسنلی — مدیریت امور حراست",
+                "value": "اداره کل حفاظت پرسنلی"
+              },
+              {
+                "label": "اداره کل حفاظت اطلاعات و اسناد — مدیریت امور حراست",
+                "value": "اداره کل حفاظت اطلاعات و اسناد"
+              },
+              {
+                "label": "اداره کل حفاظت فیزیکی — مدیریت امور حراست",
+                "value": "اداره کل حفاظت فیزیکی"
+              },
+              {
+                "label": "اداره کل بازرسی و نظارت — مدیریت امور بازرسی، نظارت و صیانت از مشتریان",
+                "value": "اداره کل بازرسی و نظارت"
+              },
+              {
+                "label": "اداره کل صیانت از مشتریان و سلامت اداری — مدیریت امور بازرسی، نظارت و صیانت از مشتریان",
+                "value": "اداره کل صیانت از مشتریان و سلامت اداری"
+              },
+              {
+                "label": "اداره کل بانکداری شرکتی و امور مشتریان حقوقی — مدیریت امور بانکداری شرکتی و بازاریابی",
+                "value": "اداره کل بانکداری شرکتی و امور مشتریان حقوقی"
+              },
+              {
+                "label": "اداره کل بازاریابی و امور مشتریان حقیقی — مدیریت امور بانکداری شرکتی و بازاریابی",
+                "value": "اداره کل بازاریابی و امور مشتریان حقیقی"
+              },
+              {
+                "label": "اداره کل امور شعب — مدیریت امور استان‌ها و مناطق",
+                "value": "اداره کل امور شعب"
+              },
+              {
+                "label": "اداره کل امور بانکی روستایی — مدیریت امور استان‌ها و مناطق",
+                "value": "اداره کل امور بانکی روستایی"
+              },
+              {
+                "label": "شعبه مستقل متمرکز (دیجیتال) — مدیریت امور استان‌ها و مناطق",
+                "value": "شعبه مستقل متمرکز (دیجیتال)"
+              },
+              {
+                "label": "اداره کل حسابداری و امور سهام — معاونت مالی و سرمایه‌گذاری",
+                "value": "اداره کل حسابداری و امور سهام"
+              },
+              {
+                "label": "اداره کل خزانه‌داری و نظام‌های پرداخت — معاونت مالی و سرمایه‌گذاری",
+                "value": "اداره کل خزانه‌داری و نظام‌های پرداخت"
+              },
+              {
+                "label": "اداره کل آمار و بودجه — معاونت مالی و سرمایه‌گذاری",
+                "value": "اداره کل آمار و بودجه"
+              },
+              {
+                "label": "اداره کل تأمین و نظارت بر سامانه‌های نرم‌افزاری — معاونت فناوری اطلاعات",
+                "value": "اداره کل تأمین و نظارت بر سامانه‌های نرم‌افزاری"
+              },
+              {
+                "label": "اداره کل توسعه بانکداری الکترونیک — معاونت فناوری اطلاعات",
+                "value": "اداره کل توسعه بانکداری الکترونیک"
+              },
+              {
+                "label": "اداره کل امنیت و زیرساخت — معاونت فناوری اطلاعات",
+                "value": "اداره کل امنیت و زیرساخت"
+              },
+              {
+                "label": "اداره کل اعتبارات — معاونت اعتباری و بین‌الملل",
+                "value": "اداره کل اعتبارات"
+              },
+              {
+                "label": "اداره کل بررسی و نظارت بر طرح‌ها — معاونت اعتباری و بین‌الملل",
+                "value": "اداره کل بررسی و نظارت بر طرح‌ها"
+              },
+              {
+                "label": "اداره کل امور بین‌الملل — معاونت اعتباری و بین‌الملل",
+                "value": "اداره کل امور بین‌الملل"
+              },
+              {
+                "label": "اداره کل پیگیری و وصول مطالبات — معاونت اعتباری و بین‌الملل",
+                "value": "اداره کل پیگیری و وصول مطالبات"
+              },
+              {
+                "label": "اداره کل تأمین مالی طرح‌های نوآورانه — معاونت اعتباری و بین‌الملل",
+                "value": "اداره کل تأمین مالی طرح‌های نوآورانه"
+              },
+              {
+                "label": "اداره کل حقوقی — مدیرعامل",
+                "value": "اداره کل حقوقی"
+              },
+              {
+                "label": "اداره کل روابط عمومی — مدیرعامل",
+                "value": "اداره کل روابط عمومی"
+              },
+              {
+                "label": "اداره کل حوزه مدیریت — مدیرعامل",
+                "value": "اداره کل حوزه مدیریت"
+              },
+              {
+                "label": "اداره کل حسابرسی داخلی — مدیرعامل",
+                "value": "اداره کل حسابرسی داخلی"
+              },
+              {
+                "label": "اداره کل مبارزه با پولشویی و تأمین مالی تروریسم — مدیرعامل",
+                "value": "اداره کل مبارزه با پولشویی و تأمین مالی تروریسم"
+              },
+              {
+                "label": "اداره کل رعایت قوانین و مقررات (تطبیق) — مدیرعامل",
+                "value": "اداره کل رعایت قوانین و مقررات (تطبیق)"
+              },
+              {
+                "label": "اداره کل مدیریت ریسک — مدیرعامل",
+                "value": "اداره کل مدیریت ریسک"
+              },
+              {
+                "label": "هسته گزینش — مدیرعامل",
+                "value": "هسته گزینش"
+              },
+              {
+                "label": "قائم‌مقام مدیرعامل — مدیرعامل",
+                "value": "قائم‌مقام مدیرعامل"
+              },
+              {
+                "label": "خود معاونت توسعه سرمایه انسانی و پشتیبانی (تأییدکننده: مدیرعامل)",
+                "value": "معاونت توسعه سرمایه انسانی و پشتیبانی"
+              },
+              {
+                "label": "خود معاونت سازمان و برنامه‌ریزی (تأییدکننده: مدیرعامل)",
+                "value": "معاونت سازمان و برنامه‌ریزی"
+              },
+              {
+                "label": "خود مدیریت امور حراست (تأییدکننده: مدیرعامل)",
+                "value": "مدیریت امور حراست"
+              },
+              {
+                "label": "خود مدیریت امور بازرسی، نظارت و صیانت از مشتریان (تأییدکننده: مدیرعامل)",
+                "value": "مدیریت امور بازرسی، نظارت و صیانت از مشتریان"
+              },
+              {
+                "label": "خود مدیریت امور بانکداری شرکتی و بازاریابی (تأییدکننده: مدیرعامل)",
+                "value": "مدیریت امور بانکداری شرکتی و بازاریابی"
+              },
+              {
+                "label": "خود مدیریت امور استان‌ها و مناطق (تأییدکننده: مدیرعامل)",
+                "value": "مدیریت امور استان‌ها و مناطق"
+              },
+              {
+                "label": "خود معاونت مالی و سرمایه‌گذاری (تأییدکننده: مدیرعامل)",
+                "value": "معاونت مالی و سرمایه‌گذاری"
+              },
+              {
+                "label": "خود معاونت فناوری اطلاعات (تأییدکننده: مدیرعامل)",
+                "value": "معاونت فناوری اطلاعات"
+              },
+              {
+                "label": "خود معاونت اعتباری و بین‌الملل (تأییدکننده: مدیرعامل)",
+                "value": "معاونت اعتباری و بین‌الملل"
+              }
+            ]
+          },
+          "key": "HQUnit",
+          "type": "select",
           "input": true,
           "clearOnHide": false,
           "validate": {
             "required": true
           },
           "errors": {
-            "required": "تکمیل «{{ field }}» الزامی است."
+            "required": "{{ field }} بایستی انتخاب شود."
           },
           "conditional": {
             "show": true,
             "when": "RequestCategory",
             "eq": "HQ"
           },
-          "description": "درخواست ستادی توسط مدیر مستقیم شما تأیید می‌شود (برای برخی افراد، مدیرعامل مدیر مستقیم است)."
+          "description": "مدیر مستقیم از روی چارت سازمانی تعیین می‌شود."
+        },
+        {
+          "label": "تأییدکننده (مدیر مستقیم) طبق چارت",
+          "key": "UpperManagerTitle",
+          "type": "textfield",
+          "input": true,
+          "disabled": true,
+          "clearOnHide": false,
+          "calculateValue": "var M = {\"اداره کل سرمایه انسانی و رفاه\": \"معاونت توسعه سرمایه انسانی و پشتیبانی\", \"اداره کل آموزش و تحقیقات\": \"معاونت توسعه سرمایه انسانی و پشتیبانی\", \"اداره کل پشتیبانی و املاک\": \"معاونت توسعه سرمایه انسانی و پشتیبانی\", \"اداره کل سازمان و بهبود روش‌ها\": \"معاونت سازمان و برنامه‌ریزی\", \"اداره کل برنامه‌ریزی، کنترل برنامه‌ها و پایش عملکرد واحدها\": \"معاونت سازمان و برنامه‌ریزی\", \"اداره کل حفاظت پرسنلی\": \"مدیریت امور حراست\", \"اداره کل حفاظت اطلاعات و اسناد\": \"مدیریت امور حراست\", \"اداره کل حفاظت فیزیکی\": \"مدیریت امور حراست\", \"اداره کل بازرسی و نظارت\": \"مدیریت امور بازرسی، نظارت و صیانت از مشتریان\", \"اداره کل صیانت از مشتریان و سلامت اداری\": \"مدیریت امور بازرسی، نظارت و صیانت از مشتریان\", \"اداره کل بانکداری شرکتی و امور مشتریان حقوقی\": \"مدیریت امور بانکداری شرکتی و بازاریابی\", \"اداره کل بازاریابی و امور مشتریان حقیقی\": \"مدیریت امور بانکداری شرکتی و بازاریابی\", \"اداره کل امور شعب\": \"مدیریت امور استان‌ها و مناطق\", \"اداره کل امور بانکی روستایی\": \"مدیریت امور استان‌ها و مناطق\", \"شعبه مستقل متمرکز (دیجیتال)\": \"مدیریت امور استان‌ها و مناطق\", \"اداره کل حسابداری و امور سهام\": \"معاونت مالی و سرمایه‌گذاری\", \"اداره کل خزانه‌داری و نظام‌های پرداخت\": \"معاونت مالی و سرمایه‌گذاری\", \"اداره کل آمار و بودجه\": \"معاونت مالی و سرمایه‌گذاری\", \"اداره کل تأمین و نظارت بر سامانه‌های نرم‌افزاری\": \"معاونت فناوری اطلاعات\", \"اداره کل توسعه بانکداری الکترونیک\": \"معاونت فناوری اطلاعات\", \"اداره کل امنیت و زیرساخت\": \"معاونت فناوری اطلاعات\", \"اداره کل اعتبارات\": \"معاونت اعتباری و بین‌الملل\", \"اداره کل بررسی و نظارت بر طرح‌ها\": \"معاونت اعتباری و بین‌الملل\", \"اداره کل امور بین‌الملل\": \"معاونت اعتباری و بین‌الملل\", \"اداره کل پیگیری و وصول مطالبات\": \"معاونت اعتباری و بین‌الملل\", \"اداره کل تأمین مالی طرح‌های نوآورانه\": \"معاونت اعتباری و بین‌الملل\", \"اداره کل حقوقی\": \"مدیرعامل\", \"اداره کل روابط عمومی\": \"مدیرعامل\", \"اداره کل حوزه مدیریت\": \"مدیرعامل\", \"اداره کل حسابرسی داخلی\": \"مدیرعامل\", \"اداره کل مبارزه با پولشویی و تأمین مالی تروریسم\": \"مدیرعامل\", \"اداره کل رعایت قوانین و مقررات (تطبیق)\": \"مدیرعامل\", \"اداره کل مدیریت ریسک\": \"مدیرعامل\", \"هسته گزینش\": \"مدیرعامل\", \"قائم‌مقام مدیرعامل\": \"مدیرعامل\", \"معاونت توسعه سرمایه انسانی و پشتیبانی\": \"مدیرعامل\", \"معاونت سازمان و برنامه‌ریزی\": \"مدیرعامل\", \"مدیریت امور حراست\": \"مدیرعامل\", \"مدیریت امور بازرسی، نظارت و صیانت از مشتریان\": \"مدیرعامل\", \"مدیریت امور بانکداری شرکتی و بازاریابی\": \"مدیرعامل\", \"مدیریت امور استان‌ها و مناطق\": \"مدیرعامل\", \"معاونت مالی و سرمایه‌گذاری\": \"مدیرعامل\", \"معاونت فناوری اطلاعات\": \"مدیرعامل\", \"معاونت اعتباری و بین‌الملل\": \"مدیرعامل\"}; value = M[data.HQUnit] || '';",
+          "conditional": {
+            "show": true,
+            "when": "RequestCategory",
+            "eq": "HQ"
+          }
+        },
+        {
+          "label": "شناسه تأییدکننده",
+          "key": "UpperManagerId",
+          "type": "textfield",
+          "input": true,
+          "disabled": true,
+          "clearOnHide": false,
+          "calculateValue": "var M = {\"اداره کل سرمایه انسانی و رفاه\": \"معاونت توسعه سرمایه انسانی و پشتیبانی\", \"اداره کل آموزش و تحقیقات\": \"معاونت توسعه سرمایه انسانی و پشتیبانی\", \"اداره کل پشتیبانی و املاک\": \"معاونت توسعه سرمایه انسانی و پشتیبانی\", \"اداره کل سازمان و بهبود روش‌ها\": \"معاونت سازمان و برنامه‌ریزی\", \"اداره کل برنامه‌ریزی، کنترل برنامه‌ها و پایش عملکرد واحدها\": \"معاونت سازمان و برنامه‌ریزی\", \"اداره کل حفاظت پرسنلی\": \"مدیریت امور حراست\", \"اداره کل حفاظت اطلاعات و اسناد\": \"مدیریت امور حراست\", \"اداره کل حفاظت فیزیکی\": \"مدیریت امور حراست\", \"اداره کل بازرسی و نظارت\": \"مدیریت امور بازرسی، نظارت و صیانت از مشتریان\", \"اداره کل صیانت از مشتریان و سلامت اداری\": \"مدیریت امور بازرسی، نظارت و صیانت از مشتریان\", \"اداره کل بانکداری شرکتی و امور مشتریان حقوقی\": \"مدیریت امور بانکداری شرکتی و بازاریابی\", \"اداره کل بازاریابی و امور مشتریان حقیقی\": \"مدیریت امور بانکداری شرکتی و بازاریابی\", \"اداره کل امور شعب\": \"مدیریت امور استان‌ها و مناطق\", \"اداره کل امور بانکی روستایی\": \"مدیریت امور استان‌ها و مناطق\", \"شعبه مستقل متمرکز (دیجیتال)\": \"مدیریت امور استان‌ها و مناطق\", \"اداره کل حسابداری و امور سهام\": \"معاونت مالی و سرمایه‌گذاری\", \"اداره کل خزانه‌داری و نظام‌های پرداخت\": \"معاونت مالی و سرمایه‌گذاری\", \"اداره کل آمار و بودجه\": \"معاونت مالی و سرمایه‌گذاری\", \"اداره کل تأمین و نظارت بر سامانه‌های نرم‌افزاری\": \"معاونت فناوری اطلاعات\", \"اداره کل توسعه بانکداری الکترونیک\": \"معاونت فناوری اطلاعات\", \"اداره کل امنیت و زیرساخت\": \"معاونت فناوری اطلاعات\", \"اداره کل اعتبارات\": \"معاونت اعتباری و بین‌الملل\", \"اداره کل بررسی و نظارت بر طرح‌ها\": \"معاونت اعتباری و بین‌الملل\", \"اداره کل امور بین‌الملل\": \"معاونت اعتباری و بین‌الملل\", \"اداره کل پیگیری و وصول مطالبات\": \"معاونت اعتباری و بین‌الملل\", \"اداره کل تأمین مالی طرح‌های نوآورانه\": \"معاونت اعتباری و بین‌الملل\", \"اداره کل حقوقی\": \"مدیرعامل\", \"اداره کل روابط عمومی\": \"مدیرعامل\", \"اداره کل حوزه مدیریت\": \"مدیرعامل\", \"اداره کل حسابرسی داخلی\": \"مدیرعامل\", \"اداره کل مبارزه با پولشویی و تأمین مالی تروریسم\": \"مدیرعامل\", \"اداره کل رعایت قوانین و مقررات (تطبیق)\": \"مدیرعامل\", \"اداره کل مدیریت ریسک\": \"مدیرعامل\", \"هسته گزینش\": \"مدیرعامل\", \"قائم‌مقام مدیرعامل\": \"مدیرعامل\", \"معاونت توسعه سرمایه انسانی و پشتیبانی\": \"مدیرعامل\", \"معاونت سازمان و برنامه‌ریزی\": \"مدیرعامل\", \"مدیریت امور حراست\": \"مدیرعامل\", \"مدیریت امور بازرسی، نظارت و صیانت از مشتریان\": \"مدیرعامل\", \"مدیریت امور بانکداری شرکتی و بازاریابی\": \"مدیرعامل\", \"مدیریت امور استان‌ها و مناطق\": \"مدیرعامل\", \"معاونت مالی و سرمایه‌گذاری\": \"مدیرعامل\", \"معاونت فناوری اطلاعات\": \"مدیرعامل\", \"معاونت اعتباری و بین‌الملل\": \"مدیرعامل\"}; var U = {\"معاونت توسعه سرمایه انسانی و پشتیبانی\": \"0073249361\", \"مدیریت امور حراست\": \"0073249361\", \"مدیریت امور بانکداری شرکتی و بازاریابی\": \"0073249361\", \"معاونت فناوری اطلاعات\": \"0073249361\", \"معاونت اعتباری و بین‌الملل\": \"0073249361\", \"معاونت مالی و سرمایه‌گذاری\": \"0073249361\", \"مدیرعامل\": \"0073249361\", \"مدیریت امور بازرسی، نظارت و صیانت از مشتریان\": \"0073249361\", \"معاونت سازمان و برنامه‌ریزی\": \"0073249361\", \"مدیریت امور استان‌ها و مناطق\": \"0073249361\"}; var t = M[data.HQUnit]; value = (t && U[t]) ? U[t] : '0073249361';",
+          "conditional": {
+            "show": true,
+            "when": "RequestCategory",
+            "eq": "HQ"
+          }
         },
         {
           "label": "Columns",
