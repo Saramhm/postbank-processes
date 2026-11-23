@@ -700,12 +700,12 @@ try {
     <bpmn:endEvent id="End_Inspection" name="پایان (رونوشت بازرسی)">
       <bpmn:incoming>Flow_Insp_End</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:exclusiveGateway id="Gateway_NeedFinal" name="نوع درخواست؟" default="Flow_NF_No">
+    <bpmn:exclusiveGateway id="Gateway_NeedFinal" name="تأیید نهایی مدیرعامل لازم است؟" default="Flow_NF_No">
       <bpmn:incoming>Flow_Fork_Route</bpmn:incoming>
       <bpmn:outgoing>Flow_NF_Yes</bpmn:outgoing>
       <bpmn:outgoing>Flow_NF_No</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:userTask id="Task_FinalApproval" name="تأیید نهایی درخواست – مقام مافوق (مدیرعامل / معاون / مدیر امور)" camunda:formKey="embedded:/camunda/forms/formioWizardCallApi.html?deployment=HousingDepositCompleteWizard.json&#38;var=Submission&#38;DefaultVal=Submission&#38;StateTask=18" camunda:assignee="${PM}">
+    <bpmn:userTask id="Task_FinalApproval" name="تأیید نهایی درخواست – مدیرعامل" camunda:formKey="embedded:/camunda/forms/formioWizardCallApi.html?deployment=HousingDepositCompleteWizard.json&#38;var=Submission&#38;DefaultVal=Submission&#38;StateTask=18" camunda:assignee="${PM}">
       <bpmn:extensionElements>
         <camunda:executionListener event="end">
           <camunda:script scriptFormat="javascript">try {
@@ -731,7 +731,7 @@ try {
       <bpmn:outgoing>Flow_FA_Yes</bpmn:outgoing>
       <bpmn:outgoing>Flow_FA_No</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:endEvent id="End_RejectedFinal" name="پایان (عدم تأیید مقام مافوق)">
+    <bpmn:endEvent id="End_RejectedFinal" name="پایان (عدم تأیید مدیرعامل)">
       <bpmn:incoming>Flow_FA_No</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:userTask id="Task_HRHeadReferral" name="رئیس اداره کل سرمایه انسانی – ارجاع به شعبه / مدیریت استان" camunda:formKey="embedded:/camunda/forms/formioWizardCallApi.html?deployment=HousingDepositCompleteWizard.json&#38;var=Submission&#38;DefaultVal=Submission&#38;StateTask=19" camunda:assignee="${PM}">
@@ -1461,10 +1461,10 @@ function hdNow() { try { var Z = Java.type("java.time.ZonedDateTime"), I = Java.
     <bpmn:sequenceFlow id="Flow_NExit_NSet" sourceRef="Notify_Exit" targetRef="Notify_Settlement" />
     <bpmn:sequenceFlow id="Flow_NSet_End" sourceRef="Notify_Settlement" targetRef="End_Handover" />
     <bpmn:sequenceFlow id="Flow_Fork_Route" sourceRef="Gateway_Fork" targetRef="Gateway_NeedFinal" />
-    <bpmn:sequenceFlow id="Flow_NF_Yes" name="ستاد" sourceRef="Gateway_NeedFinal" targetRef="Task_FinalApproval">
+    <bpmn:sequenceFlow id="Flow_NF_Yes" name="ستاد (مدیر مستقیم = مدیرعامل)" sourceRef="Gateway_NeedFinal" targetRef="Task_FinalApproval">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${_requestCategory == "HQ" &amp;&amp; _directIsCEO == "true"}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="Flow_NF_No" name="استان" sourceRef="Gateway_NeedFinal" targetRef="Task_HRHeadReferral" />
+    <bpmn:sequenceFlow id="Flow_NF_No" name="استان / سایر ستادی‌ها" sourceRef="Gateway_NeedFinal" targetRef="Task_HRHeadReferral" />
     <bpmn:sequenceFlow id="Flow_FA_G" sourceRef="Task_FinalApproval" targetRef="Gateway_Final" />
     <bpmn:sequenceFlow id="Flow_FA_Yes" name="بله" sourceRef="Gateway_Final" targetRef="Task_HRHeadReferral">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${_finalApproval == "approved"}</bpmn:conditionExpression>

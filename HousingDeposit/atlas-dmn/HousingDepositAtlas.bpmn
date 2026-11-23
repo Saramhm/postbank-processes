@@ -228,12 +228,12 @@
       <bpmn:outgoing>F15</bpmn:outgoing>
       <bpmn:outgoing>F16</bpmn:outgoing>
     </bpmn:parallelGateway>
-    <bpmn:exclusiveGateway id="Gateway_NeedFinal" name="نوع درخواست؟" default="Flow_NF_No">
+    <bpmn:exclusiveGateway id="Gateway_NeedFinal" name="تأیید نهایی مدیرعامل لازم است؟" default="Flow_NF_No">
       <bpmn:incoming>F15</bpmn:incoming>
       <bpmn:outgoing>Flow_NF_Yes</bpmn:outgoing>
       <bpmn:outgoing>Flow_NF_No</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:userTask id="Task_FinalApproval" name="تأیید نهایی درخواست – مقام مافوق (مدیرعامل / معاون / مدیر امور)" camunda:asyncBefore="true" camunda:formKey="FORM_FINAL" camunda:assignee="${starter}">
+    <bpmn:userTask id="Task_FinalApproval" name="تأیید نهایی درخواست – مدیرعامل" camunda:asyncBefore="true" camunda:formKey="FORM_FINAL" camunda:assignee="${starter}">
       <bpmn:incoming>Flow_NF_Yes</bpmn:incoming>
       <bpmn:outgoing>Flow_FA_G</bpmn:outgoing>
     </bpmn:userTask>
@@ -242,7 +242,7 @@
       <bpmn:outgoing>Flow_FA_Yes</bpmn:outgoing>
       <bpmn:outgoing>Flow_FA_No</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:endEvent id="End_RejectedFinal" name="پایان (عدم تأیید مقام مافوق)">
+    <bpmn:endEvent id="End_RejectedFinal" name="پایان (عدم تأیید مدیرعامل)">
       <bpmn:incoming>Flow_FA_No</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:userTask id="Task_HRHeadReferral" name="رئیس اداره کل سرمایه انسانی – ارجاع به شعبه / مدیریت استان" camunda:asyncBefore="true" camunda:formKey="FORM_HRHEAD" camunda:assignee="${starter}">
@@ -306,10 +306,10 @@
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression" language="javascript">typeof HRApproval !== "undefined" &amp;&amp; HRApproval == "rejected" &amp;&amp; RequestCategory == "HQ";</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="F15" sourceRef="Gateway_Fork" targetRef="Gateway_NeedFinal" />
-    <bpmn:sequenceFlow id="Flow_NF_Yes" name="ستاد" sourceRef="Gateway_NeedFinal" targetRef="Task_FinalApproval">
+    <bpmn:sequenceFlow id="Flow_NF_Yes" name="ستاد (مدیر مستقیم = مدیرعامل)" sourceRef="Gateway_NeedFinal" targetRef="Task_FinalApproval">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression" language="javascript">typeof RequestCategory !== "undefined" &amp;&amp; RequestCategory == "HQ" &amp;&amp; typeof UpperManagerTitle !== "undefined" &amp;&amp; UpperManagerTitle == "مدیرعامل";</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="Flow_NF_No" name="استان" sourceRef="Gateway_NeedFinal" targetRef="Task_HRHeadReferral" />
+    <bpmn:sequenceFlow id="Flow_NF_No" name="استان / سایر ستادی‌ها" sourceRef="Gateway_NeedFinal" targetRef="Task_HRHeadReferral" />
     <bpmn:sequenceFlow id="Flow_FA_G" sourceRef="Task_FinalApproval" targetRef="Gateway_Final" />
     <bpmn:sequenceFlow id="Flow_FA_Yes" name="بله" sourceRef="Gateway_Final" targetRef="Task_HRHeadReferral">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression" language="javascript">typeof FinalApproval !== "undefined" &amp;&amp; FinalApproval == "approved";</bpmn:conditionExpression>

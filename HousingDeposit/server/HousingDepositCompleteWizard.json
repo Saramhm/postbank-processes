@@ -2418,7 +2418,7 @@
       }
     },
     {
-      "title": "تأیید نهایی درخواست – مقام مافوق",
+      "title": "تأیید نهایی درخواست – مدیرعامل",
       "theme": "info",
       "collapsible": false,
       "key": "stepFinalApproval",
@@ -2817,7 +2817,7 @@
           ]
         },
         {
-          "label": "نظر مقام مافوق (تأیید نهایی درخواست)",
+          "label": "نظر مدیرعامل (تأیید نهایی درخواست)",
           "optionsLabelPosition": "right",
           "inline": false,
           "tableView": false,
@@ -2846,7 +2846,7 @@
           "clearOnHide": false
         },
         {
-          "label": "توضیحات مقام مافوق",
+          "label": "توضیحات مدیرعامل",
           "autoExpand": true,
           "tableView": true,
           "key": "FinalApproverNote",
@@ -8024,7 +8024,7 @@
               "tableView": false,
               "tag": "div",
               "refreshOnChange": true,
-              "content": "<div class=\"alert alert-secondary\" style=\"margin-bottom:0\"><div><b>درخواست‌دهنده:</b> {{ data.ApplicantFirstName || '' }} {{ data.ApplicantLastName || '' }} — {{ data.PostTitle || '' }} — {{ data.ServiceUnit || '' }} ({{ data.RequestCategory == 'HQ' ? 'ستاد' : 'استان / منطقه' }})</div>{{ data.HasPreviousDeposit == 'yes' ? '<div><b>ودیعه قبلی دریافت‌شده:</b> ' + Number(data.PreviousDepositAmount || 0).toLocaleString('en-US') + ' ریال</div>' : '' }}<table style=\"margin-top:6px\">{{ data.CEOApproval ? '<tr><td style=\"padding:4px 8px\">مدیر مستقیم</td><td style=\"padding:4px 8px\">' + (data.CEOApproval == 'approved' ? 'تأیید شد' : (data.CEOApproval == 'rejected' ? 'رد شد' : data.CEOApproval)) + ((data.CEONote) ? ' — ' + data.CEONote : '') + '</td></tr>' : '' }}{{ data.ProvinceApproval ? '<tr><td style=\"padding:4px 8px\">مدیریت شعب استان / منطقه</td><td style=\"padding:4px 8px\">' + (data.ProvinceApproval == 'approved' ? 'تأیید شد' : (data.ProvinceApproval == 'rejected' ? 'رد شد' : data.ProvinceApproval)) + ((data.ProvinceNote) ? ' — ' + data.ProvinceNote : '') + '</td></tr>' : '' }}{{ data.SecurityApproval ? '<tr><td style=\"padding:4px 8px\">حراست تهران</td><td style=\"padding:4px 8px\">' + (data.SecurityApproval == 'approved' ? 'تأیید شد' : (data.SecurityApproval == 'rejected' ? 'رد شد' : data.SecurityApproval)) + ((data.SecurityNote) ? ' — ' + data.SecurityNote : '') + '</td></tr>' : '' }}{{ data.HRApproval ? '<tr><td style=\"padding:4px 8px\">مدیرکل سرمایه انسانی و رفاه</td><td style=\"padding:4px 8px\">' + (data.HRApproval == 'approved' ? 'تأیید شد' : (data.HRApproval == 'rejected' ? 'رد شد' : data.HRApproval)) + ((data.HRNote) ? ' — ' + data.HRNote : '') + '</td></tr>' : '' }}{{ data.FinalApproval ? '<tr><td style=\"padding:4px 8px\">مقام مافوق (مدیرعامل / معاون / مدیر امور)</td><td style=\"padding:4px 8px\">' + (data.FinalApproval == 'approved' ? 'تأیید شد' : (data.FinalApproval == 'rejected' ? 'رد شد' : data.FinalApproval)) + ((data.FinalApproverNote) ? ' — ' + data.FinalApproverNote : '') + '</td></tr>' : '' }}{{ data.AccApproval ? '<tr><td style=\"padding:4px 8px\">رئیس حوزه حسابداری شعبه</td><td style=\"padding:4px 8px\">' + (data.AccApproval == 'approved' ? 'تأیید شد' : (data.AccApproval == 'rejected' ? 'رد شد' : data.AccApproval)) + ((data.AccNote) ? ' — ' + data.AccNote : '') + '</td></tr>' : '' }}</table></div>"
+              "content": "<div class=\"alert alert-secondary\" style=\"margin-bottom:0\"><div><b>درخواست‌دهنده:</b> {{ data.ApplicantFirstName || '' }} {{ data.ApplicantLastName || '' }} — {{ data.PostTitle || '' }} — {{ data.ServiceUnit || '' }} ({{ data.RequestCategory == 'HQ' ? 'ستاد' : 'استان / منطقه' }})</div>{{ data.HasPreviousDeposit == 'yes' ? '<div><b>ودیعه قبلی دریافت‌شده:</b> ' + Number(data.PreviousDepositAmount || 0).toLocaleString('en-US') + ' ریال</div>' : '' }}<table style=\"margin-top:6px\">{{ data.CEOApproval ? '<tr><td style=\"padding:4px 8px\">مدیر مستقیم</td><td style=\"padding:4px 8px\">' + (data.CEOApproval == 'approved' ? 'تأیید شد' : (data.CEOApproval == 'rejected' ? 'رد شد' : data.CEOApproval)) + ((data.CEONote) ? ' — ' + data.CEONote : '') + '</td></tr>' : '' }}{{ data.ProvinceApproval ? '<tr><td style=\"padding:4px 8px\">مدیریت شعب استان / منطقه</td><td style=\"padding:4px 8px\">' + (data.ProvinceApproval == 'approved' ? 'تأیید شد' : (data.ProvinceApproval == 'rejected' ? 'رد شد' : data.ProvinceApproval)) + ((data.ProvinceNote) ? ' — ' + data.ProvinceNote : '') + '</td></tr>' : '' }}{{ data.SecurityApproval ? '<tr><td style=\"padding:4px 8px\">حراست تهران</td><td style=\"padding:4px 8px\">' + (data.SecurityApproval == 'approved' ? 'تأیید شد' : (data.SecurityApproval == 'rejected' ? 'رد شد' : data.SecurityApproval)) + ((data.SecurityNote) ? ' — ' + data.SecurityNote : '') + '</td></tr>' : '' }}{{ data.HRApproval ? '<tr><td style=\"padding:4px 8px\">مدیرکل سرمایه انسانی و رفاه</td><td style=\"padding:4px 8px\">' + (data.HRApproval == 'approved' ? 'تأیید شد' : (data.HRApproval == 'rejected' ? 'رد شد' : data.HRApproval)) + ((data.HRNote) ? ' — ' + data.HRNote : '') + '</td></tr>' : '' }}{{ data.FinalApproval ? '<tr><td style=\"padding:4px 8px\">مدیرعامل (تأیید نهایی)</td><td style=\"padding:4px 8px\">' + (data.FinalApproval == 'approved' ? 'تأیید شد' : (data.FinalApproval == 'rejected' ? 'رد شد' : data.FinalApproval)) + ((data.FinalApproverNote) ? ' — ' + data.FinalApproverNote : '') + '</td></tr>' : '' }}{{ data.AccApproval ? '<tr><td style=\"padding:4px 8px\">رئیس حوزه حسابداری شعبه</td><td style=\"padding:4px 8px\">' + (data.AccApproval == 'approved' ? 'تأیید شد' : (data.AccApproval == 'rejected' ? 'رد شد' : data.AccApproval)) + ((data.AccNote) ? ' — ' + data.AccNote : '') + '</td></tr>' : '' }}</table></div>"
             },
             {
               "label": "CEOApproval",
