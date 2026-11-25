@@ -1,0 +1,14 @@
+{
+ "Task_ProvinceReview": 1,
+ "Task_SecurityReview": 2,
+ "Task_HRHeadAssign": 3,
+ "Task_HRExpert": 4,
+ "Task_HRReview": 5,
+ "Task_HRHeadReferral": 6,
+ "Task_Referral": 7,
+ "Task_Legal": 8,
+ "Task_File": 9,
+ "Task_Payment": 10,
+ "Task_LeaseInfo": 11,
+ "Task_Database": 12
+}

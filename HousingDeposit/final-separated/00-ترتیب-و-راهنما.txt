@@ -1,0 +1,96 @@
+بسته‌ی نهایی – فرایند ودیعه مسکن مدیران غیربومی (جداشده: ستاد / استان)
+============================================================
+چه چیزی عوض شده:
+- دو فرایند کاملاً جدا: «ستاد» (کلید HousingDepositHQ) و «استان / منطقه» (کلید HousingDepositProvince). هر کدام BPMN، فرم‌ها، اطلاعیه و نام‌های خودش را دارد. فرم و تسک مشترکی نیست.
+- ستاد: اگر مدیر مستقیم غیر از مدیرعامل است اول تأیید مدیر مستقیم؛ بعد رئیس اداره کل سرمایه انسانی ← کارشناس ← رئیس اداره کل سرمایه انسانی (تأیید) ← تأیید مدیر مافوق (برای همه‌ی ستاد، قبل از ارجاع) ← ارجاع به شعبه شهید بهشتی ← ارجاع برای پرداخت – شعبه شهید بهشتی ← حقوقی (با شماره حساب واسط) ← پرونده ← رئیس شعبه ← رئیس حوزه حسابداری (تأیید) ← واریز ← رئیس شعبه ← ذی‌حساب.
+- استان: مدیریت شعب استان ← (فقط رئیس حوزه حراست: مدیر امور حراست) ← رئیس اداره کل سرمایه انسانی ← کارشناس ← رئیس اداره کل سرمایه انسانی ← ارجاع به مدیریت شعب استان / منطقه ← ارجاع برای پرداخت – مدیریت شعب استان / منطقه ← حقوقی ← پرونده ← واریز ← ذی‌حساب. در استان هیچ جا «حساب واسط» نیست.
+- نام‌ها: «مدیرکل» شد «رئیس اداره کل سرمایه انسانی»؛ «حراست تهران» شد «مدیر امور حراست».
+- ترتیب فرم‌ها دقیقاً مثل ترتیب مراحل فرایند شماره‌گذاری شده (HQ-01.. و PR-01..).
+- رونوشت بازرسی: در سرور یک اطلاعیه‌ی مستقل است (نمونه‌ی جدا که حتی اگر فرایند اصلی پیش برود در کارتابل می‌ماند تا «مشاهده شد» بزنید). در Atlas یک تسک موازی است و فرایند فقط وقتی تمام می‌شود که هم رونوشت دیده شود و هم مراحل اصلی تمام شوند (گیت‌وی موازی پایانی).
+- فعلاً همه‌ی تسک‌ها برای شروع‌کننده است (assignee).
+
+------------------------------------------------------------
+سرور (هر فرایند در پوشه‌ی جدا؛ چهار فایل هر پوشه را با هم و همین نام‌ها Deploy کنید)
+------------------------------------------------------------
+
+[HQ] server/hq/  — کلید فرایند: HousingDepositHQ
+StateTask | تسک
+        1 | Task_CEOReview
+        2 | Task_HRHeadAssign
+        3 | Task_HRExpert
+        4 | Task_HRReview
+        5 | Task_FinalApproval
+        6 | Task_HRHeadReferral
+        7 | Task_ReferralBranch
+        8 | Task_Legal
+        9 | Task_File
+       10 | Task_BranchRefAcc
+       11 | Task_AccApproval
+       12 | Task_Payment
+       13 | Task_BranchRefAccountant
+       14 | Task_LeaseInfo
+       15 | Task_Database
+
+[Province] server/province/  — کلید فرایند: HousingDepositProvince
+StateTask | تسک
+        1 | Task_ProvinceReview
+        2 | Task_SecurityReview
+        3 | Task_HRHeadAssign
+        4 | Task_HRExpert
+        5 | Task_HRReview
+        6 | Task_HRHeadReferral
+        7 | Task_Referral
+        8 | Task_Legal
+        9 | Task_File
+       10 | Task_Payment
+       11 | Task_LeaseInfo
+       12 | Task_Database
+
+------------------------------------------------------------
+Atlas (هر فرایند: یک BPMN + پوشه‌ی forms به ترتیب مراحل)
+------------------------------------------------------------
+
+[HQ] atlas/hq/ — BPMN: HousingDepositHQ.bpmn
+#   فایل فرم                           اسم پیشنهادی در Atlas                  تسک(ها)                                        Form key در BPMN
+01  HQ-01-StartForm.json            HousingDepositHQStartForm               Task_Request                                    FORM_HQ_01
+02  HQ-02-DirectManager.json        HousingDepositHQDirectManager           Task_CEOReview                                  FORM_HQ_02
+03  HQ-03-HRHead.json               HousingDepositHQHRHead                  Task_HRHeadAssign و Task_HRHeadReferral         FORM_HQ_03
+04  HQ-04-HRExpert.json             HousingDepositHQHRExpert                Task_HRExpert                                   FORM_HQ_04
+05  HQ-05-HRReview.json             HousingDepositHQHRReview                Task_HRReview                                   FORM_HQ_05
+06  HQ-06-SuperiorApproval.json     HousingDepositHQSuperiorApproval        Task_FinalApproval                              FORM_HQ_06
+07  HQ-07-Referral.json             HousingDepositHQReferral                Task_ReferralBranch                             FORM_HQ_07
+08  HQ-08-Legal.json                HousingDepositHQLegal                   Task_Legal                                      FORM_HQ_08
+09  HQ-09-File.json                 HousingDepositHQFile                    Task_File                                       FORM_HQ_09
+10  HQ-10-BranchHead.json           HousingDepositHQBranchHead              Task_BranchRefAcc و Task_BranchRefAccountant    FORM_HQ_10
+11  HQ-11-AccApproval.json          HousingDepositHQAccApproval             Task_AccApproval                                FORM_HQ_11
+12  HQ-12-Payment.json              HousingDepositHQPayment                 Task_Payment                                    FORM_HQ_12
+13  HQ-13-LeaseInfo.json            HousingDepositHQLeaseInfo               Task_LeaseInfo                                  FORM_HQ_13
+14  HQ-14-Database.json             HousingDepositHQDatabase                Task_Database                                   FORM_HQ_14
+15  HQ-15-Inspection.json           HousingDepositHQInspection              Task_Inspection                                 FORM_HQ_15
+بعد از ساخت و فعال کردن هر فرم، شماره‌ی آن را به‌جای FORM_... در Form key تسک بگذارید (فرم‌ها و کلیدهای قدیمی 65 و 185 دیگر استفاده نمی‌شوند).
+
+[Province] atlas/province/ — BPMN: HousingDepositProvince.bpmn
+#   فایل فرم                           اسم پیشنهادی در Atlas                  تسک(ها)                                        Form key در BPMN
+01  PR-01-StartForm.json            HousingDepositProvinceStartForm         Task_Request                                    FORM_PR_01
+02  PR-02-ProvinceReview.json       HousingDepositProvinceProvinceReview    Task_ProvinceReview                             FORM_PR_02
+03  PR-03-SecurityReview.json       HousingDepositProvinceSecurityReview    Task_SecurityReview                             FORM_PR_03
+04  PR-04-HRHead.json               HousingDepositProvinceHRHead            Task_HRHeadAssign و Task_HRHeadReferral         FORM_PR_04
+05  PR-05-HRExpert.json             HousingDepositProvinceHRExpert          Task_HRExpert                                   FORM_PR_05
+06  PR-06-HRReview.json             HousingDepositProvinceHRReview          Task_HRReview                                   FORM_PR_06
+07  PR-07-Referral.json             HousingDepositProvinceReferral          Task_ReferralProvince                           FORM_PR_07
+08  PR-08-Legal.json                HousingDepositProvinceLegal             Task_Legal                                      FORM_PR_08
+09  PR-09-File.json                 HousingDepositProvinceFile              Task_File                                       FORM_PR_09
+10  PR-10-Payment.json              HousingDepositProvincePayment           Task_Payment                                    FORM_PR_10
+11  PR-11-LeaseInfo.json            HousingDepositProvinceLeaseInfo         Task_LeaseInfo                                  FORM_PR_11
+12  PR-12-Database.json             HousingDepositProvinceDatabase          Task_Database                                   FORM_PR_12
+13  PR-13-Inspection.json           HousingDepositProvinceInspection        Task_Inspection                                 FORM_PR_13
+بعد از ساخت و فعال کردن هر فرم، شماره‌ی آن را به‌جای FORM_... در Form key تسک بگذارید (فرم‌ها و کلیدهای قدیمی 65 و 185 دیگر استفاده نمی‌شوند).
+
+-------------------------------------------------
+کدملی‌های تست
+-------------------------------------------------
+ستاد، مدیر مستقیم = مدیرعامل:   3358227863 بهزاد امیریان (ودیعه قبلی 22.5 میلیارد)   2708572393 مهرداد یوسف‌زاده (ودیعه قبلی 17.3 میلیارد)   0010000062 کامران صادقی
+ستاد، مدیر مستقیم = معاون:      0010000021 علی احمدی    0010000038 مریم رضایی
+استان:                           0010000054 نرگس حسینی (فارس)   0010000046 رضا کریمی (البرز، ودیعه قبلی 10 میلیارد)   0150303191 سارا محمدی (آذربایجان شرقی)
+رئیس حوزه حراست استان:          0010000070 حمید رضوانی
+(هر کد فقط در فرم شروع همان فرایند پر می‌شود؛ مثلاً کد ستادی در فرم استان چیزی پر نمی‌کند.)

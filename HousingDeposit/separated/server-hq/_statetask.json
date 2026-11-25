@@ -1,0 +1,17 @@
+{
+ "Task_CEOReview": 1,
+ "Task_HRHeadAssign": 2,
+ "Task_HRExpert": 3,
+ "Task_HRReview": 4,
+ "Task_FinalApproval": 5,
+ "Task_HRHeadReferral": 6,
+ "Task_ReferralBranch": 7,
+ "Task_Legal": 8,
+ "Task_File": 9,
+ "Task_BranchRefAcc": 10,
+ "Task_AccApproval": 11,
+ "Task_Payment": 12,
+ "Task_BranchRefAccountant": 13,
+ "Task_LeaseInfo": 14,
+ "Task_Database": 15
+}
