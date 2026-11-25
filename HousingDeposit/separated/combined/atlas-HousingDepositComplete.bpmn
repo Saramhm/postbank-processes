@@ -169,7 +169,7 @@
       <bpmn:outgoing>Flow_Route_HQ</bpmn:outgoing>
       <bpmn:outgoing>Flow_Route_Prov</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:userTask id="Task_FinalApproval" name="تأیید مدیر مافوق" camunda:asyncBefore="true" camunda:formKey="FORM_HQ_06" camunda:assignee="${starter}">
+    <bpmn:userTask id="Task_FinalApproval" name="تأیید مدیر مافوق (مدیرعامل)" camunda:asyncBefore="true" camunda:formKey="FORM_HQ_06" camunda:assignee="${starter}">
       <bpmn:incoming>Flow_Route_HQ</bpmn:incoming>
       <bpmn:outgoing>Flow_FA_G</bpmn:outgoing>
     </bpmn:userTask>

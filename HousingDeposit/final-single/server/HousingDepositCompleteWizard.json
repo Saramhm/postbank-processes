@@ -1622,7 +1622,7 @@
       }
     },
     {
-      "title": "تأیید مدیر مافوق",
+      "title": "تأیید مدیر مافوق (مدیرعامل)",
       "theme": "info",
       "collapsible": false,
       "key": "stepFinalApproval",
