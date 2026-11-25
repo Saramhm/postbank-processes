@@ -83,7 +83,7 @@
       <bpmn:incoming>F01</bpmn:incoming>
       <bpmn:outgoing>F02</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:exclusiveGateway id="Gateway_Category" name="نوع درخواست؟">
+    <bpmn:exclusiveGateway id="Gateway_Category" name="نوع درخواست؟" default="F04">
       <bpmn:incoming>F02</bpmn:incoming>
       <bpmn:outgoing>F03</bpmn:outgoing>
       <bpmn:outgoing>F04</bpmn:outgoing>
@@ -155,7 +155,7 @@
       <bpmn:outgoing>F12</bpmn:outgoing>
       <bpmn:outgoing>F14</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:exclusiveGateway id="GW_Rej" name="نوع درخواست؟">
+    <bpmn:exclusiveGateway id="GW_Rej" default="Flow_Rej_Prov" name="نوع درخواست؟">
       <bpmn:incoming>F14</bpmn:incoming>
       <bpmn:outgoing>Flow_Rej_HQ</bpmn:outgoing>
       <bpmn:outgoing>Flow_Rej_Prov</bpmn:outgoing>
@@ -168,7 +168,7 @@
     <bpmn:endEvent id="End_RejectedHQ" name="پایان (عدم تأیید رئیس اداره کل سرمایه انسانی)">
       <bpmn:incoming>Flow_Rej_HQ</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:exclusiveGateway id="GW_Route" name="نوع درخواست؟">
+    <bpmn:exclusiveGateway id="GW_Route" default="Flow_Route_Prov" name="نوع درخواست؟">
       <bpmn:incoming>F15</bpmn:incoming>
       <bpmn:outgoing>Flow_Route_HQ</bpmn:outgoing>
       <bpmn:outgoing>Flow_Route_Prov</bpmn:outgoing>
@@ -212,7 +212,7 @@
       <bpmn:incoming>Flow_Route_Prov</bpmn:incoming>
       <bpmn:outgoing>Flow_HRRef_Route</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:exclusiveGateway id="GW_Ref" name="نوع درخواست؟">
+    <bpmn:exclusiveGateway id="GW_Ref" default="Flow_Ref_Prov" name="نوع درخواست؟">
       <bpmn:incoming>Flow_HRRef_Route</bpmn:incoming>
       <bpmn:outgoing>Flow_Ref_HQ</bpmn:outgoing>
       <bpmn:outgoing>Flow_Ref_Prov</bpmn:outgoing>
@@ -292,7 +292,9 @@
     <bpmn:sequenceFlow id="F01" sourceRef="StartEvent_1" targetRef="Task_Request"/>
     <bpmn:sequenceFlow id="F02" sourceRef="Task_Request" targetRef="Gateway_Category"/>
     <bpmn:sequenceFlow id="F03" name="ستاد" sourceRef="Gateway_Category" targetRef="Gateway_Direct"><bpmn:conditionExpression xsi:type="bpmn:tFormalExpression" language="javascript">typeof RequestCategory !== 'undefined' &amp;&amp; RequestCategory == 'HQ';</bpmn:conditionExpression></bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="F04" name="استان" sourceRef="Gateway_Category" targetRef="Task_ProvinceReview_PR"><bpmn:conditionExpression xsi:type="bpmn:tFormalExpression" language="javascript">typeof RequestCategory !== 'undefined' &amp;&amp; RequestCategory == 'Province';</bpmn:conditionExpression></bpmn:sequenceFlow>
+    <bpmn:sequenceFlow name="استان" id="F04" sourceRef="Gateway_Category" targetRef="Task_ProvinceReview_PR">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression" language="javascript">typeof RequestCategory !== "undefined" &amp;&amp; RequestCategory == "Province";</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
     <bpmn:sequenceFlow name="سایر (اول مدیر مستقیم)" id="F03a" sourceRef="Gateway_Direct" targetRef="Task_CEOReview"/>
     <bpmn:sequenceFlow id="F03b" name="مدیرعامل (اول رئیس اداره کل سرمایه انسانی)" sourceRef="Gateway_Direct" targetRef="Task_HRHeadAssign"><bpmn:conditionExpression xsi:type="bpmn:tFormalExpression" language="javascript">typeof UpperManagerTitle !== "undefined" &amp;&amp; UpperManagerTitle == "مدیرعامل";</bpmn:conditionExpression></bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="F05" sourceRef="Task_CEOReview" targetRef="Gateway_CEO"/>
