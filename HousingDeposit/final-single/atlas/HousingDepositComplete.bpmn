@@ -151,7 +151,7 @@
       <bpmn:incoming>Flow_HRHead_Expert</bpmn:incoming>
       <bpmn:outgoing>Flow_HRExpert_HR</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:userTask id="Task_HRHeadAssign_PR" name="رئیس اداره کل سرمایه انسانی – ارجاع به کارشناس" camunda:asyncBefore="true" camunda:formKey="FORM_PR_04" camunda:assignee="${starter}">
+    <bpmn:userTask id="Task_HRHeadAssign_PR" name="رئیس اداره کل سرمایه انسانی – ارجاع به کارشناس" camunda:asyncBefore="true" camunda:formKey="FORM_HQ_03" camunda:assignee="${starter}">
       <bpmn:incoming>Flow_IsSec_No_PR</bpmn:incoming>
       <bpmn:incoming>Flow_Sec_Yes_PR</bpmn:incoming>
       <bpmn:outgoing>Flow_HRHead_Expert_PR</bpmn:outgoing>
@@ -160,7 +160,7 @@
       <bpmn:incoming>Flow_HRExpert_HR</bpmn:incoming>
       <bpmn:outgoing>F11</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:userTask id="Task_HRExpert_PR" name="بررسی درخواست – کارشناس اداره کل سرمایه انسانی" camunda:asyncBefore="true" camunda:formKey="FORM_PR_05" camunda:assignee="${starter}">
+    <bpmn:userTask id="Task_HRExpert_PR" name="بررسی درخواست – کارشناس اداره کل سرمایه انسانی" camunda:asyncBefore="true" camunda:formKey="FORM_HQ_04" camunda:assignee="${starter}">
       <bpmn:incoming>Flow_HRHead_Expert_PR</bpmn:incoming>
       <bpmn:outgoing>Flow_HRExpert_HR_PR</bpmn:outgoing>
     </bpmn:userTask>
@@ -177,7 +177,7 @@
       <bpmn:outgoing>F16</bpmn:outgoing>
       <bpmn:outgoing>F15</bpmn:outgoing>
     </bpmn:parallelGateway>
-    <bpmn:userTask id="Task_HRReview_PR" name="بررسی و تأیید – رئیس اداره کل سرمایه انسانی" camunda:asyncBefore="true" camunda:formKey="FORM_PR_06" camunda:assignee="${starter}">
+    <bpmn:userTask id="Task_HRReview_PR" name="بررسی و تأیید – رئیس اداره کل سرمایه انسانی" camunda:asyncBefore="true" camunda:formKey="FORM_HQ_05" camunda:assignee="${starter}">
       <bpmn:incoming>Flow_HRExpert_HR_PR</bpmn:incoming>
       <bpmn:outgoing>F11_PR</bpmn:outgoing>
     </bpmn:userTask>
@@ -207,11 +207,11 @@
     <bpmn:endEvent id="End_RejectedFinal" name="پایان (عدم تأیید مدیر مافوق)">
       <bpmn:incoming>Flow_FA_No</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:userTask id="Task_HRHeadReferral_PR" name="رئیس اداره کل سرمایه انسانی – ارجاع به مدیریت شعب استان / منطقه" camunda:asyncBefore="true" camunda:formKey="FORM_PR_04" camunda:assignee="${starter}">
+    <bpmn:userTask id="Task_HRHeadReferral_PR" name="رئیس اداره کل سرمایه انسانی – ارجاع به مدیریت شعب استان / منطقه" camunda:asyncBefore="true" camunda:formKey="FORM_HQ_03" camunda:assignee="${starter}">
       <bpmn:incoming>F15_PR</bpmn:incoming>
       <bpmn:outgoing>Flow_HRRef_Route_PR</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:userTask id="Task_Inspection_PR" name="رونوشت به اداره کل بازرسی" camunda:asyncBefore="true" camunda:formKey="FORM_PR_13" camunda:assignee="${starter}">
+    <bpmn:userTask id="Task_Inspection_PR" name="رونوشت به اداره کل بازرسی" camunda:asyncBefore="true" camunda:formKey="FORM_HQ_15" camunda:assignee="${starter}">
       <bpmn:incoming>F16_PR</bpmn:incoming>
       <bpmn:outgoing>Flow_Insp_Join_PR</bpmn:outgoing>
     </bpmn:userTask>
