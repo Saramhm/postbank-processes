@@ -2288,7 +2288,7 @@
           "tag": "div",
           "input": false,
           "tableView": false,
-          "content": "<div class=\"alert alert-info\" style=\"margin-bottom:0\">شما به‌عنوان ضامن ودیعه مسکن همکار زیر معرفی شده‌اید. در صورت پذیرش، باید پشت چک ضمانت را امضا و فرم ضمانت (نمونه ۲۲۲۷) را تکمیل کنید؛ در صورت عدم تسویه ودیعه توسط همکار، بانک مجاز است مبلغ را از حقوق، اموال و حساب‌های ضامن وصول کند.</div>"
+          "content": "<div class=\"alert alert-info\" style=\"margin-bottom:0\">شما به‌عنوان ضامن ودیعه مسکن همکار زیر معرفی شده‌اید. در صورت پذیرش، باید پشت چک ضمانت را امضا و فرم ضمانت را تکمیل کنید؛ در صورت عدم تسویه ودیعه توسط همکار، بانک مجاز است مبلغ را از حقوق، اموال و حساب‌های ضامن وصول کند.</div>"
         },
         {
           "title": "خلاصه درخواست",
@@ -3551,7 +3551,7 @@
           "tag": "div",
           "input": false,
           "tableView": false,
-          "content": "<div class=\"alert alert-info\" style=\"margin-bottom:0\">یک فقره چک صیادی معادل ۱۳۰٪ ودیعه مصوب، با ضمانت یکی از کارکنان بانک در ظهر آن و امضای استفاده‌کننده، به همراه فرم ضمانت (نمونه ۲۲۲۷) اخذ می‌شود.</div>"
+          "content": "<div class=\"alert alert-info\" style=\"margin-bottom:0\">یک فقره چک صیادی معادل ۱۳۰٪ ودیعه مصوب، با ضمانت یکی از کارکنان بانک در ظهر آن و امضای استفاده‌کننده، به همراه فرم ضمانت اخذ می‌شود.</div>"
         },
         {
           "label": "Columns",
@@ -3794,7 +3794,7 @@
           "disabled": true
         },
         {
-          "label": "فرم ضمانت امضاشده (نمونه ۲۲۲۷)",
+          "label": "فرم ضمانت امضاشده",
           "tableView": false,
           "storage": "base64",
           "image": true,
@@ -3949,7 +3949,7 @@
               "shortcut": ""
             },
             {
-              "label": "فرم ضمانت (نمونه ۲۲۲۷)",
+              "label": "فرم ضمانت",
               "value": "form2227",
               "shortcut": ""
             }
@@ -3961,7 +3961,7 @@
           "clearOnHide": false
         },
         {
-          "label": "متقاضی برای تنظیم اقرارنامه (نمونه ۲۲۲۶) به دفتر اسناد رسمی معرفی شد.",
+          "label": "متقاضی برای تنظیم اقرارنامه به دفتر اسناد رسمی معرفی شد.",
           "tableView": false,
           "defaultValue": false,
           "key": "NotaryReferralDone",
@@ -4026,7 +4026,7 @@
                 {
                   "components": [
                     {
-                      "label": "شماره اقرارنامه (نمونه ۲۲۲۶)",
+                      "label": "شماره اقرارنامه",
                       "tableView": true,
                       "key": "AcknowledgmentNumber",
                       "type": "textfield",
@@ -5758,12 +5758,12 @@
               "tableView": false,
               "values": [
                 {
-                  "label": "ستاد – معاونین مدیرعامل / مدیران امور / روسا و معاونین ادارات مرکزی (فرم ۲۲۲۵)",
+                  "label": "ستاد – معاونین مدیرعامل / مدیران امور / روسا و معاونین ادارات مرکزی",
                   "value": "HQ",
                   "shortcut": ""
                 },
                 {
-                  "label": "مدیریت شعب استان / منطقه (فرم ۲۲۲۴)",
+                  "label": "مدیریت شعب استان / منطقه",
                   "value": "Province",
                   "shortcut": ""
                 }
@@ -6627,7 +6627,7 @@
           "disabled": true
         },
         {
-          "title": "فرم درخواست (نمونه ۲۲۲۵ / ۲۲۲۴)",
+          "title": "فرم درخواست",
           "theme": "primary",
           "collapsible": false,
           "key": "RequestFormPanel",
@@ -6643,7 +6643,7 @@
               "tag": "div",
               "input": false,
               "tableView": false,
-              "content": "<div class=\"alert alert-info\" style=\"margin-bottom:0\">مدیران ستادی: فرم نمونه ۲۲۲۵ خطاب به مدیرعامل محترم بانک (در دو نسخه) تکمیل، امضا و بارگذاری شود.</div>",
+              "content": "<div class=\"alert alert-info\" style=\"margin-bottom:0\">مدیران ستادی: فرم درخواست خطاب به مدیرعامل محترم بانک (در دو نسخه) تکمیل، امضا و بارگذاری شود.</div>",
               "customConditional": "show = data.RequestCategory === 'HQ';",
               "disabled": true
             },
@@ -6654,12 +6654,12 @@
               "tag": "div",
               "input": false,
               "tableView": false,
-              "content": "<div class=\"alert alert-info\" style=\"margin-bottom:0\">مدیریت‌های شعب استان / منطقه: فرم نمونه ۲۲۲۴ تکمیل، امضا و بارگذاری شود.</div>",
+              "content": "<div class=\"alert alert-info\" style=\"margin-bottom:0\">مدیریت‌های شعب استان / منطقه: فرم درخواست تکمیل، امضا و بارگذاری شود.</div>",
               "customConditional": "show = data.RequestCategory !== 'HQ';",
               "disabled": true
             },
             {
-              "label": "فرم درخواست امضاشده (نمونه ۲۲۲۵)",
+              "label": "فرم درخواست امضاشده",
               "tableView": false,
               "storage": "base64",
               "image": true,
@@ -6681,7 +6681,7 @@
               "clearOnHide": false
             },
             {
-              "label": "فرم درخواست امضاشده (نمونه ۲۲۲۴)",
+              "label": "فرم درخواست امضاشده",
               "tableView": false,
               "storage": "base64",
               "image": true,

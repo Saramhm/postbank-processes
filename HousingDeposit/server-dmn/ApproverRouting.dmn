@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_ApproverRouting" name="ApproverRouting" namespace="http://camunda.org/schema/1.0/dmn" exporter="Camunda Modeler" exporterVersion="5.4.2" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.17.0">
+  <decision id="ApproverRouting" name="جدول تعیین تأییدکننده (بعد از درخواست)">
+    <decisionTable id="DecisionTable_ApproverRouting" hitPolicy="FIRST">
+      <input id="Input_cat" label="نوع درخواست (HQ / Province)">
+        <inputExpression id="InputExpression_cat" typeRef="string">
+          <text>_requestCategory</text>
+        </inputExpression>
+      </input>
+      <output id="Output_group" label="تأییدکننده" name="approverGroup" typeRef="string" />
+      <rule id="Rule_1">
+        <description>ستاد → تأیید مدیر مستقیم متقاضی</description>
+        <inputEntry id="InputEntry_1">
+          <text>"HQ"</text>
+        </inputEntry>
+        <outputEntry id="OE_1">
+          <text>"UpperManager"</text>
+        </outputEntry>
+      </rule>
+      <rule id="Rule_2">
+        <description>استان / منطقه → بررسی مدیریت شعب استان / منطقه</description>
+        <inputEntry id="InputEntry_2">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="OE_2">
+          <text>"PBProvinceManagement"</text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+  <dmndi:DMNDI>
+    <dmndi:DMNDiagram id="DMNDiagram_1">
+      <dmndi:DMNShape id="DMNShape_ApproverRouting" dmnElementRef="ApproverRouting">
+        <dc:Bounds height="80" width="180" x="160" y="100" />
+      </dmndi:DMNShape>
+    </dmndi:DMNDiagram>
+  </dmndi:DMNDI>
+</definitions>

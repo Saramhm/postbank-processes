@@ -1,0 +1,59 @@
+بسته‌ی نهایی فرایند ودیعه مسکن مدیران غیربومی
+=================================================
+چهار پوشه (فقط یکی را استفاده کنید):
+  server/            سرور خودمان، بدون DMN   (4 فایل: BPMN + فرم شروع + Wizard + اطلاعیه) — همه را با هم Deploy کنید
+  server-with-dmn/   سرور خودمان، با DMN      (همان + ApproverRouting.dmn)
+  atlas/             Atlas، بدون DMN         (HousingDepositAtlas.bpmn + پوشه forms با 17 فرم)
+  atlas-with-dmn/    Atlas، با DMN           (همان + ApproverRouting.dmn)
+فرم‌ها در همه‌ی نسخه‌ها یکی هستند؛ فقط BPMN فرق می‌کند.
+
+-------------------------------------------------
+ترتیب فرم‌ها در Atlas (هر کدام برای کدام تسک)
+-------------------------------------------------
+#  فایل                اسم پیشنهادی                      تسک (BPMN)                            چه کسی / کدام مسیر                       Form key
+1  00-StartForm        (فرم شروع)                       Task_Request                           همه                                      65
+2  01-CEOReview        HousingDepositCEOReview          Task_CEOReview                         ستاد، فقط اگر مدیر مستقیم غیر از مدیرعامل  FORM_CEO
+3  02-ProvinceReview   HousingDepositProvinceReview     Task_ProvinceReview                    استان                                    FORM_PROVINCE
+4  14-SecurityReview   HousingDepositSecurityReview     Task_SecurityReview                    فقط رئیس حوزه حراست استان                FORM_SECURITY
+5  12-HRHead           HousingDepositHRHead             Task_HRHeadAssign (ارجاع به کارشناس)    همه                                      FORM_HRHEAD
+6  03a-HRExpert        HousingDepositHRExpert           Task_HRExpert                          همه                                      FORM_HREXPERT
+7  03-HRReview         (فرم مدیرکل سرمایه انسانی)       Task_HRReview                          همه                                      185
+8  07-Inspection       HousingDepositInspection         Task_Inspection                        همه (موازی)                              FORM_INSPECTION
+9  13-FinalApproval    HousingDepositFinalApproval      Task_FinalApproval                     فقط ستاد با مدیر مستقیم = مدیرعامل       FORM_FINAL
+10 12-HRHead (همان)    (همان فرم 5)                     Task_HRHeadReferral (ارجاع به شعبه/استان) همه                                  FORM_HRHEAD
+11 06-Referral         HousingDepositReferral           Task_ReferralBranch و Task_ReferralProvince  ستاد و استان (یک فرم)                FORM_REFERRAL
+12 08-Legal            HousingDepositLegalGuarantee     Task_Legal                             همه (حساب واسط فقط ستاد)                 FORM_LEGAL
+13 09-File             HousingDepositFile               Task_File                              همه                                      FORM_FILE
+14 15-BranchHead       HousingDepositBranchHead         Task_BranchRefAcc (ارجاع به رئیس حوزه حسابداری)   فقط ستاد                         FORM_BRANCHHEAD
+15 16-AccApproval      HousingDepositAccApproval        Task_AccApproval                       فقط ستاد                                 FORM_ACC
+16 10-Payment          HousingDepositPayment            Task_Payment                           همه (ستاد: رئیس حوزه حسابداری)           FORM_PAYMENT
+17 15-BranchHead (همان) (همان فرم 14)                    Task_BranchRefAccountant (ارجاع به ذی‌حساب) فقط ستاد                          FORM_BRANCHHEAD
+18 04-LeaseInfo        HousingDepositLeaseInfo          Task_LeaseInfo                         همه (ذی‌حساب)                            FORM_LEASE
+19 11-Database         HousingDepositDatabase           Task_Database                          همه                                      FORM_DATABASE
+نکته: ۱۷ فرم ساخته می‌شود؛ 12-HRHead و 15-BranchHead هر کدام برای دو تسک استفاده می‌شوند. شماره‌های 65 و 185 فرم‌های خودتان هستند.
+
+-------------------------------------------------
+مسیرها (در BPMN)
+-------------------------------------------------
+ستاد، مدیر مستقیم = معاون / مدیر امور:
+  شروع ← تأیید مدیر مستقیم ← رئیس سرمایه انسانی ← کارشناس ← مدیرکل سرمایه انسانی ← (رونوشت بازرسی، موازی) ← رئیس سرمایه انسانی (ارجاع) ← ارجاع شعبه ← حقوقی ← پرونده ← رئیس شعبه ← رئیس حوزه حسابداری (تأیید) ← واریز ← رئیس شعبه ← ذی‌حساب ← بانک اطلاعات
+ستاد، مدیر مستقیم = مدیرعامل:
+  شروع ← رئیس سرمایه انسانی ← کارشناس ← مدیرکل ← (رونوشت بازرسی) ← تأیید نهایی مدیرعامل ← رئیس سرمایه انسانی (ارجاع) ← ارجاع شعبه ← حقوقی ← … (بقیه مثل بالا)
+استان:
+  شروع ← مدیریت شعب استان ← رئیس سرمایه انسانی ← کارشناس ← مدیرکل ← (رونوشت بازرسی) ← رئیس سرمایه انسانی (ارجاع) ← ارجاع مدیر استان ← حقوقی ← پرونده ← واریز ← ذی‌حساب ← بانک اطلاعات
+رئیس حوزه حراست استان:
+  مثل استان، فقط بعد از مدیریت شعب استان یک مرحله «حراست تهران» اضافه می‌شود.
+
+-------------------------------------------------
+کدملی‌های تست (در فرم شروع پر می‌شوند)
+-------------------------------------------------
+ستاد، مدیر مستقیم = مدیرعامل:   3358227863  بهزاد امیریان (ودیعه قبلی 22.5 میلیارد)
+                                 2708572393  مهرداد یوسف‌زاده (ودیعه قبلی 17.3 میلیارد)
+                                 0010000062  کامران صادقی (حقوقی)
+ستاد، مدیر مستقیم = معاون:      0010000021  علی احمدی     0010000038  مریم رضایی
+استان:                           0010000054 (فارس)   0010000046 (البرز، ودیعه قبلی 10 میلیارد)   0150303191 (آذربایجان شرقی)
+رئیس حوزه حراست استان:          0010000070  حمید رضوانی
+
+-------------------------------------------------
+فعلاً: همه‌ی تسک‌ها برای شروع‌کننده است (assignee). کارشناس سرمایه انسانی و کاربر واقعی هر معاون جایگزین نشده‌اند.
+شناسه‌ی تأییدکننده‌ها در فرم شروع موقتاً 0073249361 است.
